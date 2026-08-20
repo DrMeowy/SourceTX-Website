@@ -126,14 +126,17 @@
   const dashboardModelName = $("#tx-model-name");
   const dashboardHeaderModel = $("#tx-header-model");
   const dashboardDescription = $("#tx-model-description");
+  const dashboardClockTime = $("#tx-clock-time");
+  const dashboardClockDate = $("#tx-clock-date");
   const dashboardToast = $("#tx-demo-toast");
   let dashboardToastTimer;
   let dashboardModelIndex = 0;
-  let dashboardLinkOnline = false;
+  let dashboardLinkOnline = true;
+  let dashboardLinkQuality = 100;
 
   const dashboardTimers = {
     1: { seconds: 0, running: false },
-    2: { seconds: 300, running: false },
+    2: { seconds: 600, running: false },
   };
 
   const showDashboardToast = (message) => {
@@ -143,6 +146,24 @@
     dashboardToast.classList.add("is-visible");
     dashboardToastTimer = window.setTimeout(() => dashboardToast.classList.remove("is-visible"), 1800);
   };
+
+  const renderDashboardClock = () => {
+    const now = new Date();
+    const time = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(now);
+    const date = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(now);
+    if (dashboardClockTime) dashboardClockTime.textContent = time;
+    if (dashboardClockDate) dashboardClockDate.textContent = date;
+  };
+
+  renderDashboardClock();
+  window.setInterval(renderDashboardClock, 1000);
 
   const formatDashboardTimer = (seconds) => {
     const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
@@ -207,11 +228,49 @@
     const lq = $("#tx-lq");
     const packet = $("#tx-packet");
     const power = $("#tx-power");
-    if (signal) signal.textContent = dashboardLinkOnline ? "-55 dBm" : "NO LINK";
-    if (lq) lq.textContent = dashboardLinkOnline ? "LQ 98%" : "LQ --%";
+    const signalBars = dashboardScreen ? $$(".tx-signal-bars i", dashboardScreen) : [];
+    const activeBars = Math.ceil(dashboardLinkQuality / 20);
+    const rssi = Math.round(30 + (100 - dashboardLinkQuality) * 0.85);
+
+    if (signal) signal.textContent = dashboardLinkOnline ? `RSSI -${rssi} dBm` : "NO LINK";
+    if (lq) lq.textContent = dashboardLinkOnline ? `LQ ${dashboardLinkQuality}%` : "LQ --%";
     if (packet) packet.textContent = dashboardLinkOnline ? "250 Hz" : "--";
-    if (power) power.textContent = dashboardLinkOnline ? "100mW" : "--mW";
+    if (power) power.textContent = dashboardLinkOnline ? "500mW" : "--mW";
+    signalBars.forEach((bar, index) => bar.classList.toggle("is-active", dashboardLinkOnline && index < activeBars));
   };
+
+  const updateDashboardTelemetry = () => {
+    if (!dashboardLinkOnline) return;
+    const slowWave = Math.sin(Date.now() / 4300) * 19;
+    const fastWave = Math.sin(Date.now() / 1600) * 5;
+    dashboardLinkQuality = Math.max(45, Math.min(100, Math.round(76 + slowWave + fastWave)));
+    renderDashboardLink();
+  };
+
+  window.setInterval(updateDashboardTelemetry, 1400);
+
+  const dashboardChannelBars = $$("#tx-channel-bars .tx-channel-bar");
+  const setDashboardChannelHeight = (channelIndex, height) => {
+    const fill = dashboardChannelBars[channelIndex]?.querySelector("b");
+    if (fill) fill.style.height = `${height}%`;
+  };
+
+  const animateAnalogChannels = () => {
+    for (let channelIndex = 0; channelIndex < 4; channelIndex += 1) {
+      setDashboardChannelHeight(channelIndex, Math.round(30 + Math.random() * 55));
+    }
+  };
+
+  const animateSwitchChannels = () => {
+    const switchLevels = [0, 50, 100];
+    for (let channelIndex = 4; channelIndex < 8; channelIndex += 1) {
+      const nextLevel = switchLevels[Math.floor(Math.random() * switchLevels.length)];
+      setDashboardChannelHeight(channelIndex, nextLevel);
+    }
+  };
+
+  window.setInterval(animateAnalogChannels, 1100);
+  window.setInterval(animateSwitchChannels, 2400);
 
   const handleDashboardAction = (action) => {
     if (["model", "cycle-model"].includes(action)) {
@@ -236,7 +295,7 @@
     const messages = {
       settings: "SETTINGS / firmware options",
       clock: "CLOCK / dashboard time",
-      battery: "BATTERY / TX 8.2V / RX --.-V",
+      battery: "BATTERY / TX 8.4V / RX 11.1V / 3S LiPo",
       tx: "TX / packet and power telemetry",
       channels: "CHANNEL MONITOR / 12 channels",
       trim: "TRIM / SUB-TRIM screen",

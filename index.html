@@ -113,11 +113,11 @@
                 <span class="tx-meta-state">WEB PREVIEW / SIMULATED</span>
               </div>
 
-              <div class="tx-screen" id="tx-screen">
+              <div class="tx-screen is-linked" id="tx-screen">
                 <div class="tx-header">
                   <div class="tx-header-block tx-header-battery">
                     <span>TX BATTERY</span>
-                    <strong id="tx-header-battery">8.2V</strong>
+                    <strong id="tx-header-battery">8.4V</strong>
                   </div>
                   <div class="tx-header-block tx-header-model">
                     <span>MODEL</span>
@@ -125,8 +125,8 @@
                   </div>
                   <button class="tx-header-icon" type="button" data-dashboard-action="settings" aria-label="Open dashboard settings">⚙</button>
                   <button class="tx-clock" type="button" data-dashboard-action="clock" aria-label="Open dashboard clock">
-                    <strong>6:56 PM</strong>
-                    <span>Aug 15, 2026</span>
+                    <strong id="tx-clock-time">--:--</strong>
+                    <span id="tx-clock-date">---</span>
                   </button>
                 </div>
 
@@ -142,25 +142,25 @@
                   <div class="tx-instruments">
                     <button class="tx-card tx-battery-card" type="button" data-dashboard-action="battery" aria-label="Show transmitter and receiver battery">
                       <span class="tx-card-title">BATTERY</span>
-                      <span class="tx-metric-label">TX 8.2V</span>
+                      <span class="tx-metric-label">TX 8.4V</span>
                       <span class="tx-battery-track"><i id="tx-battery-fill"></i></span>
-                      <span class="tx-metric-label">RX --.-V</span>
-                      <span class="tx-battery-track"><i class="is-empty"></i></span>
+                      <span class="tx-metric-label">RX 11.1V</span>
+                      <span class="tx-battery-track"><i class="rx-fill"></i></span>
                     </button>
 
                     <button class="tx-card tx-signal-card" type="button" data-dashboard-action="signal" aria-label="Show signal status">
                       <span class="tx-card-title">SIGNAL</span>
-                      <strong id="tx-signal-state">NO LINK</strong>
-                      <small id="tx-lq">LQ --%</small>
-                      <span class="tx-signal-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                      <strong id="tx-signal-state">RSSI -30 dBm</strong>
+                      <small id="tx-lq">LQ 100%</small>
+                      <span class="tx-signal-bars" aria-hidden="true"><i class="is-active"></i><i class="is-active"></i><i class="is-active"></i><i class="is-active"></i><i class="is-active"></i></span>
                     </button>
 
                     <button class="tx-card tx-transmit-card" type="button" data-dashboard-action="tx" aria-label="Show transmitter packet status">
                       <span class="tx-card-title">TX</span>
                       <span class="tx-metric-label">PACKET</span>
-                      <strong id="tx-packet">--</strong>
+                      <strong id="tx-packet">250 Hz</strong>
                       <span class="tx-metric-label">POWER</span>
-                      <strong id="tx-power">--mW</strong>
+                      <strong id="tx-power">500mW</strong>
                       <span class="tx-telem">TELEM</span>
                     </button>
 
@@ -171,7 +171,7 @@
                     </button>
                     <button class="tx-card tx-timer-card tx-timer-two tx-timer-2" type="button" data-dashboard-action="timer2" aria-label="Start or stop timer two">
                       <span class="tx-card-title">TIMER 2</span>
-                      <strong id="tx-timer-2">05:00</strong>
+                      <strong id="tx-timer-2">10:00</strong>
                       <small id="tx-timer-2-state">STOPPED</small>
                     </button>
 
@@ -181,16 +181,16 @@
                       <span class="tx-channel-bars" id="tx-channel-bars" aria-hidden="true">
                         <i class="tx-channel-bar is-blue"><b style="height: 43%"></b></i>
                         <i class="tx-channel-bar is-blue"><b style="height: 43%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
-                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar is-blue"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar is-blue"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar is-blue"><b style="height: 50%"></b></i>
+                        <i class="tx-channel-bar is-blue"><b style="height: 56%"></b></i>
+                        <i class="tx-channel-bar is-blue"><b style="height: 42%"></b></i>
+                        <i class="tx-channel-bar is-blue"><b style="height: 67%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 0%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 0%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 50%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 50%"></b></i>
                       </span>
                     </button>
                   </div>
