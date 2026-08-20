@@ -52,7 +52,7 @@
 
         <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
           <a href="#dashboard">Dashboard</a>
-          <a href="#download">Download</a>
+          <a href="#install">Install</a>
           <a href="#partner">Partner</a>
           <a
             class="nav-github"
@@ -78,7 +78,7 @@
 
             <div class="hero-actions">
               <a class="button button-primary" href="#start">Get started <span aria-hidden="true">↓</span></a>
-              <a class="button button-secondary" href="#download">Download tools <span aria-hidden="true">↗</span></a>
+              <a class="button button-secondary" href="#install">Install SourceTX <span aria-hidden="true">↗</span></a>
             </div>
 
             <div class="hero-stats" aria-label="SourceTX highlights">
@@ -226,78 +226,33 @@
         </div>
       </section>
 
-      <section class="section section-dark" id="download" aria-labelledby="download-title">
+      <section class="section section-dark" id="install" aria-labelledby="install-title">
         <div class="container">
           <div class="section-heading section-heading-split">
             <div>
-              <p class="eyebrow"><span class="eyebrow-dot"></span> downloads and maintenance</p>
-              <h2 id="download-title">Download the tools for your transmitter.</h2>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> install / maintain</p>
+              <h2 id="install-title">Install SourceTX your way.</h2>
             </div>
-            <p>Use the browser tool for supported desktop USB work, or choose the companion that matches the job. All paths follow the signed SourceTX release feed and keep low-level flashing details behind verified workflows.</p>
+            <p>Choose a standalone companion for guided maintenance, or try the browser alpha when you want a direct desktop USB workflow. Both paths use the same signed SourceTX release feed.</p>
           </div>
 
-          <div class="device-tool-shell" id="device-tools" aria-labelledby="device-tools-title">
-            <div class="device-tool-heading">
-              <div>
-                <p class="eyebrow"><span class="eyebrow-dot"></span> browser tools</p>
-                <h3 id="device-tools-title">Install, update, and configure from this page.</h3>
-              </div>
-              <span class="device-support-pill" id="device-support-pill">Checking browser support…</span>
-            </div>
-            <p class="device-tool-lede">
-              The browser talks directly to your USB-connected transmitter. Release manifests and firmware images are checked locally before anything is written; no firmware, model, or hardware data is uploaded to SourceTX.
-            </p>
+          <div class="install-choice-grid">
+            <article class="install-choice-card">
+              <div class="install-choice-topline"><span class="card-status">STANDALONE APPS</span><span class="install-choice-index">01</span></div>
+              <h3>Windows or Android.</h3>
+              <p>Use the supported desktop or phone companion for guided installation, signed updates, and model backup or restore.</p>
+              <a class="button button-primary" href="#standalone-apps">View standalone apps <span aria-hidden="true">↓</span></a>
+            </article>
 
-            <div class="device-tool-grid">
-              <article class="device-tool-card device-tool-flash-card">
-                <div class="device-tool-card-topline"><span class="card-status">SIGNED USB FLASH</span><span class="device-tool-index">01</span></div>
-                <h4>Firmware installation</h4>
-                <p>Install the complete factory image on the supported ESP32-S3 target, or update an existing transmitter without erasing its models.</p>
-                <p class="device-tool-subnote">Blank board or recovery: hold <span class="mono">BOOT</span>, tap <span class="mono">RESET</span>, then release <span class="mono">BOOT</span> before selecting the USB port.</p>
-                <label class="device-check-row"><input type="checkbox" id="device-erase-flash" /> <span><strong>Erase all flash before factory install</strong><small>Deletes models, calibration, settings, and update state.</small></span></label>
-                <div class="device-tool-actions">
-                  <button class="button button-primary" type="button" id="device-install-button">Install SourceTX</button>
-                  <button class="button button-secondary" type="button" id="device-update-button">Update existing device</button>
-                </div>
-              </article>
-
-              <article class="device-tool-card device-tool-config-card">
-                <div class="device-tool-card-topline"><span class="card-status">USB CONFIGURATION</span><span class="device-tool-index">02</span></div>
-                <h4>Configure your transmitter</h4>
-                <p>Read or save the validated hardware profile used by the firmware. Changes are staged in NVS and take effect after a reboot.</p>
-                <div class="device-tool-actions">
-                  <button class="button button-green" type="button" id="device-config-button">Connect &amp; configure</button>
-                  <button class="button button-ghost" type="button" id="device-read-config-button">Read current config</button>
-                </div>
-              </article>
-            </div>
-
-            <div class="device-tool-status" id="device-tool-status" role="status" aria-live="polite">
-              <span class="device-status-led"></span><span id="device-tool-status-text">Ready. Use Chrome or Edge over HTTPS, then connect a USB data cable.</span>
-            </div>
-            <pre class="device-tool-log" id="device-tool-log" aria-label="Browser tool activity log">[READY] Browser tool is idle.</pre>
-
-            <div class="device-config-panel" id="device-config-panel" hidden>
-              <div class="device-config-heading">
-                <div>
-                  <p class="card-status">SOURCE TX HARDWARE PROFILE / SCHEMA 1</p>
-                  <h4>Transmitter hardware profile</h4>
-                </div>
-                <button class="text-link device-close-button" type="button" id="device-close-config-button">Close panel</button>
-              </div>
-              <p class="device-config-note"><strong>Safety boundary:</strong> keep the vehicle restrained and remove RF-module power before changing hardware assignments. Use the companion apps for model backup and restore, with <span class="mono">Settings → Transmitter → Model Transfer</span> open on the radio.</p>
-
-              <div class="device-config-form" id="device-config-form"></div>
-              <div class="device-tool-actions device-config-actions">
-                <button class="button button-secondary" type="button" id="device-refresh-config-button">Read from transmitter</button>
-                <button class="button button-green" type="button" id="device-save-config-button">Save configuration</button>
-                <button class="button button-ghost" type="button" id="device-default-config-button">Load reference defaults</button>
-              </div>
-
-            </div>
+            <article class="install-choice-card install-choice-browser">
+              <div class="install-choice-topline"><span class="card-status">WEB BROWSER / ALPHA</span><span class="install-choice-index">02</span></div>
+              <h3>Install and configure from your browser.</h3>
+              <p>Use Chrome or Edge over HTTPS to connect directly to the official USB target and verify release data locally.</p>
+              <a class="button button-green" href="browser-tools.html">Open browser alpha <span aria-hidden="true">↗</span></a>
+            </article>
           </div>
 
-          <div class="companion-grid">
+          <div class="companion-grid" id="standalone-apps">
             <article class="companion-card companion-windows">
               <div class="companion-head">
                 <div class="platform-mark">WIN</div>
@@ -350,7 +305,7 @@
 
           <div class="browser-note">
             <span class="browser-note-mark">i</span>
-            <p><strong>Use the browser tool for the supported target.</strong> It verifies signed releases locally and preserves the companion apps as the fallback for older browsers, Android USB OTG, and guided recovery. Read the <a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">USB recovery guide</a> before a first installation.</p>
+            <p><strong>Browser alpha requirements.</strong> The browser path currently targets desktop Chrome or Edge over HTTPS. Use the standalone apps for Android USB OTG, model backup and restore, older browsers, or guided recovery. Read the <a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">USB recovery guide</a> before a first installation.</p>
           </div>
         </div>
       </section>
@@ -406,7 +361,7 @@
           <p>Source-available surface RC transmitter firmware and companion tools for builders who want the control path in view.</p>
         </div>
         <div class="footer-column"><h3>Build</h3><a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">Firmware repository</a><a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">Installation & recovery</a></div>
-        <div class="footer-column"><h3>Run</h3><a href="#download">Downloads</a><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Firmware releases</a><a href="https://github.com/DrMeowy/SourceTX/security/advisories/new" target="_blank" rel="noopener">Security report</a></div>
+        <div class="footer-column"><h3>Run</h3><a href="#install">Install</a><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Firmware releases</a><a href="https://github.com/DrMeowy/SourceTX/security/advisories/new" target="_blank" rel="noopener">Security report</a></div>
         <div class="footer-column"><h3>Connect</h3><a href="#partner">Partner enquiries</a><a href="https://github.com/DrMeowy/SourceTX/issues" target="_blank" rel="noopener">Issues & support</a><a href="https://www.buymeacoffee.com/DrMeowy" target="_blank" rel="noopener">Support development</a></div>
       </div>
       <div class="container footer-bottom"><span>© <span id="current-year">2026</span> SourceTX Project</span><span>Firmware is not a finished or certified transmitter design.</span><a href="https://github.com/DrMeowy/SourceTX/blob/main/LICENSE" target="_blank" rel="noopener">License <span aria-hidden="true">↗</span></a></div>
@@ -414,6 +369,5 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="js/main.js" defer></script>
-    <script type="module" src="js/device-tools.js"></script>
   </body>
 </html>

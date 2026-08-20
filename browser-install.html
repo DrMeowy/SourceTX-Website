@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0b0d" />
+    <meta name="description" content="Install or update SourceTX firmware from a desktop browser over USB." />
+    <title>Firmware Installation — SourceTX Browser Alpha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="page-noise" aria-hidden="true"></div><div class="page-grid" aria-hidden="true"></div>
+    <header class="site-header" id="top"><div class="container nav-wrap">
+      <a class="brand" href="index.html#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>surface control system</small></span></a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation"><a href="index.html#dashboard">Dashboard</a><a class="is-current" href="index.html#install">Install</a><a href="index.html#partner">Partner</a><a class="nav-github" href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></nav>
+    </div></header>
+
+    <main class="subpage-main">
+      <section class="subpage-hero subpage-hero-compact" aria-labelledby="install-page-title"><div class="container">
+        <a class="subpage-backlink" href="browser-tools.html">← Back to browser alpha</a>
+        <p class="eyebrow"><span class="eyebrow-dot"></span> browser alpha / firmware installation</p>
+        <h1 id="install-page-title">Install or update SourceTX over USB.</h1>
+        <p class="subpage-lede">The factory action writes the complete signed image. The update action writes only the verified application at its expected offset and preserves the transmitter’s model storage.</p>
+        <div class="detail-grid">
+          <article class="detail-card"><span class="requirement-label">REQUIRED</span><strong>PC with Chrome or Edge</strong><p>Open this page over HTTPS so Web Serial and local signature verification are available.</p></article>
+          <article class="detail-card"><span class="requirement-label">TARGET</span><strong>SourceTX ESP32-S3 / 4 MB</strong><p>The browser tool rejects releases for other chips, flash sizes, or hardware IDs.</p></article>
+          <article class="detail-card"><span class="requirement-label">CABLE</span><strong>USB data cable</strong><p>Charge-only cables cannot expose the transmitter serial port.</p></article>
+          <article class="detail-card detail-card-warn"><span class="requirement-label">RECOVERY</span><strong>BOOT → RESET → release</strong><p>For a blank board, hold BOOT, tap RESET, then release BOOT before selecting the port.</p></article>
+        </div>
+      </div></section>
+
+      <section class="section subpage-section" aria-labelledby="flash-tool-title"><div class="container">
+        <div class="section-heading section-heading-split"><div><p class="eyebrow"><span class="eyebrow-dot"></span> signed local workflow</p><h2 id="flash-tool-title">Firmware installation</h2></div><p>Keep the transmitter connected and do not disconnect USB during the write or reboot. Android is not supported for this alpha; use Android Companion instead.</p></div>
+
+        <div class="device-tool-shell" id="device-tools" aria-labelledby="device-tools-title">
+          <div class="device-tool-heading"><div><p class="eyebrow"><span class="eyebrow-dot"></span> source tx / usb</p><h3 id="device-tools-title">Flash the verified release.</h3></div><span class="device-support-pill" id="device-support-pill">Checking browser support…</span></div>
+          <p class="device-tool-lede">Release manifests, signatures, chip identity, flash size, and image layout are checked locally before esptool writes anything to the selected port.</p>
+          <div class="device-tool-grid"><article class="device-tool-card device-tool-flash-card"><div class="device-tool-card-topline"><span class="card-status">FACTORY IMAGE</span><span class="device-tool-index">0x0000</span></div><h4>Install SourceTX</h4><p>Use this for a blank board or a full recovery. It replaces the complete flash contents.</p><label class="device-check-row"><input type="checkbox" id="device-erase-flash" /> <span><strong>Erase all flash first</strong><small>Deletes models, calibration, settings, and update state.</small></span></label><div class="device-tool-actions"><button class="button button-primary" type="button" id="device-install-button">Install factory image</button></div></article><article class="device-tool-card"><div class="device-tool-card-topline"><span class="card-status">APPLICATION UPDATE</span><span class="device-tool-index">0x10000</span></div><h4>Update existing device</h4><p>Use this when SourceTX is already installed and you want the latest signed application while preserving model storage.</p><div class="device-tool-actions"><button class="button button-secondary" type="button" id="device-update-button">Update application</button></div></article></div>
+          <div class="device-tool-status" id="device-tool-status" role="status" aria-live="polite"><span class="device-status-led"></span><span id="device-tool-status-text">Ready. Use Chrome or Edge over HTTPS, then connect a USB data cable.</span></div>
+          <pre class="device-tool-log" id="device-tool-log" aria-label="Browser tool activity log">[READY] Browser tool is idle.</pre>
+        </div>
+
+        <details class="cli-details"><summary>CLI equivalent / detailed recovery</summary><div class="cli-content"><p>The browser tool uses the same release contract as the companion apps. Download the signed release artifact from <a href="https://github.com/DrMeowy/SourceTX-Updates/releases/latest" target="_blank" rel="noopener">SourceTX Updates</a>, verify its checksum and signature, then use the matching offset.</p><pre><code># Factory image — full recovery
+python -m esptool --chip esp32s3 --port PORT --baud 460800 write-flash --flash-mode dio --flash-freq 80m --flash-size 4MB 0x0000 SourceTX-vX.Y-factory.bin
+
+# Application update — preserve model storage
+python -m esptool --chip esp32s3 --port PORT --baud 460800 write-flash 0x10000 SourceTX-vX.Y.bin</code></pre><p class="cli-warning"><strong>Do not write the application image at 0x0000.</strong> A factory image and an application image are different artifacts.</p></div></details>
+      </div></section>
+    </main>
+
+    <footer class="site-footer"><div class="container footer-bottom"><span>© <span id="current-year">2026</span> SourceTX Project</span><a href="browser-tools.html">Browser alpha</a><a href="index.html#install">Install options</a></div></footer>
+    <script src="js/main.js" defer></script><script type="module" src="js/device-tools.js"></script>
+  </body>
+</html>

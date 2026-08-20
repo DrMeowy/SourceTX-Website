@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0b0d" />
+    <meta name="description" content="Configure the SourceTX transmitter hardware profile from a desktop browser over USB." />
+    <title>Configure Transmitter — SourceTX Browser Alpha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="page-noise" aria-hidden="true"></div><div class="page-grid" aria-hidden="true"></div>
+    <header class="site-header" id="top"><div class="container nav-wrap">
+      <a class="brand" href="index.html#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>surface control system</small></span></a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation"><a href="index.html#dashboard">Dashboard</a><a class="is-current" href="index.html#install">Install</a><a href="index.html#partner">Partner</a><a class="nav-github" href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></nav>
+    </div></header>
+
+    <main class="subpage-main">
+      <section class="subpage-hero subpage-hero-compact" aria-labelledby="config-page-title"><div class="container">
+        <a class="subpage-backlink" href="browser-tools.html">← Back to browser alpha</a>
+        <p class="eyebrow"><span class="eyebrow-dot"></span> browser alpha / configuration</p>
+        <h1 id="config-page-title">Configure the transmitter you already have.</h1>
+        <p class="subpage-lede">Read the current hardware profile, review every assignment, and save a validated profile over USB. Changes are staged in NVS and apply after the transmitter reboots.</p>
+        <div class="detail-grid"><article class="detail-card"><span class="requirement-label">REQUIRED</span><strong>PC with Chrome or Edge</strong><p>Use a secure HTTPS page with Web Serial enabled.</p></article><article class="detail-card"><span class="requirement-label">DEVICE</span><strong>Running SourceTX transmitter</strong><p>Power the transmitter by USB and keep the display active.</p></article><article class="detail-card"><span class="requirement-label">CABLE</span><strong>USB data cable</strong><p>Connect directly to the transmitter, not a charge-only hub.</p></article><article class="detail-card detail-card-warn"><span class="requirement-label">SAFETY</span><strong>Vehicle restrained / RF off</strong><p>Remove RF-module power before changing control or CRSF assignments.</p></article></div>
+      </div></section>
+
+      <section class="section subpage-section" aria-labelledby="config-tool-title"><div class="container">
+        <div class="section-heading section-heading-split"><div><p class="eyebrow"><span class="eyebrow-dot"></span> validated hardware profile</p><h2 id="config-tool-title">Configure your transmitter</h2></div><p>This tool edits hardware assignments only. It currently requires desktop Chrome or Edge over HTTPS; Android Chrome should use Android Companion instead. Model backup and restore stays in the Windows and Android companions.</p></div>
+
+        <div class="device-tool-shell" id="device-tools" aria-labelledby="device-tools-title"><div class="device-tool-heading"><div><p class="eyebrow"><span class="eyebrow-dot"></span> source tx / usb</p><h3 id="device-tools-title">Read, review, and save.</h3></div><span class="device-support-pill" id="device-support-pill">Checking browser support…</span></div><p class="device-tool-lede">The profile form is generated from schema 1. The transmitter validates GPIO conflicts and value ranges before acknowledging a save.</p><div class="device-tool-grid"><article class="device-tool-card device-tool-config-card"><div class="device-tool-card-topline"><span class="card-status">USB CONFIGURATION</span><span class="device-tool-index">SCHEMA 1</span></div><h4>Hardware profile</h4><p>Connect to read the profile already in NVS, or open the form with the official reference defaults.</p><div class="device-tool-actions"><button class="button button-green" type="button" id="device-config-button">Connect &amp; read profile</button><button class="button button-ghost" type="button" id="device-read-config-button">Read current config</button></div></article></div><div class="device-tool-status" id="device-tool-status" role="status" aria-live="polite"><span class="device-status-led"></span><span id="device-tool-status-text">Ready. Use Chrome or Edge over HTTPS, then connect a USB data cable.</span></div><pre class="device-tool-log" id="device-tool-log" aria-label="Browser tool activity log">[READY] Browser tool is idle.</pre><div class="device-config-panel" id="device-config-panel" hidden><div class="device-config-heading"><div><p class="card-status">SOURCE TX HARDWARE PROFILE / SCHEMA 1</p><h4>Transmitter hardware profile</h4></div><button class="text-link device-close-button" type="button" id="device-close-config-button">Close panel</button></div><p class="device-config-note"><strong>Safety boundary:</strong> keep the vehicle restrained and remove RF-module power before changing hardware assignments. Check every GPIO against your board before saving.</p><div class="device-config-form" id="device-config-form"></div><div class="device-tool-actions device-config-actions"><button class="button button-secondary" type="button" id="device-refresh-config-button">Read from transmitter</button><button class="button button-green" type="button" id="device-save-config-button">Save configuration</button><button class="button button-ghost" type="button" id="device-default-config-button">Load reference defaults</button></div></div></div>
+
+        <details class="cli-details"><summary>CLI equivalent / detailed configuration</summary><div class="cli-content"><p>The browser action sends a newline-delimited hardware-profile command over the transmitter’s USB serial interface. The firmware validates the complete schema before acknowledging the write.</p><pre><code># Read the current profile
+SOURCETX_HW:GET
+
+# Set a complete schema-1 profile (all fields are required)
+SOURCETX_HW:SET:SCHEMA=1:DISP_MOSI=7:DISP_SCLK=2:DISP_MISO=-1:DISP_CS=14:DISP_DC=13:DISP_RST=10:DISP_BL=3:I2C_SDA=8:I2C_SCL=9:TOUCH_INT=12:TOUCH_RST=11:TOUCH_ADDR=56:INA_ADDR=64:NAV_U=35:NAV_D=36:NAV_L=37:NAV_R=38:NAV_OK=39:STEER=-1:THROT=-1:CRSF=42:STAT_MODE=0:STAT_MONO=-1:STAT_R=-1:STAT_G=-1:STAT_B=-1:STAT_BRIGHT=60:SND_MODE=0:SND_PIN=-1:VOICE_RX=-1:VIB_PIN=-1</code></pre><p class="cli-warning"><strong>Save acknowledgement:</strong> <span class="mono">SOURCETX_HW:OK:SET:REBOOT</span> means the profile is checksum-verified and staged in NVS. Reboot before testing the controls.</p></div></details>
+      </div></section>
+    </main>
+
+    <footer class="site-footer"><div class="container footer-bottom"><span>© <span id="current-year">2026</span> SourceTX Project</span><a href="browser-tools.html">Browser alpha</a><a href="index.html#install">Install options</a></div></footer>
+    <script src="js/main.js" defer></script><script type="module" src="js/device-tools.js"></script>
+  </body>
+</html>

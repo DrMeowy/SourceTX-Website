@@ -16,12 +16,13 @@ python -m http.server 8000
 
 Then open `http://localhost:8000/`.
 
-The Download section includes browser-based signed factory installation,
-application updates, and hardware-profile configuration for the official
-ESP32-S3 target. It uses Web Serial in a secure Chrome or Edge context and
-verifies release signatures locally before flashing. The companion applications
-remain the fallback for older browsers, Android USB OTG, model backup/restore,
-and guided recovery.
+The Install section offers two paths: standalone Windows and Android companion
+apps, or a browser alpha for the official ESP32-S3 target. The browser path is
+split into separate firmware-installation and transmitter-configuration pages,
+with requirements, live Web Serial controls, and expandable CLI details. It
+uses secure Chrome or Edge context and verifies release signatures locally
+before flashing. The companion applications remain the fallback for older
+browsers, Android USB OTG, model backup/restore, and guided recovery.
 
 ## Deployment
 
