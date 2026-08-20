@@ -52,10 +52,7 @@
 
         <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
           <a href="#dashboard">Dashboard</a>
-          <a href="#system">System</a>
-          <a href="#capabilities">Capabilities</a>
-          <a href="#companions">Companions</a>
-          <a href="#hardware">Hardware</a>
+          <a href="#download">Download</a>
           <a href="#partner">Partner</a>
           <a
             class="nav-github"
@@ -80,8 +77,8 @@
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="#system">Explore the system <span aria-hidden="true">↓</span></a>
-              <a class="button button-secondary" href="#companions">Get companion tools <span aria-hidden="true">↗</span></a>
+              <a class="button button-primary" href="#start">Get started <span aria-hidden="true">↓</span></a>
+              <a class="button button-secondary" href="#download">Download tools <span aria-hidden="true">↗</span></a>
             </div>
 
             <div class="hero-stats" aria-label="SourceTX highlights">
@@ -229,168 +226,12 @@
         </div>
       </section>
 
-      <section class="section" id="system" aria-labelledby="system-title">
+      <section class="section section-dark" id="download" aria-labelledby="download-title">
         <div class="container">
           <div class="section-heading section-heading-split">
             <div>
-              <p class="eyebrow"><span class="eyebrow-dot"></span> the integration model</p>
-              <h2 id="system-title">The product is the path from hand to receiver.</h2>
-            </div>
-            <p>
-              SourceTX keeps the control loop visible: physical inputs become a model,
-              the model becomes a bounded CRSF output, and telemetry comes back as
-              context for the next decision.
-            </p>
-          </div>
-
-          <div class="system-flow">
-            <article class="flow-card flow-inputs">
-              <div class="flow-number">01</div>
-              <p class="flow-kicker">INPUT SURFACE</p>
-              <h3>Controls that fit a surface radio.</h3>
-              <p>Steering, throttle, navigation keys, touch, and mapped auxiliary controls enter through explicit hardware assignments.</p>
-              <div class="flow-tags"><span>ADC</span><span>TOUCH</span><span>GPIO MAP</span></div>
-            </article>
-            <div class="flow-arrow" aria-hidden="true">→</div>
-            <article class="flow-card flow-model">
-              <div class="flow-number">02</div>
-              <p class="flow-kicker">MODEL ENGINE</p>
-              <h3>Shape the vehicle, not just the channel.</h3>
-              <p>Calibration, expo, curves, trims, mixes, drive modes, brake ABS, throttle hold, and failsafe profiles stay model-aware.</p>
-              <div class="flow-tags"><span>CURVES</span><span>MIXES</span><span>LIMITS</span></div>
-            </article>
-            <div class="flow-arrow" aria-hidden="true">→</div>
-            <article class="flow-card flow-link">
-              <div class="flow-number">03</div>
-              <p class="flow-kicker">CRSF LINK</p>
-              <h3>Fast output with telemetry in the loop.</h3>
-              <p>An external ExpressLRS / CRSF module carries 16 channels while link quality, receiver battery, RPM, temperature, GPS, and more return.</p>
-              <div class="flow-tags"><span>250 HZ</span><span>16 CH</span><span>ELRS</span></div>
-            </article>
-            <div class="flow-arrow" aria-hidden="true">→</div>
-            <article class="flow-card flow-safety">
-              <div class="flow-number">04</div>
-              <p class="flow-kicker">SAFETY LAYER</p>
-              <h3>Inhibits are part of the experience.</h3>
-              <p>Startup preflight, transport health, throttle hold, alarms, runtime supervision, and output locks make state legible before motion.</p>
-              <div class="flow-tags"><span>PREFLIGHT</span><span>FAILSAFE</span><span>ALERTS</span></div>
-            </article>
-          </div>
-
-          <div class="system-callout">
-            <div class="callout-marker">!</div>
-            <div>
-              <strong>The boundary is deliberate.</strong>
-              <p>SourceTX is firmware and reference integration documentation, not a certified finished transmitter. Radio module, antenna, battery, charger, enclosure, and load safety still need their own validation.</p>
-            </div>
-            <a class="text-link" href="https://github.com/DrMeowy/SourceTX/blob/main/docs/USER_MANUAL.md" target="_blank" rel="noopener">Read the safety notes <span aria-hidden="true">↗</span></a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-dark" id="capabilities" aria-labelledby="capabilities-title">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow"><span class="eyebrow-dot"></span> what ships in the stack</p>
-            <h2 id="capabilities-title">A surface radio with room for the whole vehicle.</h2>
-            <p>Explore the capabilities by the job they do, from the first calibration pass to the last telemetry check of the day.</p>
-          </div>
-
-          <div class="filter-row" role="group" aria-label="Filter capabilities">
-            <button class="filter-button is-selected" type="button" data-filter="all" aria-pressed="true">All surfaces</button>
-            <button class="filter-button" type="button" data-filter="control" aria-pressed="false">Control</button>
-            <button class="filter-button" type="button" data-filter="vehicle" aria-pressed="false">Vehicle</button>
-            <button class="filter-button" type="button" data-filter="telemetry" aria-pressed="false">Telemetry</button>
-            <button class="filter-button" type="button" data-filter="safety" aria-pressed="false">Safety</button>
-            <button class="filter-button" type="button" data-filter="maintenance" aria-pressed="false">Maintenance</button>
-          </div>
-
-          <div class="capability-grid" id="capability-grid">
-            <article class="capability-card" data-category="control">
-              <div class="capability-topline"><span class="card-index">01</span><span class="card-status">CORE</span></div>
-              <h3>Model memory that stays manageable.</h3>
-              <p>A compact catalog keeps model identity in RAM while full configurations load on demand. Verified NVS writes and recovery paths protect the settings that matter.</p>
-              <div class="capability-meta"><span>UP TO 20 SLOTS</span><span>SCHEMA 21 BASELINE</span></div>
-            </article>
-            <article class="capability-card" data-category="vehicle">
-              <div class="capability-topline"><span class="card-index">02</span><span class="card-status">CONTROL</span></div>
-              <h3>From crawlers to boats.</h3>
-              <p>MOA and Dual ESC, skid-steer, twin-screw, 4WS, brake bias, winch, lights, throttle punch, launch rate, cruise, idle-up, engine cut, and neutral drag brake are native paths.</p>
-              <div class="capability-meta"><span>BOUNDED MIXES</span><span>MODEL-AWARE</span></div>
-            </article>
-            <article class="capability-card" data-category="telemetry">
-              <div class="capability-topline"><span class="card-index">03</span><span class="card-status">FEEDBACK</span></div>
-              <h3>Telemetry that changes the next move.</h3>
-              <p>Link quality, receiver battery, temperature, current, RPM, speed, GPS run data, lap gates, session history, and conditions can become warnings or bounded protection.</p>
-              <div class="capability-meta"><span>CRSF SENSORS</span><span>RUN HISTORY</span></div>
-            </article>
-            <article class="capability-card" data-category="safety">
-              <div class="capability-topline"><span class="card-index">04</span><span class="card-status">GUARDRAIL</span></div>
-              <h3>Safety state is visible, not implied.</h3>
-              <p>Neutral startup checks, throttle hold, receiver matching gates, transport supervision, failsafe policy, alarms, and output locks keep unsafe transitions explicit.</p>
-              <div class="capability-meta"><span>INHIBIT FIRST</span><span>CONFIRMATION GATED</span></div>
-            </article>
-            <article class="capability-card" data-category="maintenance">
-              <div class="capability-topline"><span class="card-index">05</span><span class="card-status">SIGNED</span></div>
-              <h3>Updates with a recovery story.</h3>
-              <p>Signed HTTPS OTA writes to an inactive application slot, checks the product, target, size, digest, and signature, then uses a health window with rollback. USB remains the recovery path.</p>
-              <div class="capability-meta"><span>SHA-256 / P-256</span><span>ROLLBACK</span></div>
-            </article>
-            <article class="capability-card" data-category="maintenance">
-              <div class="capability-topline"><span class="card-index">06</span><span class="card-status">PORTABLE</span></div>
-              <h3>Models can leave the transmitter.</h3>
-              <p>Windows and Android companions can export the active model or a complete model bundle, validate compatibility, and restore with explicit acknowledgements.</p>
-              <div class="capability-meta"><span>MODEL ENVELOPES</span><span>USB BUNDLES</span></div>
-            </article>
-            <article class="capability-card capability-card-development" data-category="maintenance">
-              <div class="capability-topline"><span class="card-index">07</span><span class="card-status">DEVELOPMENT</span></div>
-              <h3>Feedback hardware is configurable.</h3>
-              <p>The development tree adds configurable status, haptic, tone, and DFPlayer voice paths. The audio module, speaker stage, power, and sound pack still need physical acceptance.</p>
-              <div class="capability-meta"><span>OPTIONAL</span><span>HARDWARE GATED</span></div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="explorer" aria-labelledby="explorer-title">
-        <div class="container">
-          <div class="section-heading section-heading-split">
-            <div>
-              <p class="eyebrow"><span class="eyebrow-dot"></span> system explorer</p>
-              <h2 id="explorer-title">Three layers. One operator view.</h2>
-            </div>
-            <p>Switch layers to see what is physically connected, what the model engine owns, and what the radio link reports back.</p>
-          </div>
-
-          <div class="explorer-shell">
-            <div class="explorer-tabs" role="tablist" aria-label="SourceTX system layers">
-              <button class="explorer-tab is-active" type="button" role="tab" aria-selected="true" data-explorer="inputs">01 / Inputs</button>
-              <button class="explorer-tab" type="button" role="tab" aria-selected="false" data-explorer="engine">02 / Model engine</button>
-              <button class="explorer-tab" type="button" role="tab" aria-selected="false" data-explorer="link">03 / Link + safety</button>
-            </div>
-            <div class="explorer-content">
-              <div class="explorer-copy">
-                <p class="explorer-kicker" id="explorer-kicker">01 / INPUT SURFACE</p>
-                <h3 id="explorer-heading">Start with a control surface you can account for.</h3>
-                <p id="explorer-description">The reference target names every important input: two analog controls, five navigation buttons, a touch panel, and explicit optional GPIO assignments.</p>
-                <div class="explorer-metrics" id="explorer-metrics"></div>
-              </div>
-              <div class="explorer-terminal" aria-live="polite">
-                <div class="terminal-topline"><span><i></i><i></i><i></i></span><strong>source_tx / map</strong><span class="mono">READ ONLY</span></div>
-                <ul id="explorer-list"></ul>
-                <div class="terminal-footer"><span class="terminal-caret">▸</span> all assignments are validated before use</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-dark" id="companions" aria-labelledby="companions-title">
-        <div class="container">
-          <div class="section-heading section-heading-split">
-            <div>
-              <p class="eyebrow"><span class="eyebrow-dot"></span> companion layer</p>
-              <h2 id="companions-title">Keep the transmitter current. Keep models portable.</h2>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> downloads and maintenance</p>
+              <h2 id="download-title">Download the tools for your transmitter.</h2>
             </div>
             <p>Use the companion that matches the job. Both follow the signed SourceTX release feed and keep low-level flashing details behind verified workflows.</p>
           </div>
@@ -453,53 +294,6 @@
         </div>
       </section>
 
-      <section class="section" id="hardware" aria-labelledby="hardware-title">
-        <div class="container">
-          <div class="section-heading section-heading-split">
-            <div>
-              <p class="eyebrow"><span class="eyebrow-dot"></span> official reference target</p>
-              <h2 id="hardware-title">Build from a pinout you can verify.</h2>
-            </div>
-            <p>The reference build is intentionally specific. Similar-looking ESP32-S3 boards are not automatically compatible.</p>
-          </div>
-
-          <div class="hardware-layout">
-            <div class="hardware-spec-card">
-              <div class="board-label"><span class="board-led"></span> SOURCETX / TARGET 01</div>
-              <div class="board-body">
-                <div class="board-chip"><span>ESP32-S3</span><strong>FH4R2</strong><small>240 MHz / native USB</small></div>
-                <div class="board-rail board-rail-left"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                <div class="board-rail board-rail-right"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                <div class="board-caption"><span>4 MB DIO / 80 MHz flash</span><span>2 MB quad PSRAM</span><span>3.3 V GPIO</span></div>
-              </div>
-              <div class="board-details">
-                <div><span>DISPLAY</span><strong>ST7796U / 480×320</strong></div>
-                <div><span>TOUCH</span><strong>FT6x36 / I²C 0x38</strong></div>
-                <div><span>BATTERY</span><strong>INA219 monitor</strong></div>
-                <div><span>RADIO</span><strong>External ExpressLRS / CRSF</strong></div>
-              </div>
-            </div>
-
-            <div class="pinout-card">
-              <div class="pinout-head"><div><p class="card-status">FIXED CONNECTIONS</p><h3>Reference pin map</h3></div><span class="mono muted">GPIO / FUNCTION</span></div>
-              <div class="pin-list">
-                <div class="pin-row"><span class="pin-code">06</span><div><strong>Steering potentiometer</strong><small>12-bit ADC input</small></div><button type="button" class="copy-pin" data-copy="GPIO 6" aria-label="Copy GPIO 6">copy</button></div>
-                <div class="pin-row"><span class="pin-code">05</span><div><strong>Throttle potentiometer</strong><small>12-bit ADC input</small></div><button type="button" class="copy-pin" data-copy="GPIO 5" aria-label="Copy GPIO 5">copy</button></div>
-                <div class="pin-row"><span class="pin-code pin-code-blue">42</span><div><strong>CRSF signal</strong><small>single-wire UART / 400 kbaud</small></div><button type="button" class="copy-pin" data-copy="GPIO 42" aria-label="Copy GPIO 42">copy</button></div>
-                <div class="pin-row"><span class="pin-code">35–39</span><div><strong>Navigation / confirm</strong><small>active-low buttons / pull-ups</small></div><button type="button" class="copy-pin" data-copy="GPIO 35–39" aria-label="Copy GPIO 35 through 39">copy</button></div>
-                <div class="pin-row"><span class="pin-code">08 / 09</span><div><strong>Shared I²C bus</strong><small>touch + INA219 / 100 kHz</small></div><button type="button" class="copy-pin" data-copy="GPIO 8 / GPIO 9" aria-label="Copy GPIO 8 and GPIO 9">copy</button></div>
-              </div>
-              <a class="text-link" href="https://github.com/DrMeowy/SourceTX/blob/main/docs/REFERENCE_HARDWARE.md" target="_blank" rel="noopener">Open the complete hardware reference <span aria-hidden="true">↗</span></a>
-            </div>
-          </div>
-
-          <div class="hardware-boundaries">
-            <div><span class="boundary-icon">!</span><strong>Never power a radio module, motor, speaker, haptic motor, or high-current LED from an ESP32 GPIO.</strong></div>
-            <p>Optional voice and feedback hardware needs its own power, driver, grounding, voltage, and acceptance checks. Battery, charger, antenna, enclosure, and certification remain outside the firmware reference target.</p>
-          </div>
-        </div>
-      </section>
-
       <section class="section section-start" id="start" aria-labelledby="start-title">
         <div class="container start-grid">
           <div>
@@ -550,8 +344,8 @@
           <a class="brand" href="#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>surface control system</small></span></a>
           <p>Source-available surface RC transmitter firmware and companion tools for builders who want the control path in view.</p>
         </div>
-        <div class="footer-column"><h3>Build</h3><a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">Firmware repository</a><a href="#hardware">Reference hardware</a><a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">Installation & recovery</a></div>
-        <div class="footer-column"><h3>Run</h3><a href="#companions">Companion apps</a><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Firmware releases</a><a href="https://github.com/DrMeowy/SourceTX/security/advisories/new" target="_blank" rel="noopener">Security report</a></div>
+        <div class="footer-column"><h3>Build</h3><a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">Firmware repository</a><a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">Installation & recovery</a></div>
+        <div class="footer-column"><h3>Run</h3><a href="#download">Downloads</a><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Firmware releases</a><a href="https://github.com/DrMeowy/SourceTX/security/advisories/new" target="_blank" rel="noopener">Security report</a></div>
         <div class="footer-column"><h3>Connect</h3><a href="#partner">Partner enquiries</a><a href="https://github.com/DrMeowy/SourceTX/issues" target="_blank" rel="noopener">Issues & support</a><a href="https://www.buymeacoffee.com/DrMeowy" target="_blank" rel="noopener">Support development</a></div>
       </div>
       <div class="container footer-bottom"><span>© <span id="current-year">2026</span> SourceTX Project</span><span>Firmware is not a finished or certified transmitter design.</span><a href="https://github.com/DrMeowy/SourceTX/blob/main/LICENSE" target="_blank" rel="noopener">License <span aria-hidden="true">↗</span></a></div>
