@@ -1,0 +1,19 @@
+{
+  "name": "sourcetx-website",
+  "version": "1.0.0",
+  "description": "Modern website and interactive portal for SourceTX RC transmitter firmware",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "sourcetx",
+    "esp32-s3",
+    "expresslrs",
+    "crsf",
+    "rc-transmitter",
+    "fpv"
+  ],
+  "author": "SourceTX Project",
+  "license": "MIT"
+}
