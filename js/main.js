@@ -322,11 +322,8 @@
     dashboardChannelValues.forEach((height, channelIndex) => setDashboardChannelHeight(channelIndex, height));
   };
 
-  const dashboardMotionReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-  if (!dashboardMotionReduced) {
-    animateDashboardChannels(performance.now());
-    window.setInterval(() => animateDashboardChannels(performance.now()), 40);
-  }
+  animateDashboardChannels(performance.now());
+  window.setInterval(() => animateDashboardChannels(performance.now()), 40);
 
   const handleDashboardAction = (action) => {
     if (["model", "cycle-model"].includes(action)) {
