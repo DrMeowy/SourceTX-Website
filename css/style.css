@@ -131,7 +131,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .menu-toggle.is-open span:nth-child(2) { opacity: 0; }
 .menu-toggle.is-open span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
 
-.hero { position: relative; padding: 105px 0 88px; }
+.hero { position: relative; padding: 105px 0 88px; scroll-margin-top: 80px; }
 .hero::before { position: absolute; top: -170px; right: -110px; width: 700px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(75, 148, 255, 0.14), transparent 68%); content: ""; pointer-events: none; }
 
 .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 0.93fr) minmax(540px, 1.07fr); align-items: center; gap: 66px; }
