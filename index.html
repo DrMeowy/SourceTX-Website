@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Montserrat:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
@@ -51,6 +51,7 @@
         </button>
 
         <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+          <a href="#dashboard">Dashboard</a>
           <a href="#system">System</a>
           <a href="#capabilities">Capabilities</a>
           <a href="#companions">Companions</a>
@@ -105,77 +106,115 @@
             </p>
           </div>
 
-          <div class="hero-visual" aria-label="Illustrative SourceTX system console">
-            <div class="console-frame">
-              <div class="console-topline">
-                <div class="console-brand"><span class="console-led"></span> SOURCETX / SYSTEM VIEW</div>
-                <span class="console-mode">SIMULATED OUTPUT</span>
+          <div class="hero-visual tx-hero-visual" id="dashboard" aria-label="Interactive SourceTX 480 by 320 firmware dashboard preview">
+            <div class="tx-preview-shell">
+              <div class="tx-preview-meta">
+                <span><i class="tx-meta-dot"></i> FIRMWARE DASHBOARD / 480×320</span>
+                <span class="tx-meta-state">WEB PREVIEW / SIMULATED</span>
               </div>
-              <div class="console-screen">
-                <div class="console-model-row">
-                  <div>
-                    <span class="console-label">ACTIVE MODEL</span>
-                    <strong>TRAIL / 01</strong>
+
+              <div class="tx-screen" id="tx-screen">
+                <div class="tx-header">
+                  <div class="tx-header-block tx-header-battery">
+                    <span>TX BATTERY</span>
+                    <strong id="tx-header-battery">8.2V</strong>
                   </div>
-                  <div class="console-link-state"><span class="state-dot"></span> VEHICLE DISCONNECTED</div>
+                  <div class="tx-header-block tx-header-model">
+                    <span>MODEL</span>
+                    <strong id="tx-header-model">01: MODEL 01</strong>
+                  </div>
+                  <button class="tx-header-icon" type="button" data-dashboard-action="settings" aria-label="Open dashboard settings">⚙</button>
+                  <button class="tx-clock" type="button" data-dashboard-action="clock" aria-label="Open dashboard clock">
+                    <strong>6:56 PM</strong>
+                    <span>Aug 15, 2026</span>
+                  </button>
                 </div>
 
-                <div class="console-main-grid">
-                  <div class="control-column">
-                    <div class="control-module">
-                      <div class="module-heading">
-                        <span>STEERING</span>
-                        <strong id="steering-value">+14%</strong>
-                      </div>
-                      <input id="steering-slider" type="range" min="-100" max="100" value="14" aria-label="Demo steering position" />
-                      <div class="range-labels"><span>LEFT</span><span>CENTER</span><span>RIGHT</span></div>
-                    </div>
-                    <div class="control-module">
-                      <div class="module-heading">
-                        <span>THROTTLE / BRAKE</span>
-                        <strong id="throttle-value">+07%</strong>
-                      </div>
-                      <input id="throttle-slider" type="range" min="-100" max="100" value="7" aria-label="Demo throttle position" />
-                      <div class="range-labels"><span>REVERSE</span><span>NEUTRAL</span><span>FORWARD</span></div>
-                    </div>
-                    <div class="mini-readout-grid">
-                      <div><span>HOLD</span><strong>READY</strong></div>
-                      <div><span>MODEL</span><strong>01 / 20</strong></div>
-                      <div><span>TELEMETRY</span><strong>WATCHING</strong></div>
-                      <div><span>OUTPUT</span><strong>ARMED</strong></div>
-                    </div>
-                  </div>
+                <div class="tx-main-content">
+                  <button class="tx-card tx-model-card" type="button" data-dashboard-action="model" aria-label="Select model">
+                    <span class="tx-card-title">MODEL</span>
+                    <img id="tx-model-image" src="assets/images/source_tx_buggy_128x82.png" alt="SourceTX race buggy model preview" />
+                    <strong class="tx-model-name" id="tx-model-name">01: MODEL 01</strong>
+                    <small class="tx-model-description" id="tx-model-description">NO DESCRIPTION</small>
+                    <span class="tx-inner-button">MODEL SELECT</span>
+                  </button>
 
-                  <div class="path-column">
-                    <div class="module-heading"><span>CONTROL PATH</span><span class="mono muted">250 Hz</span></div>
-                    <div class="path-steps">
-                      <div class="path-step is-active"><span>01</span><div><strong>INPUTS</strong><small>steering + throttle</small></div><b>OK</b></div>
-                      <div class="path-connector"></div>
-                      <div class="path-step is-active"><span>02</span><div><strong>MODEL ENGINE</strong><small>curves + limits + mixes</small></div><b>OK</b></div>
-                      <div class="path-connector"></div>
-                      <div class="path-step is-active"><span>03</span><div><strong>CRSF LINK</strong><small>external ELRS module</small></div><b>READY</b></div>
-                    </div>
+                  <div class="tx-instruments">
+                    <button class="tx-card tx-battery-card" type="button" data-dashboard-action="battery" aria-label="Show transmitter and receiver battery">
+                      <span class="tx-card-title">BATTERY</span>
+                      <span class="tx-metric-label">TX 8.2V</span>
+                      <span class="tx-battery-track"><i id="tx-battery-fill"></i></span>
+                      <span class="tx-metric-label">RX --.-V</span>
+                      <span class="tx-battery-track"><i class="is-empty"></i></span>
+                    </button>
+
+                    <button class="tx-card tx-signal-card" type="button" data-dashboard-action="signal" aria-label="Show signal status">
+                      <span class="tx-card-title">SIGNAL</span>
+                      <strong id="tx-signal-state">NO LINK</strong>
+                      <small id="tx-lq">LQ --%</small>
+                      <span class="tx-signal-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                    </button>
+
+                    <button class="tx-card tx-transmit-card" type="button" data-dashboard-action="tx" aria-label="Show transmitter packet status">
+                      <span class="tx-card-title">TX</span>
+                      <span class="tx-metric-label">PACKET</span>
+                      <strong id="tx-packet">--</strong>
+                      <span class="tx-metric-label">POWER</span>
+                      <strong id="tx-power">--mW</strong>
+                      <span class="tx-telem">TELEM</span>
+                    </button>
+
+                    <button class="tx-card tx-timer-card tx-timer-one tx-timer-1" type="button" data-dashboard-action="timer1" aria-label="Start or stop timer one">
+                      <span class="tx-card-title">TIMER 1</span>
+                      <strong id="tx-timer-1">00:00</strong>
+                      <small id="tx-timer-1-state">STOPPED</small>
+                    </button>
+                    <button class="tx-card tx-timer-card tx-timer-two tx-timer-2" type="button" data-dashboard-action="timer2" aria-label="Start or stop timer two">
+                      <span class="tx-card-title">TIMER 2</span>
+                      <strong id="tx-timer-2">05:00</strong>
+                      <small id="tx-timer-2-state">STOPPED</small>
+                    </button>
+
+                    <button class="tx-card tx-channel-card" type="button" data-dashboard-action="channels" aria-label="Open channel monitor">
+                      <span class="tx-card-title">CHANNEL MONITOR</span>
+                      <span class="tx-channel-labels" aria-hidden="true"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i></span>
+                      <span class="tx-channel-bars" id="tx-channel-bars" aria-hidden="true">
+                        <i class="tx-channel-bar is-blue"><b style="height: 43%"></b></i>
+                        <i class="tx-channel-bar is-blue"><b style="height: 43%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                        <i class="tx-channel-bar"><b style="height: 71%"></b></i>
+                      </span>
+                    </button>
                   </div>
                 </div>
 
-                <div class="channel-strip" aria-label="Illustrative channel output values">
-                  <div class="channel-heading"><span>CHANNEL MONITOR</span><span class="mono muted">µs / 16 CH</span></div>
-                  <div class="channel-row">
-                    <div class="channel-cell"><div><span>CH1</span><strong id="channel-1-value">1570</strong></div><div class="channel-track"><i id="channel-1-fill" style="width:57%"></i></div><small>STEERING</small></div>
-                    <div class="channel-cell"><div><span>CH2</span><strong id="channel-2-value">1535</strong></div><div class="channel-track"><i id="channel-2-fill" style="width:53.5%"></i></div><small>THROTTLE</small></div>
-                    <div class="channel-cell"><div><span>CH3</span><strong>1500</strong></div><div class="channel-track"><i style="width:50%"></i></div><small>SHIFT</small></div>
-                    <div class="channel-cell"><div><span>CH4</span><strong id="channel-4-value">1519</strong></div><div class="channel-track"><i id="channel-4-fill" style="width:51.9%"></i></div><small>MIX</small></div>
-                  </div>
+                <div class="tx-quick-bar" aria-label="Dashboard quick actions">
+                  <button type="button" data-dashboard-action="trim"><span>+</span> TRIM/SUB-TRIM</button>
+                  <button type="button" data-dashboard-action="servo"><span>◎</span> SERVO VIEW</button>
+                  <button type="button" data-dashboard-action="expo"><span>↻</span> DR / EXPO</button>
+                  <button type="button" data-dashboard-action="mixers"><span>▦</span> MIXERS</button>
                 </div>
 
-                <div class="console-status-row">
-                  <span><i class="status-light status-green"></i> SAFETY INHIBIT: CLEAR</span>
-                  <span><i class="status-light status-blue"></i> TELEMETRY: STANDBY</span>
-                  <span class="console-clock">SYSTEM DEMO / 00:14:28</span>
-                </div>
+                <div class="tx-demo-toast" id="tx-demo-toast" role="status" aria-live="polite"></div>
               </div>
             </div>
-            <p class="visual-note"><span aria-hidden="true">↳</span> A product model, not a hardware connection. Move the sliders to see the channel path respond.</p>
+
+            <div class="tx-preview-controls">
+              <span class="tx-preview-caption"><i class="tx-preview-led"></i> on-device layout mirrored from <code>UiDashboardLayout.cpp</code></span>
+              <div class="tx-preview-actions">
+                <button class="tx-control-btn" type="button" data-dashboard-action="cycle-model">Cycle model</button>
+                <button class="tx-control-btn" type="button" data-dashboard-action="toggle-link">Toggle link</button>
+                <button class="tx-control-btn" type="button" data-dashboard-action="timer1">Start timer 1</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -101,44 +101,159 @@
   explorerTabs.forEach((tab) => tab.addEventListener("click", () => renderExplorer(tab.dataset.explorer)));
   renderExplorer("inputs");
 
-  // The console is a bounded visual demo. It never opens a serial port or writes firmware.
-  const steeringSlider = $("#steering-slider");
-  const throttleSlider = $("#throttle-slider");
-  const steeringValue = $("#steering-value");
-  const throttleValue = $("#throttle-value");
-  const channelElements = {
-    1: [$("#channel-1-value"), $("#channel-1-fill")],
-    2: [$("#channel-2-value"), $("#channel-2-fill")],
-    4: [$("#channel-4-value"), $("#channel-4-fill")],
+  // This is a bounded visual preview of the firmware dashboard. It never opens
+  // a serial port, controls a vehicle, or writes firmware.
+  const dashboardModels = [
+    {
+      name: "MODEL 01",
+      description: "NO DESCRIPTION",
+      image: "assets/images/source_tx_buggy_128x82.png",
+    },
+    {
+      name: "ROCK CRAWLER",
+      description: "TRAIL / 4WD",
+      image: "assets/images/source_tx_crawler_128x82.png",
+    },
+    {
+      name: "BLUE BEAST",
+      description: "HIGH GRIP / 4WD",
+      image: "assets/images/source_tx_beast_blue_128x82.png",
+    },
+  ];
+
+  const dashboardScreen = $("#tx-screen");
+  const dashboardImage = $("#tx-model-image");
+  const dashboardModelName = $("#tx-model-name");
+  const dashboardHeaderModel = $("#tx-header-model");
+  const dashboardDescription = $("#tx-model-description");
+  const dashboardToast = $("#tx-demo-toast");
+  let dashboardToastTimer;
+  let dashboardModelIndex = 0;
+  let dashboardLinkOnline = false;
+
+  const dashboardTimers = {
+    1: { seconds: 0, running: false },
+    2: { seconds: 300, running: false },
   };
 
-  const signedPercent = (value) => `${value >= 0 ? "+" : ""}${value}%`;
-  const setChannel = (channel, microseconds) => {
-    const elements = channelElements[channel];
-    if (!elements) return;
-    const [valueElement, fillElement] = elements;
-    valueElement.textContent = String(microseconds);
-    fillElement.style.width = `${Math.max(0, Math.min(100, (microseconds - 1000) / 10))}%`;
+  const showDashboardToast = (message) => {
+    if (!dashboardToast) return;
+    window.clearTimeout(dashboardToastTimer);
+    dashboardToast.textContent = message;
+    dashboardToast.classList.add("is-visible");
+    dashboardToastTimer = window.setTimeout(() => dashboardToast.classList.remove("is-visible"), 1800);
   };
 
-  const updateConsole = () => {
-    const steering = Number(steeringSlider?.value || 0);
-    const throttle = Number(throttleSlider?.value || 0);
-    const mix = Math.round(steering * 0.38 - throttle * 0.08);
-    const steeringUs = 1500 + Math.round(steering * 5);
-    const throttleUs = 1500 + Math.round(throttle * 5);
-    const mixUs = 1500 + mix * 5;
-
-    if (steeringValue) steeringValue.textContent = signedPercent(steering);
-    if (throttleValue) throttleValue.textContent = signedPercent(throttle);
-    setChannel(1, steeringUs);
-    setChannel(2, throttleUs);
-    setChannel(4, mixUs);
+  const formatDashboardTimer = (seconds) => {
+    const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const remainder = (seconds % 60).toString().padStart(2, "0");
+    return `${minutes}:${remainder}`;
   };
 
-  steeringSlider?.addEventListener("input", updateConsole);
-  throttleSlider?.addEventListener("input", updateConsole);
-  updateConsole();
+  const syncDashboardTimer = (timerNumber) => {
+    const timer = dashboardTimers[timerNumber];
+    const value = $(`#tx-timer-${timerNumber}`);
+    const state = $(`#tx-timer-${timerNumber}-state`);
+    if (value) value.textContent = formatDashboardTimer(timer.seconds);
+    if (state) state.textContent = timer.running ? "RUNNING" : "STOPPED";
+    $(`.tx-timer-${timerNumber}`)?.classList.toggle("is-running", timer.running);
+  };
+
+  const syncDashboardTimers = () => {
+    syncDashboardTimer(1);
+    syncDashboardTimer(2);
+  };
+
+  let dashboardTimerInterval;
+  const tickDashboardTimers = () => {
+    Object.entries(dashboardTimers).forEach(([timerNumber, timer]) => {
+      if (!timer.running) return;
+      timer.seconds += timerNumber === "1" ? 1 : -1;
+      if (timer.seconds <= 0 && timerNumber === "2") {
+        timer.seconds = 0;
+        timer.running = false;
+      }
+      syncDashboardTimer(Number(timerNumber));
+    });
+    if (!Object.values(dashboardTimers).some((timer) => timer.running)) {
+      window.clearInterval(dashboardTimerInterval);
+      dashboardTimerInterval = undefined;
+    }
+  };
+
+  const toggleDashboardTimer = (timerNumber) => {
+    const timer = dashboardTimers[timerNumber];
+    timer.running = !timer.running;
+    syncDashboardTimer(timerNumber);
+    if (timer.running && !dashboardTimerInterval) dashboardTimerInterval = window.setInterval(tickDashboardTimers, 1000);
+    showDashboardToast(`TIMER ${timerNumber} / ${timer.running ? "RUNNING" : "STOPPED"}`);
+  };
+
+  const renderDashboardModel = () => {
+    const model = dashboardModels[dashboardModelIndex];
+    const label = `${String(dashboardModelIndex + 1).padStart(2, "0")}: ${model.name}`;
+    if (dashboardImage) {
+      dashboardImage.src = model.image;
+      dashboardImage.alt = `${model.name} model preview`;
+    }
+    if (dashboardModelName) dashboardModelName.textContent = label;
+    if (dashboardHeaderModel) dashboardHeaderModel.textContent = label;
+    if (dashboardDescription) dashboardDescription.textContent = model.description;
+  };
+
+  const renderDashboardLink = () => {
+    dashboardScreen?.classList.toggle("is-linked", dashboardLinkOnline);
+    const signal = $("#tx-signal-state");
+    const lq = $("#tx-lq");
+    const packet = $("#tx-packet");
+    const power = $("#tx-power");
+    if (signal) signal.textContent = dashboardLinkOnline ? "-55 dBm" : "NO LINK";
+    if (lq) lq.textContent = dashboardLinkOnline ? "LQ 98%" : "LQ --%";
+    if (packet) packet.textContent = dashboardLinkOnline ? "250 Hz" : "--";
+    if (power) power.textContent = dashboardLinkOnline ? "100mW" : "--mW";
+  };
+
+  const handleDashboardAction = (action) => {
+    if (["model", "cycle-model"].includes(action)) {
+      dashboardModelIndex = (dashboardModelIndex + 1) % dashboardModels.length;
+      renderDashboardModel();
+      showDashboardToast(`MODEL SELECT / ${dashboardModels[dashboardModelIndex].name}`);
+      return;
+    }
+
+    if (["signal", "toggle-link"].includes(action)) {
+      dashboardLinkOnline = !dashboardLinkOnline;
+      renderDashboardLink();
+      showDashboardToast(dashboardLinkOnline ? "SIGNAL / LINK ACTIVE" : "SIGNAL / NO LINK");
+      return;
+    }
+
+    if (["timer1", "timer2"].includes(action)) {
+      toggleDashboardTimer(Number(action.slice(-1)));
+      return;
+    }
+
+    const messages = {
+      settings: "SETTINGS / firmware options",
+      clock: "CLOCK / dashboard time",
+      battery: "BATTERY / TX 8.2V / RX --.-V",
+      tx: "TX / packet and power telemetry",
+      channels: "CHANNEL MONITOR / 12 channels",
+      trim: "TRIM / SUB-TRIM screen",
+      servo: "SERVO VIEW / output monitor",
+      expo: "DR / EXPO / response curves",
+      mixers: "MIXERS / model-aware routing",
+    };
+    if (messages[action]) showDashboardToast(messages[action]);
+  };
+
+  $$('[data-dashboard-action]').forEach((button) => {
+    button.addEventListener("click", () => handleDashboardAction(button.dataset.dashboardAction));
+  });
+
+  renderDashboardModel();
+  renderDashboardLink();
+  syncDashboardTimers();
 
   // Copyable pinout values make the hardware reference practical at a workbench.
   const toast = $("#toast");
