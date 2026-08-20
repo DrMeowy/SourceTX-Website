@@ -250,27 +250,81 @@
   window.setInterval(updateDashboardTelemetry, 1400);
 
   const dashboardChannelBars = $$("#tx-channel-bars .tx-channel-bar");
+  const dashboardChannelValues = [50, 50, 50, 50, 42, 42, 42, 42, 0, 0, 50, 50];
+  const dashboardPotTargets = [50, 50, 50, 50];
+  let dashboardActivePot = 2;
+  let dashboardNextPotMoveAt = 0;
+  const dashboardSwitchScenes = [
+    [0, 0, 0, 0],
+    [100, 100, 100, 100],
+    [50, 100, 50, 100],
+    [100, 50, 100, 50],
+  ];
+  let dashboardSwitchSceneIndex = 0;
+  let dashboardSwitchTargets = [...dashboardSwitchScenes[0]];
+  let dashboardSwitchStartTimes = [0, 0, 0, 0];
+  let dashboardNextSwitchAt = 0;
+
   const setDashboardChannelHeight = (channelIndex, height) => {
     const fill = dashboardChannelBars[channelIndex]?.querySelector("b");
     if (fill) fill.style.height = `${height}%`;
   };
 
-  const animateAnalogChannels = () => {
-    for (let channelIndex = 0; channelIndex < 4; channelIndex += 1) {
-      setDashboardChannelHeight(channelIndex, Math.round(30 + Math.random() * 55));
-    }
-  };
+  const easeDashboardValue = (current, target, amount) => current + (target - current) * amount;
 
-  const animateSwitchChannels = () => {
-    const switchLevels = [0, 50, 100];
+  const animateDashboardChannels = (now) => {
+    const seconds = now / 1000;
+
+    // CH1 is steering: it moves slowly around neutral as the car turns left/right.
+    dashboardChannelValues[0] = 50 + 24 * Math.sin(seconds / 4.8);
+
+    // CH2 is throttle: forward lives above neutral, reverse below it.
+    dashboardChannelValues[1] = 50 + 28 * Math.sin(seconds / 6.5 + Math.PI / 3);
+
+    // Only one potentiometer moves at a time; CH3 and CH4 hold their last value otherwise.
+    if (now >= dashboardNextPotMoveAt) {
+      dashboardActivePot = dashboardActivePot === 2 ? 3 : 2;
+      dashboardPotTargets[dashboardActivePot] = 20 + Math.random() * 60;
+      dashboardNextPotMoveAt = now + 4200;
+    }
+    [2, 3].forEach((channelIndex) => {
+      if (channelIndex === dashboardActivePot) {
+        dashboardChannelValues[channelIndex] = easeDashboardValue(
+          dashboardChannelValues[channelIndex],
+          dashboardPotTargets[channelIndex],
+          0.018,
+        );
+      }
+    });
+
+    // CH5–CH8 change as a grouped switch scene with a small stagger, not independently.
+    if (now >= dashboardNextSwitchAt) {
+      dashboardSwitchSceneIndex = (dashboardSwitchSceneIndex + 1) % dashboardSwitchScenes.length;
+      dashboardSwitchTargets = [...dashboardSwitchScenes[dashboardSwitchSceneIndex]];
+      dashboardSwitchStartTimes = dashboardSwitchTargets.map((_, index) => now + index * 140);
+      dashboardNextSwitchAt = now + 6000 + Math.random() * 1800;
+    }
     for (let channelIndex = 4; channelIndex < 8; channelIndex += 1) {
-      const nextLevel = switchLevels[Math.floor(Math.random() * switchLevels.length)];
-      setDashboardChannelHeight(channelIndex, nextLevel);
+      if (now >= dashboardSwitchStartTimes[channelIndex - 4]) {
+        dashboardChannelValues[channelIndex] = easeDashboardValue(
+          dashboardChannelValues[channelIndex],
+          dashboardSwitchTargets[channelIndex - 4],
+          0.14,
+        );
+      }
     }
+
+    // CH9–CH10 are off; CH11–CH12 remain gray at half height.
+    dashboardChannelValues[8] = 0;
+    dashboardChannelValues[9] = 0;
+    dashboardChannelValues[10] = 50;
+    dashboardChannelValues[11] = 50;
+    dashboardChannelValues.forEach((height, channelIndex) => setDashboardChannelHeight(channelIndex, height));
+    window.requestAnimationFrame(animateDashboardChannels);
   };
 
-  window.setInterval(animateAnalogChannels, 1100);
-  window.setInterval(animateSwitchChannels, 2400);
+  const dashboardMotionReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if (!dashboardMotionReduced) window.requestAnimationFrame(animateDashboardChannels);
 
   const handleDashboardAction = (action) => {
     if (["model", "cycle-model"].includes(action)) {
