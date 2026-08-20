@@ -250,7 +250,7 @@
   window.setInterval(updateDashboardTelemetry, 1400);
 
   const dashboardChannelBars = $$("#tx-channel-bars .tx-channel-bar");
-  const dashboardChannelValues = [50, 50, 50, 50, 42, 42, 42, 42, 0, 0, 50, 50];
+  const dashboardChannelValues = [50, 50, 50, 50, 42, 42, 42, 42, 50, 50, 50, 50];
   const dashboardPotTargets = [50, 50, 50, 50];
   let dashboardActivePot = 2;
   let dashboardNextPotMoveAt = 0;
@@ -314,9 +314,9 @@
       }
     }
 
-    // CH9–CH10 are off; CH11–CH12 remain gray at half height.
-    dashboardChannelValues[8] = 0;
-    dashboardChannelValues[9] = 0;
+    // CH9–CH12 remain gray at half height because they are inactive.
+    dashboardChannelValues[8] = 50;
+    dashboardChannelValues[9] = 50;
     dashboardChannelValues[10] = 50;
     dashboardChannelValues[11] = 50;
     dashboardChannelValues.forEach((height, channelIndex) => setDashboardChannelHeight(channelIndex, height));
