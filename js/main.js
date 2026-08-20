@@ -254,16 +254,10 @@
   const dashboardPotTargets = [50, 50, 50, 50];
   let dashboardActivePot = 2;
   let dashboardNextPotMoveAt = 0;
-  const dashboardSwitchScenes = [
-    [0, 0, 0, 0],
-    [100, 100, 100, 100],
-    [50, 100, 50, 100],
-    [100, 50, 100, 50],
-  ];
-  let dashboardSwitchSceneIndex = 0;
-  let dashboardSwitchTargets = [...dashboardSwitchScenes[0]];
-  let dashboardSwitchStartTimes = [0, 0, 0, 0];
-  let dashboardNextSwitchAt = 0;
+  const dashboardSwitchLevels = [0, 50, 100];
+  const dashboardSwitchTargets = [42, 42, 42, 42];
+  const dashboardNextSwitchAt = [0, 0, 0, 0];
+  let dashboardLastSwitchAt = -Infinity;
 
   const setDashboardChannelHeight = (channelIndex, height) => {
     const fill = dashboardChannelBars[channelIndex]?.querySelector("b");
@@ -276,10 +270,10 @@
     const seconds = now / 1000;
 
     // CH1 is steering: it moves smoothly around neutral as the car turns left/right.
-    dashboardChannelValues[0] = 50 + 24 * Math.sin(seconds / 7.5);
+    dashboardChannelValues[0] = 50 + 24 * Math.sin(seconds / 0.75);
 
     // CH2 is throttle: forward lives above neutral, reverse below it.
-    dashboardChannelValues[1] = 50 + 28 * Math.sin(seconds / 10 + Math.PI / 3);
+    dashboardChannelValues[1] = 50 + 28 * Math.sin(seconds / 0.95 + Math.PI / 3);
 
     // Only one potentiometer moves at a time; CH3 and CH4 hold their last value otherwise.
     if (now >= dashboardNextPotMoveAt) {
@@ -297,21 +291,21 @@
       }
     });
 
-    // CH5–CH8 change as a grouped switch scene with a small stagger, not independently.
-    if (now >= dashboardNextSwitchAt) {
-      dashboardSwitchSceneIndex = (dashboardSwitchSceneIndex + 1) % dashboardSwitchScenes.length;
-      dashboardSwitchTargets = [...dashboardSwitchScenes[dashboardSwitchSceneIndex]];
-      dashboardSwitchStartTimes = dashboardSwitchTargets.map((_, index) => now + index * 140);
-      dashboardNextSwitchAt = now + 6000 + Math.random() * 1800;
-    }
+    // CH5–CH8 switch independently, with a spacing guard so two do not flip together.
     for (let channelIndex = 4; channelIndex < 8; channelIndex += 1) {
-      if (now >= dashboardSwitchStartTimes[channelIndex - 4]) {
-        dashboardChannelValues[channelIndex] = easeDashboardValue(
-          dashboardChannelValues[channelIndex],
-          dashboardSwitchTargets[channelIndex - 4],
-          0.14,
-        );
+      const switchIndex = channelIndex - 4;
+      if (now >= dashboardNextSwitchAt[switchIndex] && now - dashboardLastSwitchAt >= 700) {
+        const currentLevel = Math.round(dashboardChannelValues[channelIndex]);
+        const availableLevels = dashboardSwitchLevels.filter((level) => level !== currentLevel);
+        dashboardSwitchTargets[switchIndex] = availableLevels[Math.floor(Math.random() * availableLevels.length)];
+        dashboardNextSwitchAt[switchIndex] = now + 3800 + Math.random() * 5000;
+        dashboardLastSwitchAt = now;
       }
+      dashboardChannelValues[channelIndex] = easeDashboardValue(
+        dashboardChannelValues[channelIndex],
+        dashboardSwitchTargets[switchIndex],
+        0.16,
+      );
     }
 
     // CH9–CH12 remain gray at half height because they are inactive.
