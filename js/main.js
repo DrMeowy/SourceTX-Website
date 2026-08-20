@@ -275,11 +275,11 @@
   const animateDashboardChannels = (now) => {
     const seconds = now / 1000;
 
-    // CH1 is steering: it moves slowly around neutral as the car turns left/right.
-    dashboardChannelValues[0] = 50 + 24 * Math.sin(seconds / 4.8);
+    // CH1 is steering: it moves smoothly around neutral as the car turns left/right.
+    dashboardChannelValues[0] = 50 + 24 * Math.sin(seconds / 7.5);
 
     // CH2 is throttle: forward lives above neutral, reverse below it.
-    dashboardChannelValues[1] = 50 + 28 * Math.sin(seconds / 6.5 + Math.PI / 3);
+    dashboardChannelValues[1] = 50 + 28 * Math.sin(seconds / 10 + Math.PI / 3);
 
     // Only one potentiometer moves at a time; CH3 and CH4 hold their last value otherwise.
     if (now >= dashboardNextPotMoveAt) {
@@ -320,11 +320,13 @@
     dashboardChannelValues[10] = 50;
     dashboardChannelValues[11] = 50;
     dashboardChannelValues.forEach((height, channelIndex) => setDashboardChannelHeight(channelIndex, height));
-    window.requestAnimationFrame(animateDashboardChannels);
   };
 
   const dashboardMotionReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-  if (!dashboardMotionReduced) window.requestAnimationFrame(animateDashboardChannels);
+  if (!dashboardMotionReduced) {
+    animateDashboardChannels(performance.now());
+    window.setInterval(() => animateDashboardChannels(performance.now()), 40);
+  }
 
   const handleDashboardAction = (action) => {
     if (["model", "cycle-model"].includes(action)) {
