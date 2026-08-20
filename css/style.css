@@ -141,7 +141,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 4px rgba(143, 202, 255, 0.1), 0 0 18px rgba(143, 202, 255, 0.65); }
 .eyebrow-dot-amber { background: var(--amber); box-shadow: 0 0 0 4px rgba(242, 182, 92, 0.1), 0 0 18px rgba(242, 182, 92, 0.65); }
 
-.hero h1 { max-width: 680px; margin-top: 26px; font-family: var(--display); font-size: clamp(3.4rem, 6.4vw, 6.3rem); font-weight: 600; letter-spacing: -0.075em; line-height: 0.98; }
+.hero h1 { max-width: 680px; margin-top: 0; font-family: var(--display); font-size: clamp(3.4rem, 6.4vw, 6.3rem); font-weight: 600; letter-spacing: -0.075em; line-height: 0.98; }
 .hero-lede { max-width: 570px; margin-top: 27px; color: var(--muted); font-size: 1.08rem; line-height: 1.7; }
 .hero-actions, .companion-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .hero-actions { margin-top: 33px; }
