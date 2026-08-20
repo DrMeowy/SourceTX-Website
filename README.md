@@ -16,9 +16,11 @@ python -m http.server 8000
 
 Then open `http://localhost:8000/`.
 
-The Install section offers two paths: a standalone-apps page for Windows and
-Android companion downloads, or a browser alpha for the official ESP32-S3
-target. The browser path is split into separate firmware-installation and
+The site includes a reference Hardware page with the required parts, default
+pin map, and electrical boundaries; a standalone-apps page for Windows and
+Android companion downloads; and a Donate page for project support. The Install
+section also offers a browser alpha for the official ESP32-S3 target. The
+browser path is split into separate firmware-installation and
 transmitter-configuration pages, with requirements, live Web Serial controls,
 and expandable CLI details. It uses secure Chrome or Edge context and verifies
 release signatures locally before flashing. The companion applications remain
