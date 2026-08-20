@@ -20,10 +20,12 @@ The site includes a reference Hardware page with the required parts, default
 pin map, and electrical boundaries; a standalone-apps page for Windows and
 Android companion downloads; and a Donate page for project support. The Install
 section also offers a browser alpha for the official ESP32-S3 target. The
-browser path is split into separate firmware-installation and
+browser path is split into separate factory-installation and
 transmitter-configuration pages, with requirements, live Web Serial controls,
 and expandable CLI details. It uses secure Chrome or Edge context and verifies
-release signatures locally before flashing. The companion applications remain
+the release, browser flasher modules, physical ESP32-S3 identity, and exact 4 MB
+flash capacity locally before flashing. Application updates use SourceTX's
+transactional on-device OTA screen. The companion applications remain
 the fallback for older browsers, Android USB OTG, model backup/restore, and
 guided recovery.
 

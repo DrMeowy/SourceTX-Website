@@ -1,10 +1,24 @@
 const FACTORY_MANIFEST_URL =
   "https://github.com/DrMeowy/SourceTX-Updates/releases/latest/download/factory.json";
-const STABLE_MANIFEST_URL =
-  "https://github.com/DrMeowy/SourceTX-Updates/releases/latest/download/stable.json";
 const SOURCE_REPOSITORY = "DrMeowy/SourceTX-Updates";
 const SOURCE_HARDWARE_ID = "sourcetx-s3-st7796-ft6x36";
-const ESPTOOL_MODULE_URL = "https://cdn.jsdelivr.net/npm/esptool-js@0.6.0/+esm";
+const ESPTOOL_MODULES = {
+  main: {
+    url: "https://cdn.jsdelivr.net/npm/esptool-js@0.6.0/+esm",
+    sha256: "1ab3e0043e7947035cfe09cf73de55d920b6934250e8f3e823c92e483b999139",
+    maximum: 128 * 1024,
+  },
+  pako: {
+    url: "https://cdn.jsdelivr.net/npm/pako@2.1.0/+esm",
+    sha256: "bcef7d1979ed90a8601ea2ad6c9b3d605939ba9948a7f64a14e2b17643f752af",
+    maximum: 128 * 1024,
+  },
+  atob: {
+    url: "https://cdn.jsdelivr.net/npm/atob-lite@2.0.0/+esm",
+    sha256: "d55b780dccc71444965991589622684e65a8ac324b3c0cc24c271686b10c20b3",
+    maximum: 8 * 1024,
+  },
+};
 const PUBLIC_KEY_DER_BASE64 =
   "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmeyz/UyEd597cKsYeiR6dl92YAAemmH+O+ZY8Yz7NQKVRTYmS5DpJaNYdxnThRPEw2F2ie1yVvr7oXTaHJYrgw==";
 const MAX_FIRMWARE_BYTES = 4 * 1024 * 1024;
@@ -118,7 +132,7 @@ function renderSupport() {
     pill.textContent = supported ? "SUPPORTED BROWSER" : "COMPANION APP REQUIRED";
     pill.dataset.tone = supported ? "good" : "warn";
   }
-  document.querySelectorAll("#device-install-button, #device-update-button, #device-config-button, #device-read-config-button").forEach(function (button) {
+  document.querySelectorAll("#device-install-button, #device-config-button, #device-read-config-button").forEach(function (button) {
     button.disabled = !supported;
   });
   setStatus(supportMessage(), supported ? "good" : "warn");
@@ -317,10 +331,8 @@ function requireGitHubUrl(value, field) {
   return url.href;
 }
 
-function validateManifest(manifest, type) {
-  const schema = type === "factory" ? 1 : 2;
-  const imageField = type === "factory" ? "factory_url" : "firmware_url";
-  if (!manifest || manifest.schema !== schema || manifest.product !== "SourceTX" ||
+function validateManifest(manifest) {
+  if (!manifest || manifest.schema !== 1 || manifest.product !== "SourceTX" ||
       manifest.hardware !== SOURCE_HARDWARE_ID || manifest.channel !== "stable") {
     throw new Error("The signed release is not for the official SourceTX target.");
   }
@@ -335,7 +347,7 @@ function validateManifest(manifest, type) {
   }
 
   const base = "https://github.com/" + SOURCE_REPOSITORY + "/releases/download/v" + manifest.version + "/";
-  const imageUrl = requireGitHubUrl(manifest[imageField], imageField);
+  const imageUrl = requireGitHubUrl(manifest.factory_url, "factory_url");
   const signatureUrl = requireGitHubUrl(manifest.signature_url, "signature_url");
   if (!imageUrl.startsWith(base) || signatureUrl !== imageUrl + ".sig") {
     throw new Error("The signed release points outside the SourceTX release feed.");
@@ -343,8 +355,8 @@ function validateManifest(manifest, type) {
   if (manifest.release_url !== "https://github.com/" + SOURCE_REPOSITORY + "/releases/tag/v" + manifest.version) {
     throw new Error("The release link is outside the SourceTX project.");
   }
-  if (type === "factory" && (manifest.chip !== "esp32s3" || manifest.flash_size !== "4MB" ||
-      manifest.flash_mode !== "dio" || manifest.flash_frequency !== "80m" || manifest.flash_offset !== "0x0000")) {
+  if (manifest.chip !== "esp32s3" || manifest.flash_size !== "4MB" ||
+      manifest.flash_mode !== "dio" || manifest.flash_frequency !== "80m" || manifest.flash_offset !== "0x0000") {
     throw new Error("The factory release does not match the official 4 MB target.");
   }
 }
@@ -357,53 +369,101 @@ function readUint32(bytes, offset) {
   return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(offset, true);
 }
 
-function validateFirmwareImage(image, type) {
+function validateFirmwareImage(image) {
   if (image.length < 64 * 1024 || image.length > MAX_FIRMWARE_BYTES || image[0] !== 0xe9 || readUint16(image, 12) !== 9) {
     throw new Error("The downloaded image is not a valid ESP32-S3 firmware image.");
   }
-  if (type === "factory" && (image.length <= 0x10070 || image[0x8000] !== 0xaa ||
-      image[0x8001] !== 0x50 || readUint32(image, 0x10020) !== 0xabcd5432)) {
+  if (image.length <= 0x10070 || image[0x8000] !== 0xaa ||
+      image[0x8001] !== 0x50 || readUint32(image, 0x10020) !== 0xabcd5432) {
     throw new Error("The factory image is missing the expected SourceTX partition or application.");
-  }
-  if (type === "application" && (readUint32(image, 0x20) !== 0xabcd5432 ||
-      (image.length > 0x8001 && image[0x8000] === 0xaa && image[0x8001] === 0x50))) {
-    throw new Error("The update image does not match the SourceTX application contract.");
   }
 }
 
-async function acquireFirmware(type) {
-  const manifestUrl = type === "factory" ? FACTORY_MANIFEST_URL : STABLE_MANIFEST_URL;
+async function acquireFirmware() {
+  const manifestUrl = FACTORY_MANIFEST_URL;
   const manifestBytes = await fetchBytes(manifestUrl, MAX_MANIFEST_BYTES, "Release manifest");
   const manifestSignature = await fetchBytes(manifestUrl + ".sig", MAX_SIGNATURE_BYTES, "Manifest signature");
   if (!(await verifySignature(manifestBytes, manifestSignature))) throw new Error("Release manifest signature verification failed.");
   const manifest = JSON.parse(new TextDecoder().decode(manifestBytes));
-  validateManifest(manifest, type);
-  const imageField = type === "factory" ? "factory_url" : "firmware_url";
-  const image = await fetchBytes(manifest[imageField], MAX_FIRMWARE_BYTES, type === "factory" ? "Factory image" : "Application image", manifest.size);
+  validateManifest(manifest);
+  const image = await fetchBytes(manifest.factory_url, MAX_FIRMWARE_BYTES, "Factory image", manifest.size);
   if ((await sha256Hex(image)).toLowerCase() !== manifest.sha256.toLowerCase()) throw new Error("Firmware SHA-256 verification failed.");
   const imageSignature = await fetchBytes(manifest.signature_url, MAX_SIGNATURE_BYTES, "Firmware signature");
   if (!(await verifySignature(image, imageSignature))) throw new Error("Firmware signature verification failed.");
-  validateFirmwareImage(image, type);
+  validateFirmwareImage(image);
   return { manifest: manifest, image: image };
 }
 
+async function fetchVerifiedModule(module, label) {
+  const bytes = await fetchBytes(module.url, module.maximum, label);
+  if ((await sha256Hex(bytes)).toLowerCase() !== module.sha256) {
+    throw new Error(label + " integrity check failed. Use SourceTX Companion instead.");
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+async function loadVerifiedEspTool() {
+  log("[SECURITY] Verifying the pinned browser flasher and its dependencies.");
+  const sources = await Promise.all([
+    fetchVerifiedModule(ESPTOOL_MODULES.main, "Browser flasher"),
+    fetchVerifiedModule(ESPTOOL_MODULES.pako, "Compression module"),
+    fetchVerifiedModule(ESPTOOL_MODULES.atob, "Base64 module"),
+  ]);
+  const pakoUrl = URL.createObjectURL(new Blob([sources[1]], { type: "text/javascript" }));
+  const atobUrl = URL.createObjectURL(new Blob([sources[2]], { type: "text/javascript" }));
+  let mainUrl = null;
+  try {
+    if (!sources[0].includes('"/npm/pako@2.1.0/+esm"') ||
+        !sources[0].includes('"/npm/atob-lite@2.0.0/+esm"')) {
+      throw new Error("The pinned browser flasher dependency contract changed. Use SourceTX Companion instead.");
+    }
+    const mainSource = sources[0]
+      .replace('"/npm/pako@2.1.0/+esm"', JSON.stringify(pakoUrl))
+      .replace('"/npm/atob-lite@2.0.0/+esm"', JSON.stringify(atobUrl));
+    if (mainSource.includes('from"/npm/')) {
+      throw new Error("The pinned browser flasher dependency contract changed. Use SourceTX Companion instead.");
+    }
+    mainUrl = URL.createObjectURL(new Blob([mainSource], { type: "text/javascript" }));
+    return await import(mainUrl);
+  } finally {
+    if (mainUrl) URL.revokeObjectURL(mainUrl);
+    URL.revokeObjectURL(pakoUrl);
+    URL.revokeObjectURL(atobUrl);
+  }
+}
+
 async function getEspTool() {
-  if (!state.espTool) state.espTool = import(ESPTOOL_MODULE_URL);
+  if (!state.espTool) state.espTool = loadVerifiedEspTool();
   return state.espTool;
 }
 
-async function runFlash(type) {
+function verifyConnectedTarget(loader, description) {
+  const chipName = loader.chip?.CHIP_NAME;
+  if (chipName !== "ESP32-S3") {
+    throw new Error("Wrong chip detected (" + (chipName || description || "unknown") + "). This installer requires an ESP32-S3.");
+  }
+  return loader.readFlashId().then(function (flashId) {
+    const sizeId = (flashId >>> 16) & 0xff;
+    const detectedSize = loader.DETECTED_FLASH_SIZES?.[sizeId];
+    if (detectedSize !== "4MB") {
+      throw new Error("Wrong or unknown flash capacity detected (" + (detectedSize || "ID 0x" + sizeId.toString(16).padStart(2, "0")) + "). This factory image requires exactly 4 MB.");
+    }
+    log("[PREFLIGHT] Verified ESP32-S3 with 4 MB flash (JEDEC 0x" + flashId.toString(16).padStart(6, "0").toUpperCase() + ").");
+  });
+}
+
+async function runFlash() {
   if (!serialSupported()) throw new Error(supportMessage());
   await closeDevice();
   const port = await navigator.serial.requestPort();
   let transport = null;
   try {
-    if (type === "factory" && !window.confirm("Install the complete SourceTX factory image? Keep the transmitter powered and do not disconnect USB during the write.")) {
+    if (!window.confirm("Install the complete SourceTX factory image? Keep the transmitter powered and do not disconnect USB during the write.")) {
       throw new Error("Factory installation cancelled.");
     }
     setStatus("Checking the signed SourceTX release…", "busy");
-    log("[" + (type === "factory" ? "INSTALL" : "UPDATE") + "] USB port selected.");
-    const packageInfo = await acquireFirmware(type);
+    log("[INSTALL] USB port selected.");
+    const packageInfo = await acquireFirmware();
     const tool = await getEspTool();
     const Transport = tool.Transport;
     const ESPLoader = tool.ESPLoader;
@@ -418,18 +478,19 @@ async function runFlash(type) {
       },
     });
     setStatus("Checking the connected ESP32-S3…", "busy");
-    log("[PREFLIGHT] " + (await loader.main()) + " detected.");
-    const address = type === "factory" ? Number.parseInt(packageInfo.manifest.flash_offset, 16) : 0x10000;
-    const eraseAll = type === "factory" && $("#device-erase-flash")?.checked;
+    const description = await loader.main();
+    await verifyConnectedTarget(loader, description);
+    const address = Number.parseInt(packageInfo.manifest.flash_offset, 16);
+    const eraseAll = $("#device-erase-flash")?.checked;
     if (eraseAll && !window.confirm("Erase all flash first? This permanently removes models, calibration, settings, and update state.")) {
       throw new Error("Full flash erase cancelled.");
     }
     log("[FLASH] Writing verified image at 0x" + address.toString(16).padStart(6, "0").toUpperCase() + ".");
     await loader.writeFlash({
       fileArray: [{ data: packageInfo.image, address: address }],
-      flashMode: type === "factory" ? packageInfo.manifest.flash_mode : "dio",
-      flashFreq: type === "factory" ? packageInfo.manifest.flash_frequency : "80m",
-      flashSize: type === "factory" ? packageInfo.manifest.flash_size : "4MB",
+      flashMode: packageInfo.manifest.flash_mode,
+      flashFreq: packageInfo.manifest.flash_frequency,
+      flashSize: packageInfo.manifest.flash_size,
       eraseAll: eraseAll,
       compress: true,
       reportProgress: function (_index, written, total) {
@@ -438,7 +499,7 @@ async function runFlash(type) {
     });
     await loader.after("hard_reset");
     log("[VERIFY] Flash write completed and reset command sent.");
-    setStatus((type === "factory" ? "Installation" : "Update") + " complete — the transmitter is restarting.", "good");
+    setStatus("Installation complete — the transmitter is restarting.", "good");
   } finally {
     if (transport) await transport.disconnect().catch(function () {});
     else await port.close().catch(function () {});
@@ -602,23 +663,10 @@ async function bindDeviceTools() {
   $("#device-install-button")?.addEventListener("click", async function () {
     setBusy(true);
     try {
-      await runFlash("factory");
+      await runFlash();
     } catch (error) {
       log("[ERROR] " + (error.message || error));
       setStatus(error.message || "Installation stopped.", "error");
-    } finally {
-      await closeDevice();
-      setBusy(false);
-    }
-  });
-
-  $("#device-update-button")?.addEventListener("click", async function () {
-    setBusy(true);
-    try {
-      await runFlash("application");
-    } catch (error) {
-      log("[ERROR] " + (error.message || error));
-      setStatus(error.message || "Update stopped.", "error");
     } finally {
       await closeDevice();
       setBusy(false);

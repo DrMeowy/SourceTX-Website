@@ -402,21 +402,23 @@
     {
       repo: "DrMeowy/SourceTX-Updates",
       badge: "#firmware-version",
-      fallback: "v1.98",
+      fallback: "v1.0.0",
       releaseLink: "#firmware-release-link",
     },
     {
       repo: "DrMeowy/SourceTX-Companion",
       badge: "#windows-version",
-      fallback: "v0.1.5",
+      fallback: "Not published",
       download: "#windows-download",
+      downloadLabel: "Download for Windows ↗",
       assetPattern: /\.exe$|\.zip$/i,
     },
     {
       repo: "DrMeowy/-SourceTX-Companion-Android",
       badge: "#android-version",
-      fallback: "v0.2.8",
+      fallback: "Not published",
       download: "#android-download",
+      downloadLabel: "Get the Android app ↗",
       assetPattern: /\.apk$/i,
     },
   ];
@@ -424,6 +426,14 @@
   const setFallback = (target) => {
     const badge = $(target.badge);
     if (badge) badge.textContent = target.fallback;
+    const repositoryUrl = `https://github.com/${target.repo}`;
+    const releaseLink = target.releaseLink ? $(target.releaseLink) : null;
+    if (releaseLink) releaseLink.href = repositoryUrl;
+    const download = target.download ? $(target.download) : null;
+    if (download) {
+      download.href = repositoryUrl;
+      download.textContent = "Release pending — view repository ↗";
+    }
   };
 
   const hydrateRelease = async (target) => {
@@ -444,7 +454,10 @@
       const download = target.download ? $(target.download) : null;
       if (download && Array.isArray(release.assets) && target.assetPattern) {
         const asset = release.assets.find((item) => target.assetPattern.test(item.name));
-        if (asset?.browser_download_url) download.href = asset.browser_download_url;
+        if (asset?.browser_download_url) {
+          download.href = asset.browser_download_url;
+          download.textContent = target.downloadLabel;
+        }
       }
     } catch {
       // The fallback is the intended offline experience when GitHub rate-limits the page.
