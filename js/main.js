@@ -4,6 +4,19 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
+  // Do not reopen a normal page at the browser's previous scroll position.
+  // Intentional hash links still keep their requested anchor destination.
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  const restoreInitialScroll = () => {
+    if (window.location.hash) return;
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    document.documentElement.style.scrollBehavior = previousScrollBehavior;
+  };
+  restoreInitialScroll();
+  window.addEventListener("pageshow", restoreInitialScroll, { once: true });
+
   // Navigation stays usable on touch screens without adding a framework.
   const header = $(".site-header");
   const menuToggle = $("#menu-toggle");
