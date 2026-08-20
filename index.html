@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SourceTX • Next-Gen Open-Source RC Transmitter</title>
-  <meta name="description" content="SourceTX is an ultra-fast, modern, open-source RC transmitter firmware for ESP32-S3 with ExpressLRS / CRSF protocol support, full telemetry, and desktop/mobile companion apps.">
-  <meta name="keywords" content="SourceTX, RC Transmitter, ESP32-S3, ExpressLRS, CRSF, EdgeTX, OpenTX, FPV, Drone Controller">
+  <title>SourceTX • Next-Gen Open-Source Surface RC Transmitter</title>
+  <meta name="description" content="SourceTX is an ultra-fast, modern, open-source surface RC transmitter firmware for ESP32-S3 and ExpressLRS / CRSF. Built for RC cars, crawlers, trucks, drift, and land robotics.">
+  <meta name="keywords" content="SourceTX, Surface RC, RC Transmitter, RC Car Controller, Crawler Transmitter, ESP32-S3, ExpressLRS, CRSF, Pistol Grip TX">
   <meta name="theme-color" content="#090d16">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="SourceTX • Next-Gen Open-Source RC Transmitter">
-  <meta property="og:description" content="Ultra-fast RC transmitter firmware for ESP32-S3 with CRSF & ExpressLRS, real-time telemetry, and Windows & Android companion apps.">
+  <meta property="og:title" content="SourceTX • Next-Gen Open-Source Surface RC Transmitter">
+  <meta property="og:description" content="Ultra-fast surface RC transmitter firmware for ESP32-S3 with CRSF & ExpressLRS, real-time telemetry, 4WS / crawler mixing, and companion apps.">
   <meta property="og:type" content="website">
 
   <!-- Google Fonts -->
@@ -49,7 +49,7 @@
 
       <ul class="nav-menu" id="nav-menu">
         <li><a href="#features" class="nav-link">Features</a></li>
-        <li><a href="#simulator" class="nav-link">Live Simulator</a></li>
+        <li><a href="#simulator" class="nav-link">Surface Simulator</a></li>
         <li><a href="#flasher" class="nav-link">Web Flasher</a></li>
         <li><a href="#companion" class="nav-link">Companion Apps</a></li>
         <li><a href="#pinout" class="nav-link">Hardware Pinout</a></li>
@@ -74,14 +74,14 @@
       <div class="hero-content">
         <div class="hero-pill">
           <span class="pulse-dot"></span>
-          <span>SourceTX v0.2.8 • Live Release</span>
+          <span>SourceTX v0.2.8 • Surface RC Release</span>
         </div>
         <h1 class="hero-title">
           Precision. Speed.<br>
-          <span class="text-gradient">Total Freedom.</span>
+          <span class="text-gradient">Surface Dominance.</span>
         </h1>
         <p class="hero-description">
-          The next-generation open-source RC transmitter firmware engineered for ESP32-S3 and ExpressLRS / CRSF. Microsecond precision, customizable GPIO mapping, and companion apps for Windows and Android.
+          The next-generation open-source surface RC transmitter firmware engineered for ESP32-S3 and ExpressLRS / CRSF. Ultra-low latency steering & throttle response, customizable GPIO pin mapping, 16 surface channels, and companion apps for RC cars, crawlers, drift rigs, and surface robotics.
         </p>
 
         <div class="hero-cta-group">
@@ -104,7 +104,7 @@
         <div class="hero-stats-row">
           <div class="stat-item">
             <span class="stat-value text-gradient">&lt; 1 ms</span>
-            <span class="stat-label">CRSF Latency</span>
+            <span class="stat-label">Response Time</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">240 MHz</span>
@@ -112,7 +112,7 @@
           </div>
           <div class="stat-item">
             <span class="stat-value">16 CH</span>
-            <span class="stat-label">Full Telemetry</span>
+            <span class="stat-label">Surface Mixing</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">100%</span>
@@ -121,14 +121,14 @@
         </div>
       </div>
 
-      <!-- Transmitter Virtual UI Mockup -->
+      <!-- Surface Transmitter Virtual UI Mockup -->
       <div class="hero-visual">
         <div class="tx-visualizer-card">
           <!-- OLED Simulated Display -->
           <div class="tx-screen-bezel">
             <div class="tx-screen-header">
-              <span>✈ MODEL 01 [SourceTX]</span>
-              <span id="oled-batt-val">8.24V</span>
+              <span>🚗 MODEL 01 [Crawler / Drift]</span>
+              <span id="oled-batt-val">8.24V (2S)</span>
             </div>
             <div class="tx-screen-body">
               <div class="telemetry-badge">
@@ -136,25 +136,25 @@
                 <div class="val" id="oled-lq-val">100% (1:100)</div>
               </div>
               <div class="telemetry-badge">
-                <div class="lbl">RSSI 1 / 2</div>
-                <div class="val" id="oled-rssi-val">-66 dBm</div>
+                <div class="lbl">RSSI / Signal</div>
+                <div class="val" id="oled-rssi-val">-64 dBm</div>
               </div>
               <div class="telemetry-badge">
-                <div class="lbl">Throttle / Yaw</div>
-                <div class="val"><span id="oled-thr-val">0%</span> • <span id="oled-yaw-val">0%</span></div>
+                <div class="lbl">Steering (ST)</div>
+                <div class="val" id="oled-steer-val">CENTER (0%)</div>
               </div>
               <div class="telemetry-badge">
-                <div class="lbl">Roll / Pitch</div>
-                <div class="val"><span id="oled-roll-val">0%</span> • <span id="oled-pitch-val">0%</span></div>
+                <div class="lbl">Throttle / Brake</div>
+                <div class="val" id="oled-thr-val">NEUTRAL (0%)</div>
               </div>
             </div>
           </div>
 
-          <!-- Dual Virtual Gimbals -->
+          <!-- Dual Virtual Surface Controls: Steering Wheel & Throttle/Brake Trigger -->
           <div class="gimbals-row">
             <div class="gimbal-box">
-              <div class="gimbal-label">Left (Thr / Yaw)</div>
-              <div class="stick-area" id="left-stick-area">
+              <div class="gimbal-label">Steering Wheel (Left / Right)</div>
+              <div class="stick-area" id="left-stick-area" style="border-radius: 50%;">
                 <div class="stick-crosshair"></div>
                 <div class="stick-crosshair v"></div>
                 <div class="stick-thumb" id="left-stick-thumb"></div>
@@ -162,8 +162,8 @@
             </div>
 
             <div class="gimbal-box">
-              <div class="gimbal-label">Right (Pitch / Roll)</div>
-              <div class="stick-area" id="right-stick-area">
+              <div class="gimbal-label">Throttle Trigger (Fwd / Rev)</div>
+              <div class="stick-area" id="right-stick-area" style="border-radius: 20px;">
                 <div class="stick-crosshair"></div>
                 <div class="stick-crosshair v"></div>
                 <div class="stick-thumb" id="right-stick-thumb"></div>
@@ -179,10 +179,10 @@
   <section class="section" id="features">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Engineered for Performance</span>
-        <h2 class="section-title">Why Pilots Choose <span class="text-gradient">SourceTX</span></h2>
+        <span class="section-tag">Surface RC Engineering</span>
+        <h2 class="section-title">Why RC Drivers Choose <span class="text-gradient">SourceTX</span></h2>
         <p class="section-subtitle">
-          Built from the ground up for microsecond response times, rock-solid failsafe protection, and complete hardware freedom.
+          Engineered specifically for land vehicles: RC cars, rock crawlers, drift chassis, monster trucks, dual-motor rovers, and surface robotics.
         </p>
       </div>
 
@@ -191,12 +191,14 @@
         <div class="feature-card">
           <div class="feature-icon-wrapper">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+              <path d="M2 12h20"></path>
             </svg>
           </div>
-          <h3>Protected CRSF Transport</h3>
+          <h3>Sub-Millisecond Surface Response</h3>
           <p>
-            Hardware-backed UART single-wire transport for ExpressLRS & Crossfire modules with auto-baud negotiation up to 1.87M baud and sub-millisecond packet delivery.
+            Hardware-backed ADC sampling and CRSF single-wire UART transport for ExpressLRS & Crossfire surface receivers with auto-negotiation up to 1.87M baud.
           </p>
         </div>
 
@@ -210,15 +212,11 @@
               <line x1="15" y1="1" x2="15" y2="4"></line>
               <line x1="9" y1="20" x2="9" y2="23"></line>
               <line x1="15" y1="20" x2="15" y2="23"></line>
-              <line x1="20" y1="9" x2="23" y2="9"></line>
-              <line x1="20" y1="14" x2="23" y2="14"></line>
-              <line x1="1" y1="9" x2="4" y2="9"></line>
-              <line x1="1" y1="14" x2="4" y2="14"></line>
             </svg>
           </div>
-          <h3>ESP32-S3 Dual-Core Power</h3>
+          <h3>Crawler & 4WS Mixers</h3>
           <p>
-            Dedicated FreeRTOS core for input sampling and RF transmission, running independently from the OLED display, audio engine, and telemetry parser.
+            Built-in surface mixers: 4-Wheel Steering (Front, Rear, Crab, Circle), 2-Speed Transmission shift, Front/Rear Diff Locks, Winch control, and Dual-ESC tank skid steering.
           </p>
         </div>
 
@@ -231,7 +229,7 @@
           </div>
           <h3>Dynamic Hardware Pin Mapping</h3>
           <p>
-            Re-assign any physical GPIO directly over USB without recompiling: CRSF TX/RX, RGB WS2812 status LED, passive buzzer, DFPlayer audio, and vibration motor.
+            Re-assign any physical GPIO directly over USB without recompiling: Steering pot/hall sensor, Throttle trigger, multi-position switches, RGB status LED, and buzzer.
           </p>
         </div>
 
@@ -243,9 +241,9 @@
               <line x1="12" y1="18" x2="12.01" y2="18"></line>
             </svg>
           </div>
-          <h3>Cross-Platform Companion Apps</h3>
+          <h3>Windows & Android Companions</h3>
           <p>
-            Native apps for Windows (.NET WPF) and Android (Jetpack Compose) for instant USB OTG firmware flashing, verified updates, and live pin configuration.
+            Native companion apps for Windows (.NET WPF) and Android (Jetpack Compose) for USB OTG flashing, live model profiles, steering expo curves, and hardware calibration.
           </p>
         </div>
 
@@ -256,9 +254,9 @@
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
           </div>
-          <h3>Cryptographic Flash Verification</h3>
+          <h3>ABS Braking & Steering Expo Curves</h3>
           <p>
-            Every firmware install and update is verified directly on-chip with hardware SHA-256 and SPI MD5 digest checking before boot.
+            Fine-tune exponential steering response, dual-rates, throttle deadbands, punch control, and anti-lock pulse braking for extreme track or drift control.
           </p>
         </div>
 
@@ -272,9 +270,9 @@
               <line x1="15" y1="9" x2="15.01" y2="9"></line>
             </svg>
           </div>
-          <h3>Smart Audio & Haptic Feedback</h3>
+          <h3>ESC Telemetry & Haptic Alarms</h3>
           <p>
-            Custom audio buzzer alarms, voice alerts via DFPlayer Mini, and haptic vibration for low battery warnings, link loss, and timer milestones.
+            Monitor real-time ESC voltage, motor RPM, and signal strength with customizable audio buzzer alert tones and haptic vibration feedback for low battery.
           </p>
         </div>
       </div>
@@ -285,78 +283,78 @@
   <section class="section" id="simulator">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Interactive Laboratory</span>
-        <h2 class="section-title">Live 16-Channel <span class="text-gradient">Simulator</span></h2>
+        <span class="section-tag">Interactive Surface Laboratory</span>
+        <h2 class="section-title">Live 16-Channel <span class="text-gradient">Surface Simulator</span></h2>
         <p class="section-subtitle">
-          Drag the virtual gimbals above to observe real-time microsecond PWM mappings across all 16 transmitter channels.
+          Drag the virtual Steering Wheel and Throttle Trigger above to observe real-time microsecond PWM mappings across all 16 surface RC channels.
         </p>
       </div>
 
       <div class="simulator-container">
         <div class="channel-bars-grid">
-          <!-- CH 1 to 16 -->
+          <!-- CH 1 to 16 Surface Mappings -->
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH1 (Roll)</span><span id="ch-val-1">1500µs</span></div>
+            <div class="channel-meta"><span>CH1 (Steering)</span><span id="ch-val-1">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-1"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH2 (Pitch)</span><span id="ch-val-2">1500µs</span></div>
+            <div class="channel-meta"><span>CH2 (Throttle / Brake)</span><span id="ch-val-2">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-2"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH3 (Throttle)</span><span id="ch-val-3">988µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-3"></div></div>
+            <div class="channel-meta"><span>CH3 (2-Speed Shift)</span><span id="ch-val-3">1000µs</span></div>
+            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-3" style="width: 0%"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH4 (Yaw)</span><span id="ch-val-4">1500µs</span></div>
+            <div class="channel-meta"><span>CH4 (Diff Lock F/R)</span><span id="ch-val-4">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-4"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH5 (Arm)</span><span id="ch-val-5">1000µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-5" style="width: 0%"></div></div>
+            <div class="channel-meta"><span>CH5 (4WS Rear Steer)</span><span id="ch-val-5">1500µs</span></div>
+            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-5"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH6 (Mode)</span><span id="ch-val-6">1500µs</span></div>
+            <div class="channel-meta"><span>CH6 (Winch In/Out)</span><span id="ch-val-6">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-6"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH7 (Beeper)</span><span id="ch-val-7">1000µs</span></div>
+            <div class="channel-meta"><span>CH7 (Lights / Underglow)</span><span id="ch-val-7">1000µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-7" style="width: 0%"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH8 (Turtle)</span><span id="ch-val-8">1000µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-8" style="width: 0%"></div></div>
+            <div class="channel-meta"><span>CH8 (Gyro / AVC Gain)</span><span id="ch-val-8">1750µs</span></div>
+            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-8" style="width: 75%"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH9 (Aux 5)</span><span id="ch-val-9">1500µs</span></div>
+            <div class="channel-meta"><span>CH9 (Sound / Smoke)</span><span id="ch-val-9">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-9"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH10 (Aux 6)</span><span id="ch-val-10">1500µs</span></div>
+            <div class="channel-meta"><span>CH10 (Skid Left Motor)</span><span id="ch-val-10">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-10"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH11 (Aux 7)</span><span id="ch-val-11">1500µs</span></div>
+            <div class="channel-meta"><span>CH11 (Skid Right Motor)</span><span id="ch-val-11">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-11"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH12 (Aux 8)</span><span id="ch-val-12">1500µs</span></div>
+            <div class="channel-meta"><span>CH12 (FPV Camera Pan)</span><span id="ch-val-12">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-12"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH13 (Aux 9)</span><span id="ch-val-13">1500µs</span></div>
+            <div class="channel-meta"><span>CH13 (Aux Servo 1)</span><span id="ch-val-13">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-13"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH14 (Aux 10)</span><span id="ch-val-14">1500µs</span></div>
+            <div class="channel-meta"><span>CH14 (Aux Servo 2)</span><span id="ch-val-14">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-14"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH15 (Aux 11)</span><span id="ch-val-15">1500µs</span></div>
+            <div class="channel-meta"><span>CH15 (Accessory 1)</span><span id="ch-val-15">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-15"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH16 (Aux 12)</span><span id="ch-val-16">1500µs</span></div>
+            <div class="channel-meta"><span>CH16 (Accessory 2)</span><span id="ch-val-16">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-16"></div></div>
           </div>
         </div>
@@ -371,7 +369,7 @@
         <span class="section-tag">Browser-Based Tools</span>
         <h2 class="section-title">WebSerial <span class="text-gradient">Diagnostic Terminal</span></h2>
         <p class="section-subtitle">
-          Connect your ESP32-S3 directly in Chrome, Edge, or Android Chrome to inspect live telemetry output or engage ROM download mode.
+          Connect your ESP32-S3 surface transmitter directly in Chrome, Edge, or Android Chrome to inspect live telemetry output or engage ROM download mode.
         </p>
       </div>
 
@@ -388,7 +386,7 @@
         </div>
 
         <div class="terminal-box" id="webserial-terminal">
-          <div class="terminal-line info">[READY] SourceTX WebSerial Terminal Ready. Connect your ESP32-S3 via USB to begin.</div>
+          <div class="terminal-line info">[READY] SourceTX Surface WebSerial Terminal Ready. Connect your ESP32-S3 transmitter via USB to begin.</div>
         </div>
       </div>
     </div>
@@ -398,10 +396,10 @@
   <section class="section" id="companion">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Official Utilities</span>
+        <span class="section-tag">Official Surface Utilities</span>
         <h2 class="section-title">SourceTX <span class="text-gradient">Companion Apps</span></h2>
         <p class="section-subtitle">
-          Manage your transmitter profiles, flash verified releases with 1-click, and customize your physical GPIOs.
+          Manage your surface vehicle profiles, calibrate steering & throttle pots, flash verified releases with 1-click, and customize your physical GPIOs.
         </p>
       </div>
 
@@ -421,7 +419,7 @@
               </div>
             </div>
             <p style="color: var(--text-secondary); font-size: 0.95rem;">
-              Full-featured desktop suite built with WPF & .NET. Real-time telemetry dashboards, multi-model backup, channel graph monitors, and USB flashing.
+              Full-featured desktop suite built with WPF & .NET. Real-time telemetry dashboards, crawler multi-model backup, steering & throttle graph monitors, and USB flashing.
             </p>
             <ul class="companion-features-list">
               <li>
@@ -465,7 +463,7 @@
               </div>
             </div>
             <p style="color: var(--text-secondary); font-size: 0.95rem;">
-              Mobile tool built with Jetpack Compose & Material 3. USB OTG direct flashing, live hardware pin configuration, and seamless signed in-app updates.
+              Mobile surface tool built with Jetpack Compose & Material 3. USB OTG direct flashing, live hardware pin configuration, and seamless signed in-app updates.
             </p>
             <ul class="companion-features-list">
               <li>
@@ -501,10 +499,10 @@
   <section class="section" id="pinout">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Wiring Reference</span>
+        <span class="section-tag">Surface Wiring Reference</span>
         <h2 class="section-title">ESP32-S3 <span class="text-gradient">Hardware Pinout</span></h2>
         <p class="section-subtitle">
-          Default pin mappings for ESP32-S3 SuperMini & DevKit. Every pin can be dynamically re-configured in the Companion App.
+          Default pin mappings for ESP32-S3 SuperMini & DevKit custom surface transmitters. Every pin can be dynamically re-configured in the Companion App.
         </p>
       </div>
 
@@ -514,7 +512,7 @@
             <span class="pin-badge">GPIO 43</span>
             <div class="pin-desc">
               <h4>CRSF UART TX/RX</h4>
-              <p>Half-duplex single-wire to ELRS module</p>
+              <p>Half-duplex single-wire to ELRS surface module</p>
             </div>
           </div>
           <div class="pin-pill" onclick="copyPin('WS2812 Status LED', '48')">
@@ -528,42 +526,42 @@
             <span class="pin-badge" style="background: var(--gradient-emerald); color: #fff;">GPIO 44</span>
             <div class="pin-desc">
               <h4>Passive Buzzer / Audio</h4>
-              <p>PWM tone generator for telemetry alarms</p>
+              <p>PWM tone generator for telemetry & battery alarms</p>
             </div>
           </div>
           <div class="pin-pill" onclick="copyPin('Vibration Motor', '21')">
             <span class="pin-badge">GPIO 21</span>
             <div class="pin-desc">
               <h4>Vibration Motor</h4>
-              <p>Haptic feedback for low-LQ & alarms</p>
+              <p>Haptic grip feedback for low-LQ & alarms</p>
             </div>
           </div>
-          <div class="pin-pill" onclick="copyPin('ADC Stick 1 (Roll)', '1')">
+          <div class="pin-pill" onclick="copyPin('ADC Steering Wheel', '1')">
             <span class="pin-badge">GPIO 1</span>
             <div class="pin-desc">
-              <h4>ADC Stick 1 (Roll)</h4>
-              <p>12-bit analog input channel</p>
+              <h4>ADC Steering Pot / Hall</h4>
+              <p>12-bit analog input channel (CH1 Steering)</p>
             </div>
           </div>
-          <div class="pin-pill" onclick="copyPin('ADC Stick 2 (Pitch)', '2')">
+          <div class="pin-pill" onclick="copyPin('ADC Throttle Trigger', '2')">
             <span class="pin-badge">GPIO 2</span>
             <div class="pin-desc">
-              <h4>ADC Stick 2 (Pitch)</h4>
-              <p>12-bit analog input channel</p>
+              <h4>ADC Throttle / Brake Pot</h4>
+              <p>12-bit analog input channel (CH2 Throttle)</p>
             </div>
           </div>
-          <div class="pin-pill" onclick="copyPin('ADC Stick 3 (Throttle)', '3')">
-            <span class="pin-badge">GPIO 3</span>
+          <div class="pin-pill" onclick="copyPin('Shift Switch (2-Speed)', '5')">
+            <span class="pin-badge">GPIO 5</span>
             <div class="pin-desc">
-              <h4>ADC Stick 3 (Throttle)</h4>
-              <p>12-bit analog input channel</p>
+              <h4>2-Speed Shift Switch</h4>
+              <p>High / Low gear transmission selector</p>
             </div>
           </div>
-          <div class="pin-pill" onclick="copyPin('ADC Stick 4 (Yaw)', '4')">
-            <span class="pin-badge">GPIO 4</span>
+          <div class="pin-pill" onclick="copyPin('Diff Lock Switch', '6')">
+            <span class="pin-badge">GPIO 6</span>
             <div class="pin-desc">
-              <h4>ADC Stick 4 (Yaw)</h4>
-              <p>12-bit analog input channel</p>
+              <h4>Diff Lock Switch</h4>
+              <p>Open / Front / Both locker selector</p>
             </div>
           </div>
         </div>
@@ -576,7 +574,7 @@
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Getting Started</span>
-        <h2 class="section-title">Flash & Fly in <span class="text-gradient">3 Simple Steps</span></h2>
+        <h2 class="section-title">Flash & Drive in <span class="text-gradient">3 Simple Steps</span></h2>
       </div>
 
       <div class="features-grid">
@@ -586,7 +584,7 @@
           </div>
           <h3>Connect & Flash</h3>
           <p>
-            Plug your ESP32-S3 board into your PC or Android phone via USB OTG. Open the Companion App and press <strong>Install SourceTX</strong>.
+            Plug your ESP32-S3 transmitter board into your PC or Android phone via USB OTG. Open the Companion App and press <strong>Install SourceTX</strong>.
           </p>
         </div>
 
@@ -594,9 +592,9 @@
           <div class="feature-icon-wrapper">
             <span style="font-size: 1.5rem; font-weight: 800; font-family: 'JetBrains Mono';">02</span>
           </div>
-          <h3>Wire Your Hardware</h3>
+          <h3>Wire Wheel & Trigger</h3>
           <p>
-            Connect your ExpressLRS transmitter module to the CRSF single-wire GPIO pin and wire your gimbal potentiometers to the ADC pins.
+            Connect your steering wheel pot, throttle trigger, and auxiliary shift switches to the ADC/GPIO pins, and hook up the single-wire CRSF line.
           </p>
         </div>
 
@@ -604,9 +602,9 @@
           <div class="feature-icon-wrapper">
             <span style="font-size: 1.5rem; font-weight: 800; font-family: 'JetBrains Mono';">03</span>
           </div>
-          <h3>Bind & Fly</h3>
+          <h3>Bind & Drive!</h3>
           <p>
-            Power on your drone or model. SourceTX automatically establishes the ultra-low-latency CRSF link with full bidirectional telemetry!
+            Power on your RC car, crawler, or truck. SourceTX automatically establishes the ultra-low-latency CRSF link with full telemetry!
           </p>
         </div>
       </div>
@@ -627,7 +625,7 @@
             <span>Source<span class="text-gradient">TX</span></span>
           </a>
           <p>
-            High-performance, open-source RC transmitter firmware for ESP32-S3 and ExpressLRS / CRSF.
+            High-performance, open-source surface RC transmitter firmware for ESP32-S3 and ExpressLRS / CRSF.
           </p>
         </div>
 

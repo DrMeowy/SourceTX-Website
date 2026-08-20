@@ -1,22 +1,19 @@
 /**
- * SourceTX Live Interactive Transmitter & Channel Simulator
+ * SourceTX Surface RC Transmitter & 16-Channel Simulator
  */
 
 (function () {
-  // Stick States (-1.0 to 1.0)
-  const sticks = {
-    yaw: 0.0,      // Left Stick X (CH4)
-    throttle: 0.0, // Left Stick Y (CH3: 0.0 to 1.0)
-    roll: 0.0,     // Right Stick X (CH1)
-    pitch: 0.0     // Right Stick Y (CH2)
+  // Surface Controls State (-1.0 to 1.0)
+  const surfaceControls = {
+    steering: 0.0, // Steering Wheel: -1.0 (Full Left) to 1.0 (Full Right)
+    throttle: 0.0  // Throttle Trigger: -1.0 (Full Brake/Rev) to 1.0 (Full Throttle)
   };
 
-  // Channels 1 to 16 in Microseconds (988us to 2012us)
+  // Channels 1 to 16 in Microseconds (1000µs to 2000µs, 1500µs center)
   const channels = new Array(16).fill(1500);
-  channels[2] = 988; // Throttle down by default
 
-  // Setup Gimbal Draggers
-  function setupGimbal(boxId, thumbId, onMove, springReturnY = true) {
+  // Setup Surface Control Draggers (Steering Wheel & Throttle Trigger)
+  function setupSurfaceControl(boxId, thumbId, onMove) {
     const box = document.getElementById(boxId);
     const thumb = document.getElementById(thumbId);
     if (!box || !thumb) return;
@@ -41,20 +38,15 @@
       thumb.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
 
       const normX = dx / radius;
-      const normY = -dy / radius; // Invert Y so up is positive
+      const normY = -dy / radius; // Invert Y so pushing forward is positive
       onMove(normX, normY);
       updateOutputs();
     }
 
-    function resetStick() {
+    function resetToCenter() {
       isDragging = false;
-      const returnY = springReturnY ? 0 : (sticks.throttle * 2 - 1) * -radius;
-      thumb.style.transform = `translate(-50%, calc(-50% + ${returnY}px))`;
-      if (springReturnY) {
-        onMove(0, 0);
-      } else {
-        onMove(0, sticks.throttle * 2 - 1);
-      }
+      thumb.style.transform = `translate(-50%, -50%)`;
+      onMove(0, 0);
       updateOutputs();
     }
 
@@ -68,10 +60,10 @@
     });
 
     window.addEventListener('mouseup', () => {
-      if (isDragging) resetStick();
+      if (isDragging) resetToCenter();
     });
 
-    // Touch Support
+    // Touch Support for Mobile / Tablets
     box.addEventListener('touchstart', (e) => {
       isDragging = true;
       const touch = e.touches[0];
@@ -87,16 +79,14 @@
     }, { passive: false });
 
     window.addEventListener('touchend', () => {
-      if (isDragging) resetStick();
+      if (isDragging) resetToCenter();
     });
   }
 
   function updateOutputs() {
-    // Map normalized sticks (-1.0 to 1.0) to Microseconds (988 to 2012)
-    channels[0] = Math.round(1500 + sticks.roll * 512);     // CH1: Roll
-    channels[1] = Math.round(1500 + sticks.pitch * 512);    // CH2: Pitch
-    channels[2] = Math.round(988 + sticks.throttle * 1024); // CH3: Throttle (988 to 2012)
-    channels[3] = Math.round(1500 + sticks.yaw * 512);      // CH4: Yaw
+    // Map Surface Inputs to Microseconds (1000µs to 2000µs)
+    channels[0] = Math.round(1500 + surfaceControls.steering * 500); // CH1: Steering
+    channels[1] = Math.round(1500 + surfaceControls.throttle * 500); // CH2: Throttle / Brake
 
     // Update Channel UI Bars
     for (let i = 0; i < 16; i++) {
@@ -111,15 +101,30 @@
     }
 
     // Update OLED HUD Telemetry
-    const oledThrottle = document.getElementById('oled-thr-val');
-    const oledRoll = document.getElementById('oled-roll-val');
-    const oledPitch = document.getElementById('oled-pitch-val');
-    const oledYaw = document.getElementById('oled-yaw-val');
+    const oledSteer = document.getElementById('oled-steer-val');
+    const oledThr = document.getElementById('oled-thr-val');
 
-    if (oledThrottle) oledThrottle.textContent = `${Math.round(sticks.throttle * 100)}%`;
-    if (oledRoll) oledRoll.textContent = `${Math.round(sticks.roll * 100)}%`;
-    if (oledPitch) oledPitch.textContent = `${Math.round(sticks.pitch * 100)}%`;
-    if (oledYaw) oledYaw.textContent = `${Math.round(sticks.yaw * 100)}%`;
+    if (oledSteer) {
+      const steerPct = Math.round(surfaceControls.steering * 100);
+      if (steerPct > 2) {
+        oledSteer.textContent = `RIGHT ${steerPct}%`;
+      } else if (steerPct < -2) {
+        oledSteer.textContent = `LEFT ${Math.abs(steerPct)}%`;
+      } else {
+        oledSteer.textContent = `CENTER (0%)`;
+      }
+    }
+
+    if (oledThr) {
+      const thrPct = Math.round(surfaceControls.throttle * 100);
+      if (thrPct > 2) {
+        oledThr.textContent = `FWD ${thrPct}%`;
+      } else if (thrPct < -2) {
+        oledThr.textContent = `BRAKE/REV ${Math.abs(thrPct)}%`;
+      } else {
+        oledThr.textContent = `NEUTRAL (0%)`;
+      }
+    }
   }
 
   // Simulated Telemetry Drift (Battery & LQ)
@@ -130,30 +135,28 @@
 
     if (oledBatt) {
       const v = (8.2 + Math.sin(Date.now() / 8000) * 0.05).toFixed(2);
-      oledBatt.textContent = `${v}V`;
+      oledBatt.textContent = `${v}V (2S)`;
     }
     if (oledLq) {
       const lq = Math.floor(99 + Math.random() * 2);
       oledLq.textContent = `${lq}% (1:100)`;
     }
     if (oledRssi) {
-      const rssi = Math.floor(-68 + Math.random() * 4);
+      const rssi = Math.floor(-64 + Math.random() * 4);
       oledRssi.textContent = `${rssi} dBm`;
     }
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-    // Left Stick: Throttle (Y) + Yaw (X)
-    setupGimbal('left-stick-area', 'left-stick-thumb', (x, y) => {
-      sticks.yaw = x;
-      sticks.throttle = (y + 1) / 2; // Map -1..1 to 0..1
-    }, false);
+    // Left Control: Steering Wheel (X-Axis)
+    setupSurfaceControl('left-stick-area', 'left-stick-thumb', (x, y) => {
+      surfaceControls.steering = x;
+    });
 
-    // Right Stick: Roll (X) + Pitch (Y)
-    setupGimbal('right-stick-area', 'right-stick-thumb', (x, y) => {
-      sticks.roll = x;
-      sticks.pitch = y;
-    }, true);
+    // Right Control: Throttle / Brake Trigger (Y-Axis)
+    setupSurfaceControl('right-stick-area', 'right-stick-thumb', (x, y) => {
+      surfaceControls.throttle = y;
+    });
 
     updateOutputs();
     setInterval(simulateTelemetryDrift, 1500);
