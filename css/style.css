@@ -125,6 +125,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-size: 0.72rem;
 }
 
+.site-nav .nav-discord {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border: 1px solid rgba(143, 202, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(143, 202, 255, 0.08);
+  color: var(--blue);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+.site-nav .nav-discord:hover, .site-nav .nav-discord:focus-visible { border-color: var(--blue); background: rgba(143, 202, 255, 0.16); color: var(--text); }
+
 .menu-toggle { display: none; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); cursor: pointer; }
 .menu-toggle span { display: block; width: 17px; height: 1px; margin: 4px auto; background: var(--text); transition: transform 160ms ease, opacity 160ms ease; }
 .menu-toggle.is-open span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
