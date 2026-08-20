@@ -233,7 +233,68 @@
               <p class="eyebrow"><span class="eyebrow-dot"></span> downloads and maintenance</p>
               <h2 id="download-title">Download the tools for your transmitter.</h2>
             </div>
-            <p>Use the companion that matches the job. Both follow the signed SourceTX release feed and keep low-level flashing details behind verified workflows.</p>
+            <p>Use the browser tool for supported desktop USB work, or choose the companion that matches the job. All paths follow the signed SourceTX release feed and keep low-level flashing details behind verified workflows.</p>
+          </div>
+
+          <div class="device-tool-shell" id="device-tools" aria-labelledby="device-tools-title">
+            <div class="device-tool-heading">
+              <div>
+                <p class="eyebrow"><span class="eyebrow-dot"></span> browser tools</p>
+                <h3 id="device-tools-title">Install, update, and configure from this page.</h3>
+              </div>
+              <span class="device-support-pill" id="device-support-pill">Checking browser support…</span>
+            </div>
+            <p class="device-tool-lede">
+              The browser talks directly to your USB-connected transmitter. Release manifests and firmware images are checked locally before anything is written; no firmware, model, or hardware data is uploaded to SourceTX.
+            </p>
+
+            <div class="device-tool-grid">
+              <article class="device-tool-card device-tool-flash-card">
+                <div class="device-tool-card-topline"><span class="card-status">SIGNED USB FLASH</span><span class="device-tool-index">01</span></div>
+                <h4>Firmware installation</h4>
+                <p>Install the complete factory image on the supported ESP32-S3 target, or update an existing transmitter without erasing its models.</p>
+                <p class="device-tool-subnote">Blank board or recovery: hold <span class="mono">BOOT</span>, tap <span class="mono">RESET</span>, then release <span class="mono">BOOT</span> before selecting the USB port.</p>
+                <label class="device-check-row"><input type="checkbox" id="device-erase-flash" /> <span><strong>Erase all flash before factory install</strong><small>Deletes models, calibration, settings, and update state.</small></span></label>
+                <div class="device-tool-actions">
+                  <button class="button button-primary" type="button" id="device-install-button">Install SourceTX</button>
+                  <button class="button button-secondary" type="button" id="device-update-button">Update existing device</button>
+                </div>
+              </article>
+
+              <article class="device-tool-card device-tool-config-card">
+                <div class="device-tool-card-topline"><span class="card-status">USB CONFIGURATION</span><span class="device-tool-index">02</span></div>
+                <h4>Configure your transmitter</h4>
+                <p>Read or save the validated hardware profile used by the firmware. Changes are staged in NVS and take effect after a reboot.</p>
+                <div class="device-tool-actions">
+                  <button class="button button-green" type="button" id="device-config-button">Connect &amp; configure</button>
+                  <button class="button button-ghost" type="button" id="device-read-config-button">Read current config</button>
+                </div>
+              </article>
+            </div>
+
+            <div class="device-tool-status" id="device-tool-status" role="status" aria-live="polite">
+              <span class="device-status-led"></span><span id="device-tool-status-text">Ready. Use Chrome or Edge over HTTPS, then connect a USB data cable.</span>
+            </div>
+            <pre class="device-tool-log" id="device-tool-log" aria-label="Browser tool activity log">[READY] Browser tool is idle.</pre>
+
+            <div class="device-config-panel" id="device-config-panel" hidden>
+              <div class="device-config-heading">
+                <div>
+                  <p class="card-status">SOURCE TX HARDWARE PROFILE / SCHEMA 1</p>
+                  <h4>Transmitter hardware profile</h4>
+                </div>
+                <button class="text-link device-close-button" type="button" id="device-close-config-button">Close panel</button>
+              </div>
+              <p class="device-config-note"><strong>Safety boundary:</strong> keep the vehicle restrained and remove RF-module power before changing hardware assignments. Use the companion apps for model backup and restore, with <span class="mono">Settings → Transmitter → Model Transfer</span> open on the radio.</p>
+
+              <div class="device-config-form" id="device-config-form"></div>
+              <div class="device-tool-actions device-config-actions">
+                <button class="button button-secondary" type="button" id="device-refresh-config-button">Read from transmitter</button>
+                <button class="button button-green" type="button" id="device-save-config-button">Save configuration</button>
+                <button class="button button-ghost" type="button" id="device-default-config-button">Load reference defaults</button>
+              </div>
+
+            </div>
           </div>
 
           <div class="companion-grid">
@@ -289,7 +350,7 @@
 
           <div class="browser-note">
             <span class="browser-note-mark">i</span>
-            <p><strong>The website is the map, not the flasher.</strong> Firmware writes belong in the verified Windows or Android companion flow. Use the <a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">USB recovery guide</a> when the board needs a factory image or partition repair.</p>
+            <p><strong>Use the browser tool for the supported target.</strong> It verifies signed releases locally and preserves the companion apps as the fallback for older browsers, Android USB OTG, and guided recovery. Read the <a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">USB recovery guide</a> before a first installation.</p>
           </div>
         </div>
       </section>
@@ -353,5 +414,6 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="js/main.js" defer></script>
+    <script type="module" src="js/device-tools.js"></script>
   </body>
 </html>
