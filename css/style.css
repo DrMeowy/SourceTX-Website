@@ -27,10 +27,12 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { color-scheme: dark; scroll-behavior: smooth; }
+html { color-scheme: dark; scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   min-width: 320px;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
