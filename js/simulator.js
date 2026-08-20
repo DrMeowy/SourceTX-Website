@@ -1,16 +1,27 @@
 /**
- * SourceTX Surface RC Transmitter & 16-Channel Simulator
+ * SourceTX Surface RC Transmitter & Authentic LVGL On-Device Simulator
  */
 
 (function () {
   // Surface Controls State (-1.0 to 1.0)
   const surfaceControls = {
     steering: 0.0, // Steering Wheel: -1.0 (Full Left) to 1.0 (Full Right)
-    throttle: 0.0  // Throttle Trigger: -1.0 (Full Brake/Rev) to 1.0 (Full Throttle)
+    throttle: 0.0, // Throttle Trigger: -1.0 (Full Brake/Rev) to 1.0 (Full Throttle)
+    gearHigh: false,
+    diffLock: 0,   // 0: Open, 1: Front, 2: Both
+    lightsOn: false,
+    stTrim: 0,
+    thTrim: 0
   };
 
   // Channels 1 to 16 in Microseconds (1000µs to 2000µs, 1500µs center)
   const channels = new Array(16).fill(1500);
+  channels[2] = 1000; // CH3 (2-Speed Shift): Low Gear default
+  channels[6] = 1000; // CH7 (Lights): Off default
+
+  // Timer State
+  let timer1Seconds = 525; // 08:45
+  let timer1Running = false;
 
   // Setup Surface Control Draggers (Steering Wheel & Throttle Trigger)
   function setupSurfaceControl(boxId, thumbId, onMove) {
@@ -19,7 +30,7 @@
     if (!box || !thumb) return;
 
     let isDragging = false;
-    const radius = 40; // Max displacement in pixels
+    const radius = 35; // Max displacement in pixels
 
     function handlePointer(clientX, clientY) {
       const rect = box.getBoundingClientRect();
@@ -85,65 +96,154 @@
 
   function updateOutputs() {
     // Map Surface Inputs to Microseconds (1000µs to 2000µs)
-    channels[0] = Math.round(1500 + surfaceControls.steering * 500); // CH1: Steering
-    channels[1] = Math.round(1500 + surfaceControls.throttle * 500); // CH2: Throttle / Brake
+    channels[0] = Math.round(1500 + surfaceControls.stTrim + surfaceControls.steering * 500); // CH1: Steering
+    channels[1] = Math.round(1500 + surfaceControls.thTrim + surfaceControls.throttle * 500); // CH2: Throttle / Brake
+    channels[2] = surfaceControls.gearHigh ? 2000 : 1000;                                     // CH3: 2-Speed Gear
+    channels[3] = surfaceControls.diffLock === 0 ? 1000 : (surfaceControls.diffLock === 1 ? 1500 : 2000); // CH4: Diff
+    channels[6] = surfaceControls.lightsOn ? 2000 : 1000;                                     // CH7: Lights
 
-    // Update Channel UI Bars
+    // Check throttle timer auto-trigger
+    timer1Running = Math.abs(surfaceControls.throttle) > 0.05;
+
+    // Update Bottom Full 16-Channel Bars
     for (let i = 0; i < 16; i++) {
       const valElem = document.getElementById(`ch-val-${i + 1}`);
       const barElem = document.getElementById(`ch-bar-${i + 1}`);
       if (valElem && barElem) {
         const us = channels[i];
         valElem.textContent = `${us}µs`;
-        const percent = ((us - 988) / (2012 - 988)) * 100;
+        const percent = ((us - 1000) / 1000) * 100;
         barElem.style.width = `${Math.min(100, Math.max(0, percent))}%`;
       }
     }
 
-    // Update OLED HUD Telemetry
-    const oledSteer = document.getElementById('oled-steer-val');
-    const oledThr = document.getElementById('oled-thr-val');
-
-    if (oledSteer) {
-      const steerPct = Math.round(surfaceControls.steering * 100);
-      if (steerPct > 2) {
-        oledSteer.textContent = `RIGHT ${steerPct}%`;
-      } else if (steerPct < -2) {
-        oledSteer.textContent = `LEFT ${Math.abs(steerPct)}%`;
-      } else {
-        oledSteer.textContent = `CENTER (0%)`;
+    // Update On-Screen LVGL Mini Channel Bars (CH1 to CH8)
+    for (let i = 0; i < 8; i++) {
+      const miniVal = document.getElementById(`mini-ch-val-${i + 1}`);
+      const miniBar = document.getElementById(`mini-ch-bar-${i + 1}`);
+      if (miniVal && miniBar) {
+        const us = channels[i];
+        miniVal.textContent = us;
+        const percent = ((us - 1000) / 1000) * 100;
+        miniBar.style.width = `${Math.min(100, Math.max(0, percent))}%`;
       }
     }
 
-    if (oledThr) {
-      const thrPct = Math.round(surfaceControls.throttle * 100);
-      if (thrPct > 2) {
-        oledThr.textContent = `FWD ${thrPct}%`;
-      } else if (thrPct < -2) {
-        oledThr.textContent = `BRAKE/REV ${Math.abs(thrPct)}%`;
-      } else {
-        oledThr.textContent = `NEUTRAL (0%)`;
-      }
+    // Update Simulated Speed based on Throttle
+    const speedElem = document.getElementById('lvgl-speed');
+    if (speedElem) {
+      const topSpeed = surfaceControls.gearHigh ? 42.0 : 18.4;
+      const currentSpeed = (Math.max(0, surfaceControls.throttle) * topSpeed).toFixed(1);
+      speedElem.textContent = `${currentSpeed} km/h`;
     }
   }
 
-  // Simulated Telemetry Drift (Battery & LQ)
-  function simulateTelemetryDrift() {
-    const oledBatt = document.getElementById('oled-batt-val');
-    const oledLq = document.getElementById('oled-lq-val');
-    const oledRssi = document.getElementById('oled-rssi-val');
+  // LVGL Overlay Handlers
+  window.openLvglOverlay = function (overlayId) {
+    document.querySelectorAll('.lvgl-overlay').forEach(el => el.classList.remove('active'));
+    const target = document.getElementById(`overlay-${overlayId}`);
+    if (target) target.classList.add('active');
+  };
 
-    if (oledBatt) {
-      const v = (8.2 + Math.sin(Date.now() / 8000) * 0.05).toFixed(2);
-      oledBatt.textContent = `${v}V (2S)`;
+  window.closeLvglOverlay = function () {
+    document.querySelectorAll('.lvgl-overlay').forEach(el => el.classList.remove('active'));
+  };
+
+  window.adjustTrim = function (type, amount) {
+    if (type === 'st') {
+      surfaceControls.stTrim = amount === 0 ? 0 : surfaceControls.stTrim + amount;
+      const elem = document.getElementById('trim-st-val');
+      if (elem) elem.textContent = `${surfaceControls.stTrim >= 0 ? '+' : ''}${surfaceControls.stTrim} µs (${surfaceControls.stTrim === 0 ? 'Center' : (surfaceControls.stTrim > 0 ? 'Right' : 'Left')})`;
+    } else if (type === 'th') {
+      surfaceControls.thTrim = amount === 0 ? 0 : surfaceControls.thTrim + amount;
+      const elem = document.getElementById('trim-th-val');
+      if (elem) elem.textContent = `${surfaceControls.thTrim >= 0 ? '+' : ''}${surfaceControls.thTrim} µs (${surfaceControls.thTrim === 0 ? 'Neutral' : (surfaceControls.thTrim > 0 ? 'Fwd' : 'Rev')})`;
     }
-    if (oledLq) {
-      const lq = Math.floor(99 + Math.random() * 2);
-      oledLq.textContent = `${lq}% (1:100)`;
+    updateOutputs();
+  };
+
+  window.set4wsMode = function (mode) {
+    alert(`SourceTX 4WS Mode set to: ${mode}`);
+    document.getElementById('btn-4ws-front').classList.toggle('active', mode === 'Front Only');
+    document.getElementById('btn-4ws-opp').classList.toggle('active', mode === 'Opposite/Circle');
+    document.getElementById('btn-4ws-crab').classList.toggle('active', mode === 'Crab Crawl');
+  };
+
+  window.setDiffMode = function (mode) {
+    alert(`SourceTX Diff Lock set to: ${mode}`);
+  };
+
+  window.selectModel = function (name, desc) {
+    document.getElementById('lvgl-header-model').textContent = name;
+    document.getElementById('lvgl-card-model').textContent = name;
+    closeLvglOverlay();
+  };
+
+  window.toggle2Speed = function () {
+    surfaceControls.gearHigh = !surfaceControls.gearHigh;
+    const btn = document.getElementById('btn-shift-toggle');
+    if (btn) {
+      btn.textContent = `Gear: ${surfaceControls.gearHigh ? 'HIGH (Fast)' : 'LOW (Torque)'}`;
+      btn.classList.toggle('active', surfaceControls.gearHigh);
     }
-    if (oledRssi) {
-      const rssi = Math.floor(-64 + Math.random() * 4);
-      oledRssi.textContent = `${rssi} dBm`;
+    updateOutputs();
+  };
+
+  window.toggleDiffLock = function () {
+    surfaceControls.diffLock = (surfaceControls.diffLock + 1) % 3;
+    const btn = document.getElementById('btn-diff-toggle');
+    const names = ['Diff: OPEN', 'Diff: FRONT LOCK', 'Diff: BOTH LOCKED'];
+    if (btn) {
+      btn.textContent = names[surfaceControls.diffLock];
+      btn.classList.toggle('active', surfaceControls.diffLock > 0);
+    }
+    updateOutputs();
+  };
+
+  window.toggleLights = function () {
+    surfaceControls.lightsOn = !surfaceControls.lightsOn;
+    const btn = document.getElementById('btn-lights-toggle');
+    if (btn) {
+      btn.textContent = `Lights: ${surfaceControls.lightsOn ? 'ON (High Beam)' : 'OFF'}`;
+      btn.classList.toggle('active', surfaceControls.lightsOn);
+    }
+    updateOutputs();
+  };
+
+  // Clock & Telemetry Loop
+  function tickClockAndTelemetry() {
+    // Clock
+    const now = new Date();
+    const clockElem = document.getElementById('lvgl-clock-time');
+    if (clockElem) {
+      clockElem.textContent = now.toTimeString().substring(0, 5);
+    }
+
+    // Timer
+    if (timer1Running) {
+      timer1Seconds++;
+      const m = String(Math.floor(timer1Seconds / 60)).padStart(2, '0');
+      const s = String(timer1Seconds % 60).padStart(2, '0');
+      const tElem = document.getElementById('lvgl-timer-1');
+      if (tElem) tElem.textContent = `${m}:${s}`;
+    }
+
+    // Telemetry Drift
+    const txBatt = document.getElementById('lvgl-tx-batt');
+    const rxBatt = document.getElementById('lvgl-rx-batt');
+    const rssiLq = document.getElementById('lvgl-rssi-lq');
+
+    if (txBatt) {
+      const v = (7.84 + Math.sin(Date.now() / 9000) * 0.04).toFixed(2);
+      txBatt.textContent = `${v}V`;
+    }
+    if (rxBatt) {
+      const v = (11.4 + Math.sin(Date.now() / 7000) * 0.08).toFixed(1);
+      rxBatt.textContent = `${v}V (3S)`;
+    }
+    if (rssiLq) {
+      const rssi = Math.floor(-64 + Math.random() * 3);
+      rssiLq.textContent = `${rssi}dBm (100%)`;
     }
   }
 
@@ -159,6 +259,6 @@
     });
 
     updateOutputs();
-    setInterval(simulateTelemetryDrift, 1500);
+    setInterval(tickClockAndTelemetry, 1000);
   });
 })();

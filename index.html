@@ -16,7 +16,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
@@ -121,55 +121,315 @@
         </div>
       </div>
 
-      <!-- Surface Transmitter Virtual UI Mockup -->
+      <!-- ==========================================================================
+           AUTHENTIC SOURCETX ON-DEVICE TFT / LVGL DASHBOARD DISPLAY
+           ========================================================================== -->
       <div class="hero-visual">
         <div class="tx-visualizer-card">
-          <!-- OLED Simulated Display -->
-          <div class="tx-screen-bezel">
-            <div class="tx-screen-header">
-              <span>🚗 MODEL 01 [Crawler / Drift]</span>
-              <span id="oled-batt-val">8.24V (2S)</span>
+          <div class="tx-bezel-title">
+            <span>SOURCETX LIVE ON-DEVICE UI</span>
+            <span style="color: #00f2fe;">● ONLINE (CRSF 250Hz)</span>
+          </div>
+
+          <div class="tx-screen-bezel" id="lvgl-display">
+            <!-- Header Bar (36px) -->
+            <div class="lvgl-header">
+              <div class="lvgl-header-left">
+                <span style="color: #f59e0b;">★</span>
+                <span id="lvgl-header-model">TRX-4 Crawler</span>
+              </div>
+              <div class="lvgl-header-center">
+                <span id="lvgl-clock-time">18:30</span>
+              </div>
+              <div class="lvgl-header-right">
+                <div class="lvgl-batt-badge">
+                  <span>TX</span>
+                  <strong id="lvgl-tx-batt" style="color: #83b94b;">7.84V</strong>
+                </div>
+                <div class="lvgl-batt-badge">
+                  <span>RX</span>
+                  <strong id="lvgl-rx-batt" style="color: #38bdf8;">11.4V (3S)</strong>
+                </div>
+                <div class="lvgl-signal-bars" title="Link Quality: 100% (1:100)">
+                  <div class="lvgl-sig-bar"></div>
+                  <div class="lvgl-sig-bar"></div>
+                  <div class="lvgl-sig-bar"></div>
+                  <div class="lvgl-sig-bar"></div>
+                  <div class="lvgl-sig-bar"></div>
+                </div>
+              </div>
             </div>
-            <div class="tx-screen-body">
-              <div class="telemetry-badge">
-                <div class="lbl">Link Quality</div>
-                <div class="val" id="oled-lq-val">100% (1:100)</div>
+
+            <!-- Main 2x2 Dashboard Cards -->
+            <div class="lvgl-main-content">
+              <!-- Card 1: Active Model & Garage -->
+              <div class="lvgl-card" onclick="openLvglOverlay('garage')">
+                <div class="lvgl-card-title">
+                  <span>Active Vehicle</span>
+                  <span class="badge">Profile 01</span>
+                </div>
+                <div class="lvgl-model-name" id="lvgl-card-model">Traxxas TRX-4</div>
+                <div class="lvgl-model-desc">1/10 4WD Rock Crawler</div>
               </div>
-              <div class="telemetry-badge">
-                <div class="lbl">RSSI / Signal</div>
-                <div class="val" id="oled-rssi-val">-64 dBm</div>
+
+              <!-- Card 2: RF & Live Telemetry -->
+              <div class="lvgl-card" onclick="openLvglOverlay('telemetry')">
+                <div class="lvgl-card-title">
+                  <span>RF Telemetry</span>
+                  <span class="badge" style="color: #83b94b;">ELRS 2.4G</span>
+                </div>
+                <div class="lvgl-telemetry-grid">
+                  <div class="lvgl-tel-item">
+                    <span class="lvgl-tel-lbl">RSSI / LQ</span>
+                    <span class="lvgl-tel-val" id="lvgl-rssi-lq">-64dBm (100%)</span>
+                  </div>
+                  <div class="lvgl-tel-item">
+                    <span class="lvgl-tel-lbl">Speed</span>
+                    <span class="lvgl-tel-val" id="lvgl-speed">18.4 km/h</span>
+                  </div>
+                  <div class="lvgl-tel-item">
+                    <span class="lvgl-tel-lbl">ESC Temp</span>
+                    <span class="lvgl-tel-val">34°C</span>
+                  </div>
+                  <div class="lvgl-tel-item">
+                    <span class="lvgl-tel-lbl">Tx Power</span>
+                    <span class="lvgl-tel-val">100 mW</span>
+                  </div>
+                </div>
               </div>
-              <div class="telemetry-badge">
-                <div class="lbl">Steering (ST)</div>
-                <div class="val" id="oled-steer-val">CENTER (0%)</div>
+
+              <!-- Card 3: Dual Timers -->
+              <div class="lvgl-card" onclick="openLvglOverlay('timers')">
+                <div class="lvgl-card-title">
+                  <span>Timers</span>
+                  <span class="badge">Auto-Trigger</span>
+                </div>
+                <div class="lvgl-timers-box">
+                  <div>
+                    <div class="lvgl-timer-val" id="lvgl-timer-1">08:45</div>
+                    <div class="lvgl-timer-status">Run: TH Trigger Active</div>
+                  </div>
+                  <div>
+                    <div class="lvgl-timer-val" style="color: #38bdf8; font-size: 1.05rem;">15:00</div>
+                    <div class="lvgl-timer-status">Session Countdown</div>
+                  </div>
+                </div>
               </div>
-              <div class="telemetry-badge">
-                <div class="lbl">Throttle / Brake</div>
-                <div class="val" id="oled-thr-val">NEUTRAL (0%)</div>
+
+              <!-- Card 4: Mini 12-Channel Real-Time Monitor -->
+              <div class="lvgl-card" onclick="openLvglOverlay('channels')">
+                <div class="lvgl-card-title">
+                  <span>Live 12-CH Monitor</span>
+                  <span class="badge" style="color: #a855f7;">Real-Time</span>
+                </div>
+                <div class="lvgl-channels-monitor">
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>ST</span><span id="mini-ch-val-1">1500</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-1"></div></div>
+                  </div>
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>TH</span><span id="mini-ch-val-2">1500</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-2"></div></div>
+                  </div>
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>2SPD</span><span id="mini-ch-val-3">1000</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-3" style="width: 0%;"></div></div>
+                  </div>
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>DIFF</span><span id="mini-ch-val-4">1500</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-4"></div></div>
+                  </div>
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>4WS</span><span id="mini-ch-val-5">1500</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-5"></div></div>
+                  </div>
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>WNCH</span><span id="mini-ch-val-6">1500</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-6"></div></div>
+                  </div>
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>LGT</span><span id="mini-ch-val-7">1000</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-7" style="width: 0%;"></div></div>
+                  </div>
+                  <div class="lvgl-mini-ch">
+                    <div class="lvgl-mini-ch-header"><span>GYRO</span><span id="mini-ch-val-8">1750</span></div>
+                    <div class="lvgl-mini-ch-track"><div class="lvgl-mini-ch-fill" id="mini-ch-bar-8" style="width: 75%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Quick Action Tabs -->
+            <div class="lvgl-bottom-tabs">
+              <button class="lvgl-tab-btn" onclick="openLvglOverlay('trim')">TRIM</button>
+              <button class="lvgl-tab-btn" onclick="openLvglOverlay('servo')">SERVO</button>
+              <button class="lvgl-tab-btn" onclick="openLvglOverlay('expo')">EXPO</button>
+              <button class="lvgl-tab-btn" onclick="openLvglOverlay('mixers')">MIXERS</button>
+              <button class="lvgl-tab-btn" onclick="openLvglOverlay('settings')">SETTINGS</button>
+            </div>
+
+            <!-- Interactive Overlays (Authentic Sub-Screens) -->
+            <!-- 1. TRIM OVERLAY -->
+            <div class="lvgl-overlay" id="overlay-trim">
+              <div class="lvgl-overlay-header">
+                <span class="lvgl-overlay-title">Sub-Trim & Center Calibration</span>
+                <button class="lvgl-close-btn" onclick="closeLvglOverlay()">← Back</button>
+              </div>
+              <div class="lvgl-overlay-body">
+                <div style="margin-bottom: 12px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <strong>Steering (ST) Sub-Trim</strong>
+                    <span id="trim-st-val" style="color: #00f2fe; font-family: 'JetBrains Mono';">0 µs (Center)</span>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button class="aux-toggle-btn" onclick="adjustTrim('st', -5)">- Trim Left</button>
+                    <button class="aux-toggle-btn" onclick="adjustTrim('st', 0)">Reset 0</button>
+                    <button class="aux-toggle-btn" onclick="adjustTrim('st', 5)">+ Trim Right</button>
+                  </div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <strong>Throttle (TH) Neutral Trim</strong>
+                    <span id="trim-th-val" style="color: #83b94b; font-family: 'JetBrains Mono';">0 µs (Neutral)</span>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button class="aux-toggle-btn" onclick="adjustTrim('th', -5)">- Trim Rev</button>
+                    <button class="aux-toggle-btn" onclick="adjustTrim('th', 0)">Reset 0</button>
+                    <button class="aux-toggle-btn" onclick="adjustTrim('th', 5)">+ Trim Fwd</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. EXPO OVERLAY -->
+            <div class="lvgl-overlay" id="overlay-expo">
+              <div class="lvgl-overlay-header">
+                <span class="lvgl-overlay-title">Steering Exponential & Dual-Rates</span>
+                <button class="lvgl-close-btn" onclick="closeLvglOverlay()">← Back</button>
+              </div>
+              <div class="lvgl-overlay-body">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span>Steering Dual-Rate: <strong style="color: #00f2fe;">100%</strong></span>
+                  <span>Steering Expo: <strong style="color: #83b94b;">-25% (Soft Center)</strong></span>
+                </div>
+                <div style="background: #090a0d; border: 1px solid #343538; border-radius: 4px; height: 90px; display: flex; align-items: center; justify-content: center; position: relative;">
+                  <svg width="100%" height="80" viewBox="0 0 200 80">
+                    <line x1="0" y1="40" x2="200" y2="40" stroke="#334155" stroke-dasharray="2 2"/>
+                    <line x1="100" y1="0" x2="100" y2="80" stroke="#334155" stroke-dasharray="2 2"/>
+                    <path d="M 0,80 Q 80,60 100,40 T 200,0" fill="none" stroke="#00f2fe" stroke-width="2.5"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. MIXERS OVERLAY -->
+            <div class="lvgl-overlay" id="overlay-mixers">
+              <div class="lvgl-overlay-header">
+                <span class="lvgl-overlay-title">Crawler 4WS & Diff Lock Mixers</span>
+                <button class="lvgl-close-btn" onclick="closeLvglOverlay()">← Back</button>
+              </div>
+              <div class="lvgl-overlay-body">
+                <div style="margin-bottom: 10px;">
+                  <div style="margin-bottom: 4px;">4-Wheel Steering (4WS Mode):</div>
+                  <div style="display: flex; gap: 6px;">
+                    <button class="aux-toggle-btn active" id="btn-4ws-front" onclick="set4wsMode('Front Only')">Front Only</button>
+                    <button class="aux-toggle-btn" id="btn-4ws-opp" onclick="set4wsMode('Opposite/Circle')">Opposite</button>
+                    <button class="aux-toggle-btn" id="btn-4ws-crab" onclick="set4wsMode('Crab Crawl')">Crab</button>
+                  </div>
+                </div>
+                <div>
+                  <div style="margin-bottom: 4px;">Differential Lock Setup:</div>
+                  <div style="display: flex; gap: 6px;">
+                    <button class="aux-toggle-btn active" onclick="setDiffMode('Open')">Open</button>
+                    <button class="aux-toggle-btn" onclick="setDiffMode('Front Lock')">Front Only</button>
+                    <button class="aux-toggle-btn" onclick="setDiffMode('Both Locked')">Both Locked</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. GARAGE OVERLAY -->
+            <div class="lvgl-overlay" id="overlay-garage">
+              <div class="lvgl-overlay-header">
+                <span class="lvgl-overlay-title">Model Garage (32 Profiles)</span>
+                <button class="lvgl-close-btn" onclick="closeLvglOverlay()">← Back</button>
+              </div>
+              <div class="lvgl-overlay-body">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <div style="padding: 6px; background: #24262a; border-left: 3px solid #00f2fe; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="selectModel('Traxxas TRX-4', '1/10 4WD Rock Crawler')">
+                    <strong>01: Traxxas TRX-4 (Active)</strong>
+                    <span style="font-size: 0.7rem; color: #83b94b;">4WS + 2SPD</span>
+                  </div>
+                  <div style="padding: 6px; background: #18191c; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="selectModel('MST RMX Drift', 'RWD Pro Drift Chassis')">
+                    <span>02: MST RMX 2.5 Drift</span>
+                    <span style="font-size: 0.7rem; color: #a0a2a6;">Gyro AVC</span>
+                  </div>
+                  <div style="padding: 6px; background: #18191c; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="selectModel('Arrma Kraton 6S', '1/8 Monster Truck')">
+                    <span>03: Arrma Kraton 6S</span>
+                    <span style="font-size: 0.7rem; color: #a0a2a6;">Bashing 6S</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. SETTINGS OVERLAY -->
+            <div class="lvgl-overlay" id="overlay-settings">
+              <div class="lvgl-overlay-header">
+                <span class="lvgl-overlay-title">Transmitter Hardware Settings</span>
+                <button class="lvgl-close-btn" onclick="closeLvglOverlay()">← Back</button>
+              </div>
+              <div class="lvgl-overlay-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.75rem;">
+                  <div style="background: #18191c; padding: 6px; border-radius: 4px;">
+                    <div style="color: #71717a;">CRSF Baud Rate</div>
+                    <strong style="color: #00f2fe;">400,000 Baud (Fast)</strong>
+                  </div>
+                  <div style="background: #18191c; padding: 6px; border-radius: 4px;">
+                    <div style="color: #71717a;">Status LED</div>
+                    <strong style="color: #83b94b;">WS2812 Link State</strong>
+                  </div>
+                  <div style="background: #18191c; padding: 6px; border-radius: 4px;">
+                    <div style="color: #71717a;">Audio Alert</div>
+                    <strong style="color: #f59e0b;">Buzzer + Haptics</strong>
+                  </div>
+                  <div style="background: #18191c; padding: 6px; border-radius: 4px;">
+                    <div style="color: #71717a;">NVS Storage</div>
+                    <strong style="color: #cbd5e1;">Healthy (32 Models)</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Surface Control Pods Below Screen -->
+          <div class="surface-controls-deck">
+            <div class="control-pod">
+              <div class="control-pod-label">Steering Wheel (Left / Right)</div>
+              <div class="wheel-area" id="left-stick-area">
+                <div class="wheel-rim-cross"></div>
+                <div class="wheel-rim-cross v"></div>
+                <div class="wheel-thumb" id="left-stick-thumb"></div>
+              </div>
+            </div>
+
+            <div class="control-pod">
+              <div class="control-pod-label">Throttle Trigger (Fwd / Rev)</div>
+              <div class="trigger-area" id="right-stick-area">
+                <div class="wheel-rim-cross"></div>
+                <div class="wheel-rim-cross v"></div>
+                <div class="trigger-thumb" id="right-stick-thumb"></div>
               </div>
             </div>
           </div>
 
-          <!-- Dual Virtual Surface Controls: Steering Wheel & Throttle/Brake Trigger -->
-          <div class="gimbals-row">
-            <div class="gimbal-box">
-              <div class="gimbal-label">Steering Wheel (Left / Right)</div>
-              <div class="stick-area" id="left-stick-area" style="border-radius: 50%;">
-                <div class="stick-crosshair"></div>
-                <div class="stick-crosshair v"></div>
-                <div class="stick-thumb" id="left-stick-thumb"></div>
-              </div>
-            </div>
-
-            <div class="gimbal-box">
-              <div class="gimbal-label">Throttle Trigger (Fwd / Rev)</div>
-              <div class="stick-area" id="right-stick-area" style="border-radius: 20px;">
-                <div class="stick-crosshair"></div>
-                <div class="stick-crosshair v"></div>
-                <div class="stick-thumb" id="right-stick-thumb"></div>
-              </div>
-            </div>
+          <!-- Auxiliary Surface Switch Controls -->
+          <div class="aux-switches-row">
+            <button class="aux-toggle-btn" id="btn-shift-toggle" onclick="toggle2Speed()">Gear: LOW</button>
+            <button class="aux-toggle-btn" id="btn-diff-toggle" onclick="toggleDiffLock()">Diff: OPEN</button>
+            <button class="aux-toggle-btn" id="btn-lights-toggle" onclick="toggleLights()">Lights: OFF</button>
           </div>
+
         </div>
       </div>
     </div>
@@ -187,7 +447,6 @@
       </div>
 
       <div class="features-grid">
-        <!-- Feature 1 -->
         <div class="feature-card">
           <div class="feature-icon-wrapper">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -202,7 +461,6 @@
           </p>
         </div>
 
-        <!-- Feature 2 -->
         <div class="feature-card">
           <div class="feature-icon-wrapper">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -212,6 +470,10 @@
               <line x1="15" y1="1" x2="15" y2="4"></line>
               <line x1="9" y1="20" x2="9" y2="23"></line>
               <line x1="15" y1="20" x2="15" y2="23"></line>
+              <line x1="20" y1="9" x2="23" y2="9"></line>
+              <line x1="20" y1="14" x2="23" y2="14"></line>
+              <line x1="1" y1="9" x2="4" y2="9"></line>
+              <line x1="1" y1="14" x2="4" y2="14"></line>
             </svg>
           </div>
           <h3>Crawler & 4WS Mixers</h3>
@@ -220,7 +482,6 @@
           </p>
         </div>
 
-        <!-- Feature 3 -->
         <div class="feature-card">
           <div class="feature-icon-wrapper">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -233,7 +494,6 @@
           </p>
         </div>
 
-        <!-- Feature 4 -->
         <div class="feature-card">
           <div class="feature-icon-wrapper">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -247,7 +507,6 @@
           </p>
         </div>
 
-        <!-- Feature 5 -->
         <div class="feature-card">
           <div class="feature-icon-wrapper">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -260,7 +519,6 @@
           </p>
         </div>
 
-        <!-- Feature 6 -->
         <div class="feature-card">
           <div class="feature-icon-wrapper">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -283,22 +541,21 @@
   <section class="section" id="simulator">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Interactive Surface Laboratory</span>
-        <h2 class="section-title">Live 16-Channel <span class="text-gradient">Surface Simulator</span></h2>
+        <span class="section-tag">Full Surface Channel Lab</span>
+        <h2 class="section-title">Expanded 16-Channel <span class="text-gradient">Surface Output</span></h2>
         <p class="section-subtitle">
-          Drag the virtual Steering Wheel and Throttle Trigger above to observe real-time microsecond PWM mappings across all 16 surface RC channels.
+          Observe live PWM pulse values (1000µs – 2000µs) mapped to real surface servos, winches, lights, gyro gains, and dual ESC motors.
         </p>
       </div>
 
       <div class="simulator-container">
         <div class="channel-bars-grid">
-          <!-- CH 1 to 16 Surface Mappings -->
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH1 (Steering)</span><span id="ch-val-1">1500µs</span></div>
+            <div class="channel-meta"><span>CH1 (Steering Servo)</span><span id="ch-val-1">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-1"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH2 (Throttle / Brake)</span><span id="ch-val-2">1500µs</span></div>
+            <div class="channel-meta"><span>CH2 (Throttle / ESC)</span><span id="ch-val-2">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-2"></div></div>
           </div>
           <div class="channel-bar-item">
@@ -338,7 +595,7 @@
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-11"></div></div>
           </div>
           <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH12 (FPV Camera Pan)</span><span id="ch-val-12">1500µs</span></div>
+            <div class="channel-meta"><span>CH12 (FPV Pan/Tilt)</span><span id="ch-val-12">1500µs</span></div>
             <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-12"></div></div>
           </div>
           <div class="channel-bar-item">
