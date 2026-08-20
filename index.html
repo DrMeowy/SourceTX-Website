@@ -1,967 +1,524 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SourceTX • Next-Gen Open-Source Surface RC Transmitter</title>
-  <meta name="description" content="SourceTX is an ultra-fast, modern, open-source surface RC transmitter firmware for ESP32-S3 and ExpressLRS / CRSF. Built for RC cars, crawlers, trucks, drift, and land robotics.">
-  <meta name="keywords" content="SourceTX, Surface RC, RC Transmitter, RC Car Controller, Crawler Transmitter, ESP32-S3, ExpressLRS, CRSF, Pistol Grip TX">
-  <meta name="theme-color" content="#090d16">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0b0d" />
+    <meta
+      name="description"
+      content="SourceTX is a safety-focused surface RC transmitter system for ESP32-S3: model-aware control, telemetry, signed updates, and companion tools."
+    />
+    <meta property="og:title" content="SourceTX — surface control, documented" />
+    <meta
+      property="og:description"
+      content="A safety-focused surface RC transmitter system with firmware, companion apps, and a reproducible reference target."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sourcetx.org/" />
+    <title>SourceTX — surface control, documented</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="SourceTX • Next-Gen Open-Source Surface RC Transmitter">
-  <meta property="og:description" content="Ultra-fast surface RC transmitter firmware for ESP32-S3 with CRSF & ExpressLRS, real-time telemetry, 4WS / crawler mixing, and companion apps.">
-  <meta property="og:type" content="website">
+  <body>
+    <div class="page-noise" aria-hidden="true"></div>
+    <div class="page-grid" aria-hidden="true"></div>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
-
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/responsive.css">
-</head>
-<body>
-
-  <!-- Interactive Particle Background -->
-  <canvas id="particles-canvas"></canvas>
-
-  <!-- Navigation Header -->
-  <header class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="brand-logo">
-        <div class="logo-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </div>
-        <span>Source<span class="text-gradient">TX</span></span>
-      </a>
-
-      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-
-      <ul class="nav-menu" id="nav-menu">
-        <li><a href="#features" class="nav-link">Features</a></li>
-        <li><a href="#simulator" class="nav-link">Surface Simulator</a></li>
-        <li><a href="#flasher" class="nav-link">Web Flasher</a></li>
-        <li><a href="#companion" class="nav-link">Companion Apps</a></li>
-        <li><a href="#pinout" class="nav-link">Hardware Pinout</a></li>
-        <li><a href="#quickstart" class="nav-link">Quick Start</a></li>
-      </ul>
-
-      <div class="nav-actions">
-        <a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-          </svg>
-          GitHub
+    <header class="site-header" id="top">
+      <div class="container nav-wrap">
+        <a class="brand" href="#top" aria-label="SourceTX home">
+          <span class="brand-mark" aria-hidden="true">TX</span>
+          <span class="brand-copy">
+            <strong>SourceTX</strong>
+            <small>surface control system</small>
+          </span>
         </a>
-        <a href="#companion" class="btn btn-primary btn-sm">Get App</a>
-      </div>
-    </div>
-  </header>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="container hero-grid">
-      <div class="hero-content">
-        <div class="hero-pill">
-          <span class="pulse-dot"></span>
-          <span>SourceTX v0.2.8 • Surface RC Release</span>
-        </div>
-        <h1 class="hero-title">
-          Precision. Speed.<br>
-          <span class="text-gradient">Surface Dominance.</span>
-        </h1>
-        <p class="hero-description">
-          The next-generation open-source surface RC transmitter firmware engineered for ESP32-S3 and ExpressLRS / CRSF. Ultra-low latency steering & throttle response, customizable GPIO pin mapping, 16 surface channels, and companion apps for RC cars, crawlers, drift rigs, and surface robotics.
-        </p>
+        <button
+          class="menu-toggle"
+          id="menu-toggle"
+          type="button"
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span><span></span><span></span>
+        </button>
 
-        <div class="hero-cta-group">
-          <a href="#companion" class="btn btn-primary btn-lg">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download Companion
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+          <a href="#system">System</a>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#companions">Companions</a>
+          <a href="#hardware">Hardware</a>
+          <a href="#partner">Partner</a>
+          <a
+            class="nav-github"
+            href="https://github.com/DrMeowy/SourceTX"
+            target="_blank"
+            rel="noopener"
+          >
+            GitHub <span aria-hidden="true">↗</span>
           </a>
-          <a href="#flasher" class="btn btn-secondary btn-lg">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-            </svg>
-            WebSerial Flasher
-          </a>
-        </div>
-
-        <div class="hero-stats-row">
-          <div class="stat-item">
-            <span class="stat-value text-gradient">&lt; 1 ms</span>
-            <span class="stat-label">Response Time</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">240 MHz</span>
-            <span class="stat-label">ESP32-S3 Dual-Core</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">16 CH</span>
-            <span class="stat-label">Surface Mixing</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">100%</span>
-            <span class="stat-label">Open Source</span>
-          </div>
-        </div>
+        </nav>
       </div>
+    </header>
 
-      <!-- ==========================================================================
-           1:1 IDENTICAL SOURCETX FIRMWARE ON-DEVICE TFT 480x320 DISPLAY
-           ========================================================================== -->
-      <div class="hero-visual">
-        <div class="stx-hardware-bezel">
-          <div class="stx-bezel-top-bar">
-            <span>SOURCETX 480x320 TFT DISPLAY</span>
-            <span style="color: #00f2fe;">● LIVE INTERACTIVE</span>
-          </div>
-
-          <div class="stx-screen" id="stx-screen-container">
-            <!-- 1. Header Bar (480x36) -->
-            <div class="stx-header">
-              <div class="stx-header-section" style="width: 80px;">
-                <span class="stx-header-label">TX BATTERY</span>
-                <span class="stx-header-value" id="stx-head-batt" style="color: #83b94b;">8.1V</span>
-              </div>
-
-              <div class="stx-header-section" style="flex-grow: 1; padding-left: 10px;">
-                <span class="stx-header-label">MODEL</span>
-                <span class="stx-header-value" id="stx-head-model" style="color: #f2f3f4;">01: TRX-4 CRAWLER</span>
-              </div>
-
-              <button class="stx-gear-btn" onclick="openStxOverlay('settings')" title="Transmitter Settings">⚙</button>
-
-              <div class="stx-header-section" style="text-align: right; width: 110px;">
-                <span class="stx-header-value" id="stx-head-clock">06:30 PM</span>
-                <span class="stx-header-label" id="stx-head-date">AUG 20, 2026</span>
-              </div>
-            </div>
-
-            <!-- 2. Main Dashboard Area (8, 40 to 268) -->
-            <div class="stx-main-area">
-              <!-- Left Model Card (138x228) -->
-              <div class="stx-model-card" onclick="openStxOverlay('garage')">
-                <span class="stx-card-header-lbl">MODEL</span>
-                
-                <div class="stx-vehicle-image-box">
-                  <svg viewBox="0 0 120 70" fill="none">
-                    <path d="M15 45 L30 25 L65 22 L95 38 L108 45 L112 52 L8 52 Z" fill="#1e293b" stroke="#00f2fe" stroke-width="2"/>
-                    <circle cx="32" cy="52" r="14" fill="#090d16" stroke="#4a92f7" stroke-width="3"/>
-                    <circle cx="32" cy="52" r="6" fill="#334155"/>
-                    <circle cx="88" cy="52" r="14" fill="#090d16" stroke="#4a92f7" stroke-width="3"/>
-                    <circle cx="88" cy="52" r="6" fill="#334155"/>
-                    <line x1="30" y1="25" x2="65" y2="22" stroke="#00f2fe" stroke-width="3"/>
-                    <rect x="42" y="27" width="20" height="14" rx="2" fill="#090d16" stroke="#38bdf8" stroke-width="1.5"/>
-                  </svg>
-                </div>
-
-                <div>
-                  <div class="stx-model-title" id="stx-card-model-name">01: TRX-4 CRAWLER</div>
-                  <div class="stx-model-subtitle" id="stx-card-model-desc">1/10 4WD ROCK CRAWLER</div>
-                </div>
-
-                <button class="stx-inner-btn" onclick="event.stopPropagation(); openStxOverlay('garage')">MODEL SELECT</button>
-              </div>
-
-              <!-- Right Sub-Cards Grid Area -->
-              <div class="stx-right-grid">
-                <!-- Top Row of 4 Sub-Cards (76x119 each) -->
-                <div class="stx-top-cards-row">
-                  <!-- Sub-Card 1: Battery -->
-                  <div class="stx-sub-card">
-                    <span class="stx-sub-title">BATTERY</span>
-                    <div class="stx-batt-item">
-                      <div class="stx-batt-row">
-                        <span style="color: #a0a2a6;">TX</span>
-                        <span id="stx-batt-tx-val" style="color: #83b94b;">8.1V</span>
-                      </div>
-                      <div class="stx-batt-track"><div class="stx-batt-fill" id="stx-batt-tx-fill" style="width: 82%;"></div></div>
-                    </div>
-                    <div class="stx-batt-item">
-                      <div class="stx-batt-row">
-                        <span style="color: #a0a2a6;">RX</span>
-                        <span id="stx-batt-rx-val" style="color: #38bdf8;">11.4V</span>
-                      </div>
-                      <div class="stx-batt-track"><div class="stx-batt-fill" id="stx-batt-rx-fill" style="width: 90%; background: #38bdf8;"></div></div>
-                    </div>
-                  </div>
-
-                  <!-- Sub-Card 2: Signal -->
-                  <div class="stx-sub-card">
-                    <span class="stx-sub-title">SIGNAL</span>
-                    <div style="font-size: 0.8rem; font-weight: 700; font-family: 'JetBrains Mono';" id="stx-rssi-val">RSSI -64</div>
-                    <div style="font-size: 0.65rem; color: #a0a2a6; font-family: 'JetBrains Mono';" id="stx-lq-val">LQ 100%</div>
-                    <div class="stx-signal-stepped-bars">
-                      <div class="stx-step-bar active"></div>
-                      <div class="stx-step-bar active"></div>
-                      <div class="stx-step-bar active"></div>
-                      <div class="stx-step-bar active"></div>
-                      <div class="stx-step-bar active"></div>
-                    </div>
-                  </div>
-
-                  <!-- Sub-Card 3: TX / RF -->
-                  <div class="stx-sub-card" onclick="openStxOverlay('telemetry')">
-                    <span class="stx-sub-title">TX</span>
-                    <div>
-                      <div style="font-size: 0.58rem; color: #a0a2a6;">PACKET</div>
-                      <div style="font-size: 0.78rem; font-weight: 700; font-family: 'JetBrains Mono';">250Hz</div>
-                    </div>
-                    <div>
-                      <div style="font-size: 0.58rem; color: #a0a2a6;">POWER</div>
-                      <div style="font-size: 0.78rem; font-weight: 700; font-family: 'JetBrains Mono'; color: #00f2fe;">100mW</div>
-                    </div>
-                    <button class="stx-inner-btn" style="padding: 2px 0; font-size: 0.6rem;" onclick="event.stopPropagation(); openStxOverlay('telemetry')">TELEM</button>
-                  </div>
-
-                  <!-- Sub-Card 4: Timers (Stacked Timer 1 & 2) -->
-                  <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <div class="stx-sub-card" style="height: 55px; padding: 4px 6px;">
-                      <span style="font-size: 0.6rem; color: #f2f3f4; font-weight: 700;">TIMER 1</span>
-                      <div style="font-size: 0.88rem; font-weight: 800; color: #83b94b; font-family: 'JetBrains Mono';" id="stx-timer-1-val">08:45</div>
-                      <span style="font-size: 0.55rem; color: #a0a2a6;" id="stx-timer-status">RUNNING</span>
-                    </div>
-                    <div class="stx-sub-card" style="height: 55px; padding: 4px 6px;">
-                      <span style="font-size: 0.6rem; color: #f2f3f4; font-weight: 700;">TIMER 2</span>
-                      <div style="font-size: 0.88rem; font-weight: 800; color: #38bdf8; font-family: 'JetBrains Mono';">05:00</div>
-                      <span style="font-size: 0.55rem; color: #a0a2a6;">STOPPED</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 12-Channel Vertical Monitor Card (320x104) -->
-                <div class="stx-channel-monitor-card" onclick="openStxOverlay('servo')">
-                  <span style="font-size: 0.65rem; font-weight: 700; color: #f2f3f4; letter-spacing: 0.05em;">CHANNEL MONITOR</span>
-                  
-                  <div class="stx-channels-12-track-grid">
-                    <!-- Channels 1 to 12 with real vertical indicator tracks -->
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">1</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill st-ch" id="vch-fill-1"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">2</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill th-ch" id="vch-fill-2"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">3</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-3" style="height: 0%;"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">4</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-4"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">5</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-5"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">6</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-6"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">7</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-7" style="height: 0%;"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">8</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-8" style="height: 75%;"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">9</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-9"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">10</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-10"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">11</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-11"></div></div>
-                    </div>
-                    <div class="stx-vchannel-col">
-                      <span class="stx-vchannel-num">12</span>
-                      <div class="stx-vchannel-track"><div class="stx-vchannel-fill" id="vch-fill-12"></div></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 3. Bottom Quick Bar (y: 276, 4 Buttons) -->
-            <div class="stx-quickbar">
-              <button class="stx-quick-btn" onclick="openStxOverlay('trim')">+ TRIM/SUB-TRIM</button>
-              <button class="stx-quick-btn" onclick="openStxOverlay('servo')">👁 SERVO VIEW</button>
-              <button class="stx-quick-btn" onclick="openStxOverlay('expo')">🔄 DR / EXPO</button>
-              <button class="stx-quick-btn" onclick="openStxOverlay('mixers')">☰ MIXERS</button>
-            </div>
-
-            <!-- 4. Interactive Fullscreen Sub-Screens -->
-            <!-- SUB-TRIM SCREEN -->
-            <div class="stx-screen-overlay" id="stx-overlay-trim">
-              <div class="stx-overlay-header">
-                <span class="stx-overlay-title">SUB-TRIM CALIBRATION</span>
-                <button class="stx-back-btn" onclick="closeStxOverlay()">← BACK</button>
-              </div>
-              <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px;">
-                <div>
-                  <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 4px;">
-                    <span>STEERING (ST) SUB-TRIM</span>
-                    <strong id="stx-trim-st-lbl" style="color: #00f2fe; font-family: 'JetBrains Mono';">0 µs (CENTER)</strong>
-                  </div>
-                  <div style="display: flex; gap: 6px;">
-                    <button class="stx-switch-btn" onclick="adjustStxTrim('st', -5)">◀ LEFT 5µs</button>
-                    <button class="stx-switch-btn" onclick="adjustStxTrim('st', 0)">RESET 0</button>
-                    <button class="stx-switch-btn" onclick="adjustStxTrim('st', 5)">RIGHT 5µs ▶</button>
-                  </div>
-                </div>
-                <div>
-                  <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 4px;">
-                    <span>THROTTLE (TH) NEUTRAL TRIM</span>
-                    <strong id="stx-trim-th-lbl" style="color: #83b94b; font-family: 'JetBrains Mono';">0 µs (NEUTRAL)</strong>
-                  </div>
-                  <div style="display: flex; gap: 6px;">
-                    <button class="stx-switch-btn" onclick="adjustStxTrim('th', -5)">◀ REV 5µs</button>
-                    <button class="stx-switch-btn" onclick="adjustStxTrim('th', 0)">RESET 0</button>
-                    <button class="stx-switch-btn" onclick="adjustStxTrim('th', 5)">FWD 5µs ▶</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- EXPO & DUAL RATES SCREEN -->
-            <div class="stx-screen-overlay" id="stx-overlay-expo">
-              <div class="stx-overlay-header">
-                <span class="stx-overlay-title">DUAL RATES & STEERING EXPO</span>
-                <button class="stx-back-btn" onclick="closeStxOverlay()">← BACK</button>
-              </div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.72rem;">
-                <span>DUAL RATE: <strong style="color: #00f2fe;">100%</strong></span>
-                <span>EXPO: <strong style="color: #83b94b;">-25% (SOFT CENTER)</strong></span>
-              </div>
-              <div style="background: #090a0d; border: 1px solid #343538; border-radius: 4px; height: 130px; display: flex; align-items: center; justify-content: center; position: relative;">
-                <svg width="100%" height="120" viewBox="0 0 240 100">
-                  <line x1="0" y1="50" x2="240" y2="50" stroke="#334155" stroke-dasharray="3 3"/>
-                  <line x1="120" y1="0" x2="120" y2="100" stroke="#334155" stroke-dasharray="3 3"/>
-                  <path d="M 0,100 Q 100,75 120,50 T 240,0" fill="none" stroke="#00f2fe" stroke-width="3"/>
-                </svg>
-              </div>
-            </div>
-
-            <!-- MIXERS SCREEN -->
-            <div class="stx-screen-overlay" id="stx-overlay-mixers">
-              <div class="stx-overlay-header">
-                <span class="stx-overlay-title">CRAWLER 4WS & DIFF MIXERS</span>
-                <button class="stx-back-btn" onclick="closeStxOverlay()">← BACK</button>
-              </div>
-              <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                <div>
-                  <div style="font-size: 0.72rem; margin-bottom: 4px;">4-WHEEL STEERING (4WS):</div>
-                  <div style="display: flex; gap: 6px;">
-                    <button class="stx-switch-btn active" id="btn-stx-4ws-1" onclick="setStx4ws(1)">FRONT ONLY</button>
-                    <button class="stx-switch-btn" id="btn-stx-4ws-2" onclick="setStx4ws(2)">OPPOSITE</button>
-                    <button class="stx-switch-btn" id="btn-stx-4ws-3" onclick="setStx4ws(3)">CRAB CRAWL</button>
-                  </div>
-                </div>
-                <div>
-                  <div style="font-size: 0.72rem; margin-bottom: 4px;">DIFF LOCKS:</div>
-                  <div style="display: flex; gap: 6px;">
-                    <button class="stx-switch-btn active" id="btn-stx-diff-1" onclick="setStxDiff(0)">OPEN</button>
-                    <button class="stx-switch-btn" id="btn-stx-diff-2" onclick="setStxDiff(1)">FRONT LOCK</button>
-                    <button class="stx-switch-btn" id="btn-stx-diff-3" onclick="setStxDiff(2)">BOTH LOCKED</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- MODEL GARAGE SCREEN -->
-            <div class="stx-screen-overlay" id="stx-overlay-garage">
-              <div class="stx-overlay-header">
-                <span class="stx-overlay-title">MODEL GARAGE (32 PROFILES)</span>
-                <button class="stx-back-btn" onclick="closeStxOverlay()">← BACK</button>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem;">
-                <div style="padding: 8px; background: #24262a; border-left: 3px solid #00f2fe; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="selectStxModel('01: TRX-4 CRAWLER', '1/10 4WD ROCK CRAWLER')">
-                  <strong>01: Traxxas TRX-4 (ACTIVE)</strong>
-                  <span style="color: #83b94b; font-size: 0.7rem;">4WS + 2SPD</span>
-                </div>
-                <div style="padding: 8px; background: #18191c; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="selectStxModel('02: MST RMX 2.5', 'RWD PRO DRIFT CHASSIS')">
-                  <span>02: MST RMX 2.5 Drift</span>
-                  <span style="color: #a0a2a6; font-size: 0.7rem;">Gyro AVC</span>
-                </div>
-                <div style="padding: 8px; background: #18191c; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="selectStxModel('03: ARRMA KRATON', '1/8 6S MONSTER TRUCK')">
-                  <span>03: Arrma Kraton 6S</span>
-                  <span style="color: #a0a2a6; font-size: 0.7rem;">Bashing 6S</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- SETTINGS SCREEN -->
-            <div class="stx-screen-overlay" id="stx-overlay-settings">
-              <div class="stx-overlay-header">
-                <span class="stx-overlay-title">HARDWARE SETTINGS</span>
-                <button class="stx-back-btn" onclick="closeStxOverlay()">← BACK</button>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.72rem;">
-                <div style="background: #18191c; padding: 8px; border-radius: 4px;">
-                  <div style="color: #a0a2a6;">CRSF BAUD</div>
-                  <strong style="color: #00f2fe;">400,000 BAUD</strong>
-                </div>
-                <div style="background: #18191c; padding: 8px; border-radius: 4px;">
-                  <div style="color: #a0a2a6;">STATUS LED</div>
-                  <strong style="color: #83b94b;">WS2812 LINK MODE</strong>
-                </div>
-                <div style="background: #18191c; padding: 8px; border-radius: 4px;">
-                  <div style="color: #a0a2a6;">AUDIO BUZZER</div>
-                  <strong style="color: #f59e0b;">LOW-LQ & BATTERY</strong>
-                </div>
-                <div style="background: #18191c; padding: 8px; border-radius: 4px;">
-                  <div style="color: #a0a2a6;">NVS STORAGE</div>
-                  <strong style="color: #cbd5e1;">HEALTHY (32 SLOTS)</strong>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Surface Control Pods Below Bezel -->
-          <div class="stx-surface-pods">
-            <div class="stx-pod">
-              <span class="stx-pod-title">Steering Wheel (Left / Right)</span>
-              <div class="stx-wheel-pad" id="left-stick-area">
-                <div class="stx-wheel-thumb" id="left-stick-thumb"></div>
-              </div>
-            </div>
-
-            <div class="stx-pod">
-              <span class="stx-pod-title">Throttle Trigger (Fwd / Rev)</span>
-              <div class="stx-trigger-pad" id="right-stick-area">
-                <div class="stx-trigger-thumb" id="right-stick-thumb"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Auxiliary Switch Bar -->
-          <div class="stx-switches-bar">
-            <button class="stx-switch-btn" id="btn-stx-gear" onclick="toggleStxGear()">Gear: LOW</button>
-            <button class="stx-switch-btn" id="btn-stx-diff" onclick="toggleStxDiff()">Diff: OPEN</button>
-            <button class="stx-switch-btn" id="btn-stx-lgt" onclick="toggleStxLights()">Lights: OFF</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="section" id="features">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Surface RC Engineering</span>
-        <h2 class="section-title">Why RC Drivers Choose <span class="text-gradient">SourceTX</span></h2>
-        <p class="section-subtitle">
-          Engineered specifically for land vehicles: RC cars, rock crawlers, drift chassis, monster trucks, dual-motor rovers, and surface robotics.
-        </p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-              <path d="M2 12h20"></path>
-            </svg>
-          </div>
-          <h3>Sub-Millisecond Surface Response</h3>
-          <p>
-            Hardware-backed ADC sampling and CRSF single-wire UART transport for ExpressLRS & Crossfire surface receivers with auto-negotiation up to 1.87M baud.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-              <rect x="9" y="9" width="6" height="6"></rect>
-              <line x1="9" y1="1" x2="9" y2="4"></line>
-              <line x1="15" y1="1" x2="15" y2="4"></line>
-              <line x1="9" y1="20" x2="9" y2="23"></line>
-              <line x1="15" y1="20" x2="15" y2="23"></line>
-              <line x1="20" y1="9" x2="23" y2="9"></line>
-              <line x1="20" y1="14" x2="23" y2="14"></line>
-              <line x1="1" y1="9" x2="4" y2="9"></line>
-              <line x1="1" y1="14" x2="4" y2="14"></line>
-            </svg>
-          </div>
-          <h3>Crawler & 4WS Mixers</h3>
-          <p>
-            Built-in surface mixers: 4-Wheel Steering (Front, Rear, Crab, Circle), 2-Speed Transmission shift, Front/Rear Diff Locks, Winch control, and Dual-ESC tank skid steering.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-            </svg>
-          </div>
-          <h3>Dynamic Hardware Pin Mapping</h3>
-          <p>
-            Re-assign any physical GPIO directly over USB without recompiling: Steering pot/hall sensor, Throttle trigger, multi-position switches, RGB status LED, and buzzer.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-              <line x1="12" y1="18" x2="12.01" y2="18"></line>
-            </svg>
-          </div>
-          <h3>Windows & Android Companions</h3>
-          <p>
-            Native companion apps for Windows (.NET WPF) and Android (Jetpack Compose) for USB OTG flashing, live model profiles, steering expo curves, and hardware calibration.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-          </div>
-          <h3>ABS Braking & Steering Expo Curves</h3>
-          <p>
-            Fine-tune exponential steering response, dual-rates, throttle deadbands, punch control, and anti-lock pulse braking for extreme track or drift control.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-              <line x1="9" y1="9" x2="9.01" y2="9"></line>
-              <line x1="15" y1="9" x2="15.01" y2="9"></line>
-            </svg>
-          </div>
-          <h3>ESC Telemetry & Haptic Alarms</h3>
-          <p>
-            Monitor real-time ESC voltage, motor RPM, and signal strength with customizable audio buzzer alert tones and haptic vibration feedback for low battery.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Live 16-Channel Surface Lab Section -->
-  <section class="section" id="simulator">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Full Surface Channel Lab</span>
-        <h2 class="section-title">Expanded 16-Channel <span class="text-gradient">Surface Output</span></h2>
-        <p class="section-subtitle">
-          Observe live PWM pulse values (1000µs – 2000µs) mapped to real surface servos, winches, lights, gyro gains, and dual ESC motors.
-        </p>
-      </div>
-
-      <div class="simulator-container">
-        <div class="channel-bars-grid">
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH1 (Steering Servo)</span><span id="ch-val-1">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-1"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH2 (Throttle / ESC)</span><span id="ch-val-2">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-2"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH3 (2-Speed Shift)</span><span id="ch-val-3">1000µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-3" style="width: 0%"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH4 (Diff Lock F/R)</span><span id="ch-val-4">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-4"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH5 (4WS Rear Steer)</span><span id="ch-val-5">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-5"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH6 (Winch In/Out)</span><span id="ch-val-6">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-6"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH7 (Lights / Underglow)</span><span id="ch-val-7">1000µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-7" style="width: 0%"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH8 (Gyro / AVC Gain)</span><span id="ch-val-8">1750µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-8" style="width: 75%"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH9 (Sound / Smoke)</span><span id="ch-val-9">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-9"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH10 (Skid Left Motor)</span><span id="ch-val-10">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-10"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH11 (Skid Right Motor)</span><span id="ch-val-11">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-11"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH12 (FPV Pan/Tilt)</span><span id="ch-val-12">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-12"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH13 (Aux Servo 1)</span><span id="ch-val-13">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-13"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH14 (Aux Servo 2)</span><span id="ch-val-14">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-14"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH15 (Accessory 1)</span><span id="ch-val-15">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-15"></div></div>
-          </div>
-          <div class="channel-bar-item">
-            <div class="channel-meta"><span>CH16 (Accessory 2)</span><span id="ch-val-16">1500µs</span></div>
-            <div class="channel-meter-track"><div class="channel-meter-fill" id="ch-bar-16"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WebSerial Flasher Section -->
-  <section class="section" id="flasher">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Browser-Based Tools</span>
-        <h2 class="section-title">WebSerial <span class="text-gradient">Diagnostic Terminal</span></h2>
-        <p class="section-subtitle">
-          Connect your ESP32-S3 surface transmitter directly in Chrome, Edge, or Android Chrome to inspect live telemetry output or engage ROM download mode.
-        </p>
-      </div>
-
-      <div class="flasher-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-          <div>
-            <span style="font-size: 0.85rem; color: var(--text-muted);">USB Device Status: </span>
-            <strong id="webserial-status-badge" style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">Disconnected</strong>
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <button id="webserial-connect-btn" class="btn btn-primary btn-sm">Connect USB Device</button>
-            <button id="webserial-flash-btn" class="btn btn-secondary btn-sm" disabled>Engage S3 ROM Bootloader</button>
-          </div>
-        </div>
-
-        <div class="terminal-box" id="webserial-terminal">
-          <div class="terminal-line info">[READY] SourceTX Surface WebSerial Terminal Ready. Connect your ESP32-S3 transmitter via USB to begin.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Companion Apps Section -->
-  <section class="section" id="companion">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Official Surface Utilities</span>
-        <h2 class="section-title">SourceTX <span class="text-gradient">Companion Apps</span></h2>
-        <p class="section-subtitle">
-          Manage your surface vehicle profiles, calibrate steering & throttle pots, flash verified releases with 1-click, and customize your physical GPIOs.
-        </p>
-      </div>
-
-      <div class="companion-grid">
-        <!-- Windows Companion -->
-        <div class="companion-card">
-          <div>
-            <div class="companion-card-header">
-              <div class="companion-icon-box">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
-                </svg>
-              </div>
-              <div class="companion-title">
-                <h3>Windows Companion</h3>
-                <span class="version-tag" id="win-version-badge">v0.1.5 (Latest)</span>
-              </div>
-            </div>
-            <p style="color: var(--text-secondary); font-size: 0.95rem;">
-              Full-featured desktop suite built with WPF & .NET. Real-time telemetry dashboards, crawler multi-model backup, steering & throttle graph monitors, and USB flashing.
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> firmware / tools / reference hardware</p>
+            <h1 id="hero-title">A control system for the hard parts of driving.</h1>
+            <p class="hero-lede">
+              SourceTX brings model-aware surface control, telemetry, safety supervision,
+              and signed maintenance into one ESP32-S3 transmitter stack.
             </p>
-            <ul class="companion-features-list">
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                1-Click Verified USB Flashing & Target Preflight
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Light / Dark Modern Sleek Design System
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Dedicated Red Accent Bug Report Action
-              </li>
-            </ul>
-          </div>
-          <div>
-            <a href="https://github.com/DrMeowy/SourceTX-Companion/releases/latest" id="win-download-btn" target="_blank" rel="noopener" class="btn btn-primary" style="width: 100%;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              Download Windows .exe
-            </a>
-          </div>
-        </div>
 
-        <!-- Android Companion -->
-        <div class="companion-card">
-          <div>
-            <div class="companion-card-header">
-              <div class="companion-icon-box" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: var(--accent-emerald);">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.996-3.4572c.1568-.2716.064-.6184-.2076-.7752-.2715-.1567-.6183-.064-.7751.2076l-2.0224 3.5028C15.3032 8.1257 13.7025 7.7667 12 7.7667s-3.3032.359-4.8724 1.0327L5.1052 5.2966c-.1568-.2716-.5036-.3643-.7751-.2076-.2716.1568-.3644.5036-.2076.7752l1.996 3.4572C2.6515 11.2386.3262 14.8876.0128 19.1667h23.9744c-.3134-4.2791-2.6387-7.9281-6.1047-9.8453"/>
-                </svg>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#system">Explore the system <span aria-hidden="true">↓</span></a>
+              <a class="button button-secondary" href="#companions">Get companion tools <span aria-hidden="true">↗</span></a>
+            </div>
+
+            <div class="hero-stats" aria-label="SourceTX highlights">
+              <div class="hero-stat">
+                <strong>16</strong>
+                <span>CRSF output channels</span>
               </div>
-              <div class="companion-title">
-                <h3>Android Companion</h3>
-                <span class="version-tag" id="android-version-badge" style="color: var(--accent-emerald);">v0.2.8 (Latest)</span>
+              <div class="hero-stat">
+                <strong>250 Hz</strong>
+                <span>transmitter schedule</span>
+              </div>
+              <div class="hero-stat">
+                <strong>480×320</strong>
+                <span>touch interface</span>
               </div>
             </div>
-            <p style="color: var(--text-secondary); font-size: 0.95rem;">
-              Mobile surface tool built with Jetpack Compose & Material 3. USB OTG direct flashing, live hardware pin configuration, and seamless signed in-app updates.
+
+            <p class="hero-footnote">
+              Stable baseline <span class="mono" id="firmware-version" data-fallback="v1.98">v1.98</span>
+              · source-available · built for surface vehicles
             </p>
-            <ul class="companion-features-list">
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Direct USB OTG Flashing with S3 Auto-Reset
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Live Hardware Pin Configuration & Conflict Check
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Permanent Release Keystore Signed APKs
-              </li>
-            </ul>
           </div>
+
+          <div class="hero-visual" aria-label="Illustrative SourceTX system console">
+            <div class="console-frame">
+              <div class="console-topline">
+                <div class="console-brand"><span class="console-led"></span> SOURCETX / SYSTEM VIEW</div>
+                <span class="console-mode">SIMULATED OUTPUT</span>
+              </div>
+              <div class="console-screen">
+                <div class="console-model-row">
+                  <div>
+                    <span class="console-label">ACTIVE MODEL</span>
+                    <strong>TRAIL / 01</strong>
+                  </div>
+                  <div class="console-link-state"><span class="state-dot"></span> VEHICLE DISCONNECTED</div>
+                </div>
+
+                <div class="console-main-grid">
+                  <div class="control-column">
+                    <div class="control-module">
+                      <div class="module-heading">
+                        <span>STEERING</span>
+                        <strong id="steering-value">+14%</strong>
+                      </div>
+                      <input id="steering-slider" type="range" min="-100" max="100" value="14" aria-label="Demo steering position" />
+                      <div class="range-labels"><span>LEFT</span><span>CENTER</span><span>RIGHT</span></div>
+                    </div>
+                    <div class="control-module">
+                      <div class="module-heading">
+                        <span>THROTTLE / BRAKE</span>
+                        <strong id="throttle-value">+07%</strong>
+                      </div>
+                      <input id="throttle-slider" type="range" min="-100" max="100" value="7" aria-label="Demo throttle position" />
+                      <div class="range-labels"><span>REVERSE</span><span>NEUTRAL</span><span>FORWARD</span></div>
+                    </div>
+                    <div class="mini-readout-grid">
+                      <div><span>HOLD</span><strong>READY</strong></div>
+                      <div><span>MODEL</span><strong>01 / 20</strong></div>
+                      <div><span>TELEMETRY</span><strong>WATCHING</strong></div>
+                      <div><span>OUTPUT</span><strong>ARMED</strong></div>
+                    </div>
+                  </div>
+
+                  <div class="path-column">
+                    <div class="module-heading"><span>CONTROL PATH</span><span class="mono muted">250 Hz</span></div>
+                    <div class="path-steps">
+                      <div class="path-step is-active"><span>01</span><div><strong>INPUTS</strong><small>steering + throttle</small></div><b>OK</b></div>
+                      <div class="path-connector"></div>
+                      <div class="path-step is-active"><span>02</span><div><strong>MODEL ENGINE</strong><small>curves + limits + mixes</small></div><b>OK</b></div>
+                      <div class="path-connector"></div>
+                      <div class="path-step is-active"><span>03</span><div><strong>CRSF LINK</strong><small>external ELRS module</small></div><b>READY</b></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="channel-strip" aria-label="Illustrative channel output values">
+                  <div class="channel-heading"><span>CHANNEL MONITOR</span><span class="mono muted">µs / 16 CH</span></div>
+                  <div class="channel-row">
+                    <div class="channel-cell"><div><span>CH1</span><strong id="channel-1-value">1570</strong></div><div class="channel-track"><i id="channel-1-fill" style="width:57%"></i></div><small>STEERING</small></div>
+                    <div class="channel-cell"><div><span>CH2</span><strong id="channel-2-value">1535</strong></div><div class="channel-track"><i id="channel-2-fill" style="width:53.5%"></i></div><small>THROTTLE</small></div>
+                    <div class="channel-cell"><div><span>CH3</span><strong>1500</strong></div><div class="channel-track"><i style="width:50%"></i></div><small>SHIFT</small></div>
+                    <div class="channel-cell"><div><span>CH4</span><strong id="channel-4-value">1519</strong></div><div class="channel-track"><i id="channel-4-fill" style="width:51.9%"></i></div><small>MIX</small></div>
+                  </div>
+                </div>
+
+                <div class="console-status-row">
+                  <span><i class="status-light status-green"></i> SAFETY INHIBIT: CLEAR</span>
+                  <span><i class="status-light status-blue"></i> TELEMETRY: STANDBY</span>
+                  <span class="console-clock">SYSTEM DEMO / 00:14:28</span>
+                </div>
+              </div>
+            </div>
+            <p class="visual-note"><span aria-hidden="true">↳</span> A product model, not a hardware connection. Move the sliders to see the channel path respond.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="signal-rail" aria-label="SourceTX system facts">
+        <div class="container signal-rail-inner">
+          <span>DESIGNED AROUND</span>
+          <strong>ESP32-S3 / CRSF / TELEMETRY / SAFETY</strong>
+          <span class="signal-line" aria-hidden="true"></span>
+          <span>MAINTAINED THROUGH</span>
+          <strong>SIGNED OTA + USB RECOVERY</strong>
+        </div>
+      </section>
+
+      <section class="section" id="system" aria-labelledby="system-title">
+        <div class="container">
+          <div class="section-heading section-heading-split">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> the integration model</p>
+              <h2 id="system-title">The product is the path from hand to receiver.</h2>
+            </div>
+            <p>
+              SourceTX keeps the control loop visible: physical inputs become a model,
+              the model becomes a bounded CRSF output, and telemetry comes back as
+              context for the next decision.
+            </p>
+          </div>
+
+          <div class="system-flow">
+            <article class="flow-card flow-inputs">
+              <div class="flow-number">01</div>
+              <p class="flow-kicker">INPUT SURFACE</p>
+              <h3>Controls that fit a surface radio.</h3>
+              <p>Steering, throttle, navigation keys, touch, and mapped auxiliary controls enter through explicit hardware assignments.</p>
+              <div class="flow-tags"><span>ADC</span><span>TOUCH</span><span>GPIO MAP</span></div>
+            </article>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <article class="flow-card flow-model">
+              <div class="flow-number">02</div>
+              <p class="flow-kicker">MODEL ENGINE</p>
+              <h3>Shape the vehicle, not just the channel.</h3>
+              <p>Calibration, expo, curves, trims, mixes, drive modes, brake ABS, throttle hold, and failsafe profiles stay model-aware.</p>
+              <div class="flow-tags"><span>CURVES</span><span>MIXES</span><span>LIMITS</span></div>
+            </article>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <article class="flow-card flow-link">
+              <div class="flow-number">03</div>
+              <p class="flow-kicker">CRSF LINK</p>
+              <h3>Fast output with telemetry in the loop.</h3>
+              <p>An external ExpressLRS / CRSF module carries 16 channels while link quality, receiver battery, RPM, temperature, GPS, and more return.</p>
+              <div class="flow-tags"><span>250 HZ</span><span>16 CH</span><span>ELRS</span></div>
+            </article>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <article class="flow-card flow-safety">
+              <div class="flow-number">04</div>
+              <p class="flow-kicker">SAFETY LAYER</p>
+              <h3>Inhibits are part of the experience.</h3>
+              <p>Startup preflight, transport health, throttle hold, alarms, runtime supervision, and output locks make state legible before motion.</p>
+              <div class="flow-tags"><span>PREFLIGHT</span><span>FAILSAFE</span><span>ALERTS</span></div>
+            </article>
+          </div>
+
+          <div class="system-callout">
+            <div class="callout-marker">!</div>
+            <div>
+              <strong>The boundary is deliberate.</strong>
+              <p>SourceTX is firmware and reference integration documentation, not a certified finished transmitter. Radio module, antenna, battery, charger, enclosure, and load safety still need their own validation.</p>
+            </div>
+            <a class="text-link" href="https://github.com/DrMeowy/SourceTX/blob/main/docs/USER_MANUAL.md" target="_blank" rel="noopener">Read the safety notes <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-dark" id="capabilities" aria-labelledby="capabilities-title">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> what ships in the stack</p>
+            <h2 id="capabilities-title">A surface radio with room for the whole vehicle.</h2>
+            <p>Explore the capabilities by the job they do, from the first calibration pass to the last telemetry check of the day.</p>
+          </div>
+
+          <div class="filter-row" role="group" aria-label="Filter capabilities">
+            <button class="filter-button is-selected" type="button" data-filter="all" aria-pressed="true">All surfaces</button>
+            <button class="filter-button" type="button" data-filter="control" aria-pressed="false">Control</button>
+            <button class="filter-button" type="button" data-filter="vehicle" aria-pressed="false">Vehicle</button>
+            <button class="filter-button" type="button" data-filter="telemetry" aria-pressed="false">Telemetry</button>
+            <button class="filter-button" type="button" data-filter="safety" aria-pressed="false">Safety</button>
+            <button class="filter-button" type="button" data-filter="maintenance" aria-pressed="false">Maintenance</button>
+          </div>
+
+          <div class="capability-grid" id="capability-grid">
+            <article class="capability-card" data-category="control">
+              <div class="capability-topline"><span class="card-index">01</span><span class="card-status">CORE</span></div>
+              <h3>Model memory that stays manageable.</h3>
+              <p>A compact catalog keeps model identity in RAM while full configurations load on demand. Verified NVS writes and recovery paths protect the settings that matter.</p>
+              <div class="capability-meta"><span>UP TO 20 SLOTS</span><span>SCHEMA 21 BASELINE</span></div>
+            </article>
+            <article class="capability-card" data-category="vehicle">
+              <div class="capability-topline"><span class="card-index">02</span><span class="card-status">CONTROL</span></div>
+              <h3>From crawlers to boats.</h3>
+              <p>MOA and Dual ESC, skid-steer, twin-screw, 4WS, brake bias, winch, lights, throttle punch, launch rate, cruise, idle-up, engine cut, and neutral drag brake are native paths.</p>
+              <div class="capability-meta"><span>BOUNDED MIXES</span><span>MODEL-AWARE</span></div>
+            </article>
+            <article class="capability-card" data-category="telemetry">
+              <div class="capability-topline"><span class="card-index">03</span><span class="card-status">FEEDBACK</span></div>
+              <h3>Telemetry that changes the next move.</h3>
+              <p>Link quality, receiver battery, temperature, current, RPM, speed, GPS run data, lap gates, session history, and conditions can become warnings or bounded protection.</p>
+              <div class="capability-meta"><span>CRSF SENSORS</span><span>RUN HISTORY</span></div>
+            </article>
+            <article class="capability-card" data-category="safety">
+              <div class="capability-topline"><span class="card-index">04</span><span class="card-status">GUARDRAIL</span></div>
+              <h3>Safety state is visible, not implied.</h3>
+              <p>Neutral startup checks, throttle hold, receiver matching gates, transport supervision, failsafe policy, alarms, and output locks keep unsafe transitions explicit.</p>
+              <div class="capability-meta"><span>INHIBIT FIRST</span><span>CONFIRMATION GATED</span></div>
+            </article>
+            <article class="capability-card" data-category="maintenance">
+              <div class="capability-topline"><span class="card-index">05</span><span class="card-status">SIGNED</span></div>
+              <h3>Updates with a recovery story.</h3>
+              <p>Signed HTTPS OTA writes to an inactive application slot, checks the product, target, size, digest, and signature, then uses a health window with rollback. USB remains the recovery path.</p>
+              <div class="capability-meta"><span>SHA-256 / P-256</span><span>ROLLBACK</span></div>
+            </article>
+            <article class="capability-card" data-category="maintenance">
+              <div class="capability-topline"><span class="card-index">06</span><span class="card-status">PORTABLE</span></div>
+              <h3>Models can leave the transmitter.</h3>
+              <p>Windows and Android companions can export the active model or a complete model bundle, validate compatibility, and restore with explicit acknowledgements.</p>
+              <div class="capability-meta"><span>MODEL ENVELOPES</span><span>USB BUNDLES</span></div>
+            </article>
+            <article class="capability-card capability-card-development" data-category="maintenance">
+              <div class="capability-topline"><span class="card-index">07</span><span class="card-status">DEVELOPMENT</span></div>
+              <h3>Feedback hardware is configurable.</h3>
+              <p>The development tree adds configurable status, haptic, tone, and DFPlayer voice paths. The audio module, speaker stage, power, and sound pack still need physical acceptance.</p>
+              <div class="capability-meta"><span>OPTIONAL</span><span>HARDWARE GATED</span></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="explorer" aria-labelledby="explorer-title">
+        <div class="container">
+          <div class="section-heading section-heading-split">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> system explorer</p>
+              <h2 id="explorer-title">Three layers. One operator view.</h2>
+            </div>
+            <p>Switch layers to see what is physically connected, what the model engine owns, and what the radio link reports back.</p>
+          </div>
+
+          <div class="explorer-shell">
+            <div class="explorer-tabs" role="tablist" aria-label="SourceTX system layers">
+              <button class="explorer-tab is-active" type="button" role="tab" aria-selected="true" data-explorer="inputs">01 / Inputs</button>
+              <button class="explorer-tab" type="button" role="tab" aria-selected="false" data-explorer="engine">02 / Model engine</button>
+              <button class="explorer-tab" type="button" role="tab" aria-selected="false" data-explorer="link">03 / Link + safety</button>
+            </div>
+            <div class="explorer-content">
+              <div class="explorer-copy">
+                <p class="explorer-kicker" id="explorer-kicker">01 / INPUT SURFACE</p>
+                <h3 id="explorer-heading">Start with a control surface you can account for.</h3>
+                <p id="explorer-description">The reference target names every important input: two analog controls, five navigation buttons, a touch panel, and explicit optional GPIO assignments.</p>
+                <div class="explorer-metrics" id="explorer-metrics"></div>
+              </div>
+              <div class="explorer-terminal" aria-live="polite">
+                <div class="terminal-topline"><span><i></i><i></i><i></i></span><strong>source_tx / map</strong><span class="mono">READ ONLY</span></div>
+                <ul id="explorer-list"></ul>
+                <div class="terminal-footer"><span class="terminal-caret">▸</span> all assignments are validated before use</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-dark" id="companions" aria-labelledby="companions-title">
+        <div class="container">
+          <div class="section-heading section-heading-split">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> companion layer</p>
+              <h2 id="companions-title">Keep the transmitter current. Keep models portable.</h2>
+            </div>
+            <p>Use the companion that matches the job. Both follow the signed SourceTX release feed and keep low-level flashing details behind verified workflows.</p>
+          </div>
+
+          <div class="companion-grid">
+            <article class="companion-card companion-windows">
+              <div class="companion-head">
+                <div class="platform-mark">WIN</div>
+                <div>
+                  <p class="card-status">DESKTOP / USB</p>
+                  <h3>Windows Companion</h3>
+                </div>
+                <span class="version-pill" id="windows-version" data-fallback="v0.1.5" aria-live="polite">v0.1.5</span>
+              </div>
+              <p class="companion-lede">The maintenance desk for a supported ESP32-S3 transmitter.</p>
+              <ul class="check-list">
+                <li>Install a signed factory image on a blank supported board.</li>
+                <li>Update or repair firmware with exact chip and flash preflight.</li>
+                <li>Back up the active model or every configured model as a bundle.</li>
+                <li>Restore only after schema, checksum, and transmitter acknowledgement.</li>
+              </ul>
+              <div class="companion-actions">
+                <a class="button button-primary" id="windows-download" href="https://github.com/DrMeowy/SourceTX-Companion/releases/latest" target="_blank" rel="noopener">Download for Windows <span aria-hidden="true">↗</span></a>
+                <a class="text-link" href="https://github.com/DrMeowy/SourceTX-Companion" target="_blank" rel="noopener">View repository <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="companion-card companion-android">
+              <div class="companion-head">
+                <div class="platform-mark platform-android">AND</div>
+                <div>
+                  <p class="card-status">ANDROID / USB OTG</p>
+                  <h3>Android Companion</h3>
+                </div>
+                <span class="version-pill version-pill-green" id="android-version" data-fallback="v0.2.8" aria-live="polite">v0.2.8</span>
+              </div>
+              <p class="companion-lede">A phone-first path for signed maintenance and model backups.</p>
+              <ul class="check-list">
+                <li>Install the verified factory image on the official 4 MB target.</li>
+                <li>Download signed stable updates while preserving model storage.</li>
+                <li>Export and validate <span class="mono">.stxm</span> or <span class="mono">.stxb</span> backups.</li>
+                <li>Works without analytics, accounts, or uploaded model data.</li>
+              </ul>
+              <div class="companion-actions">
+                <a class="button button-green" id="android-download" href="https://github.com/DrMeowy/-SourceTX-Companion-Android/releases/latest" target="_blank" rel="noopener">Get the Android app <span aria-hidden="true">↗</span></a>
+                <a class="text-link" href="https://github.com/DrMeowy/-SourceTX-Companion-Android" target="_blank" rel="noopener">View repository <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="release-strip">
+            <div class="release-signal"><span class="release-dot"></span><div><strong>Stable release feed</strong><span>Signed firmware, factory images, manifests, and checksums</span></div></div>
+            <a class="text-link" id="firmware-release-link" href="https://github.com/DrMeowy/SourceTX-Updates/releases/latest" target="_blank" rel="noopener">Open SourceTX Updates <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <div class="browser-note">
+            <span class="browser-note-mark">i</span>
+            <p><strong>The website is the map, not the flasher.</strong> Firmware writes belong in the verified Windows or Android companion flow. Use the <a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">USB recovery guide</a> when the board needs a factory image or partition repair.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="hardware" aria-labelledby="hardware-title">
+        <div class="container">
+          <div class="section-heading section-heading-split">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> official reference target</p>
+              <h2 id="hardware-title">Build from a pinout you can verify.</h2>
+            </div>
+            <p>The reference build is intentionally specific. Similar-looking ESP32-S3 boards are not automatically compatible.</p>
+          </div>
+
+          <div class="hardware-layout">
+            <div class="hardware-spec-card">
+              <div class="board-label"><span class="board-led"></span> SOURCETX / TARGET 01</div>
+              <div class="board-body">
+                <div class="board-chip"><span>ESP32-S3</span><strong>FH4R2</strong><small>240 MHz / native USB</small></div>
+                <div class="board-rail board-rail-left"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="board-rail board-rail-right"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="board-caption"><span>4 MB DIO / 80 MHz flash</span><span>2 MB quad PSRAM</span><span>3.3 V GPIO</span></div>
+              </div>
+              <div class="board-details">
+                <div><span>DISPLAY</span><strong>ST7796U / 480×320</strong></div>
+                <div><span>TOUCH</span><strong>FT6x36 / I²C 0x38</strong></div>
+                <div><span>BATTERY</span><strong>INA219 monitor</strong></div>
+                <div><span>RADIO</span><strong>External ExpressLRS / CRSF</strong></div>
+              </div>
+            </div>
+
+            <div class="pinout-card">
+              <div class="pinout-head"><div><p class="card-status">FIXED CONNECTIONS</p><h3>Reference pin map</h3></div><span class="mono muted">GPIO / FUNCTION</span></div>
+              <div class="pin-list">
+                <div class="pin-row"><span class="pin-code">06</span><div><strong>Steering potentiometer</strong><small>12-bit ADC input</small></div><button type="button" class="copy-pin" data-copy="GPIO 6" aria-label="Copy GPIO 6">copy</button></div>
+                <div class="pin-row"><span class="pin-code">05</span><div><strong>Throttle potentiometer</strong><small>12-bit ADC input</small></div><button type="button" class="copy-pin" data-copy="GPIO 5" aria-label="Copy GPIO 5">copy</button></div>
+                <div class="pin-row"><span class="pin-code pin-code-blue">42</span><div><strong>CRSF signal</strong><small>single-wire UART / 400 kbaud</small></div><button type="button" class="copy-pin" data-copy="GPIO 42" aria-label="Copy GPIO 42">copy</button></div>
+                <div class="pin-row"><span class="pin-code">35–39</span><div><strong>Navigation / confirm</strong><small>active-low buttons / pull-ups</small></div><button type="button" class="copy-pin" data-copy="GPIO 35–39" aria-label="Copy GPIO 35 through 39">copy</button></div>
+                <div class="pin-row"><span class="pin-code">08 / 09</span><div><strong>Shared I²C bus</strong><small>touch + INA219 / 100 kHz</small></div><button type="button" class="copy-pin" data-copy="GPIO 8 / GPIO 9" aria-label="Copy GPIO 8 and GPIO 9">copy</button></div>
+              </div>
+              <a class="text-link" href="https://github.com/DrMeowy/SourceTX/blob/main/docs/REFERENCE_HARDWARE.md" target="_blank" rel="noopener">Open the complete hardware reference <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+
+          <div class="hardware-boundaries">
+            <div><span class="boundary-icon">!</span><strong>Never power a radio module, motor, speaker, haptic motor, or high-current LED from an ESP32 GPIO.</strong></div>
+            <p>Optional voice and feedback hardware needs its own power, driver, grounding, voltage, and acceptance checks. Battery, charger, antenna, enclosure, and certification remain outside the firmware reference target.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-start" id="start" aria-labelledby="start-title">
+        <div class="container start-grid">
           <div>
-            <a href="https://github.com/DrMeowy/-SourceTX-Companion-Android/releases/latest" id="android-download-btn" target="_blank" rel="noopener" class="btn btn-emerald" style="width: 100%;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              Download Android .apk
-            </a>
+            <p class="eyebrow"><span class="eyebrow-dot"></span> a safer first run</p>
+            <h2 id="start-title">Start with the vehicle restrained.</h2>
+            <p class="start-lede">The shortest path to a good first drive is a careful one. SourceTX gives you the checkpoints; the builder still owns the hardware and the load.</p>
+            <a class="button button-secondary" href="https://github.com/DrMeowy/SourceTX/blob/main/docs/USER_MANUAL.md" target="_blank" rel="noopener">Read the user manual <span aria-hidden="true">↗</span></a>
           </div>
+          <ol class="start-list">
+            <li><span>01</span><div><strong>Confirm the target.</strong><p>Match the ESP32-S3, flash, PSRAM, display, touch controller, pins, module, and antenna to the reference.</p></div></li>
+            <li><span>02</span><div><strong>Install through a companion.</strong><p>Use the signed factory flow for a blank board, or the signed OTA path for a compatible running unit.</p></div></li>
+            <li><span>03</span><div><strong>Calibrate with drive power off.</strong><p>Center controls, verify direction and endpoints, select the intended model, and configure receiver failsafe.</p></div></li>
+            <li><span>04</span><div><strong>Watch the return path.</strong><p>Keep throttle hold available and treat link loss, stale telemetry, or unexpected response as a stop condition.</p></div></li>
+          </ol>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- Hardware Pinout & Wiring Section -->
-  <section class="section" id="pinout">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Surface Wiring Reference</span>
-        <h2 class="section-title">ESP32-S3 <span class="text-gradient">Hardware Pinout</span></h2>
-        <p class="section-subtitle">
-          Default pin mappings for ESP32-S3 SuperMini & DevKit custom surface transmitters. Every pin can be dynamically re-configured in the Companion App.
-        </p>
-      </div>
-
-      <div class="pinout-card">
-        <div class="pin-grid">
-          <div class="pin-pill" onclick="copyPin('CRSF UART Single-Wire', '43')">
-            <span class="pin-badge">GPIO 43</span>
-            <div class="pin-desc">
-              <h4>CRSF UART TX/RX</h4>
-              <p>Half-duplex single-wire to ELRS surface module</p>
+      <section class="section partner-section" id="partner" aria-labelledby="partner-title">
+        <div class="container">
+          <div class="partner-panel">
+            <div class="partner-copy">
+              <p class="eyebrow"><span class="eyebrow-dot eyebrow-dot-amber"></span> for builders, integrators, and firms</p>
+              <h2 id="partner-title">Bring SourceTX into the next surface platform.</h2>
+              <p>
+                We welcome serious conversations around reference hardware, radio-module integration,
+                companion distribution, testing, and vehicle-specific control systems.
+                Start with a clear brief: target hardware, intended market, load, RF module, and support model.
+              </p>
+              <div class="partner-points">
+                <span><i></i> Hardware integration</span>
+                <span><i></i> Companion / distribution</span>
+                <span><i></i> Vehicle-control partnerships</span>
+              </div>
             </div>
-          </div>
-          <div class="pin-pill" onclick="copyPin('WS2812 Status LED', '48')">
-            <span class="pin-badge" style="background: var(--gradient-purple); color: #fff;">GPIO 48</span>
-            <div class="pin-desc">
-              <h4>WS2812 RGB LED</h4>
-              <p>Addressable transmitter status indicator</p>
-            </div>
-          </div>
-          <div class="pin-pill" onclick="copyPin('Buzzer / Audio', '44')">
-            <span class="pin-badge" style="background: var(--gradient-emerald); color: #fff;">GPIO 44</span>
-            <div class="pin-desc">
-              <h4>Passive Buzzer / Audio</h4>
-              <p>PWM tone generator for telemetry & battery alarms</p>
-            </div>
-          </div>
-          <div class="pin-pill" onclick="copyPin('Vibration Motor', '21')">
-            <span class="pin-badge">GPIO 21</span>
-            <div class="pin-desc">
-              <h4>Vibration Motor</h4>
-              <p>Haptic grip feedback for low-LQ & alarms</p>
-            </div>
-          </div>
-          <div class="pin-pill" onclick="copyPin('ADC Steering Wheel', '1')">
-            <span class="pin-badge">GPIO 1</span>
-            <div class="pin-desc">
-              <h4>ADC Steering Pot / Hall</h4>
-              <p>12-bit analog input channel (CH1 Steering)</p>
-            </div>
-          </div>
-          <div class="pin-pill" onclick="copyPin('ADC Throttle Trigger', '2')">
-            <span class="pin-badge">GPIO 2</span>
-            <div class="pin-desc">
-              <h4>ADC Throttle / Brake Pot</h4>
-              <p>12-bit analog input channel (CH2 Throttle)</p>
-            </div>
-          </div>
-          <div class="pin-pill" onclick="copyPin('Shift Switch (2-Speed)', '5')">
-            <span class="pin-badge">GPIO 5</span>
-            <div class="pin-desc">
-              <h4>2-Speed Shift Switch</h4>
-              <p>High / Low gear transmission selector</p>
-            </div>
-          </div>
-          <div class="pin-pill" onclick="copyPin('Diff Lock Switch', '6')">
-            <span class="pin-badge">GPIO 6</span>
-            <div class="pin-desc">
-              <h4>Diff Lock Switch</h4>
-              <p>Open / Front / Both locker selector</p>
+            <div class="partner-actions">
+              <a class="button button-amber" href="https://github.com/DrMeowy" target="_blank" rel="noopener">Contact the maintainer <span aria-hidden="true">↗</span></a>
+              <a class="button button-ghost" href="https://github.com/DrMeowy/SourceTX/discussions" target="_blank" rel="noopener">Start a project discussion <span aria-hidden="true">↗</span></a>
+              <p>Commercial use remains subject to the SourceTX license. Partnership contact does not imply certification, warranty, exclusivity, or guaranteed support.</p>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+    </main>
 
-  <!-- Quick Start Section -->
-  <section class="section" id="quickstart">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Getting Started</span>
-        <h2 class="section-title">Flash & Drive in <span class="text-gradient">3 Simple Steps</span></h2>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <span style="font-size: 1.5rem; font-weight: 800; font-family: 'JetBrains Mono';">01</span>
-          </div>
-          <h3>Connect & Flash</h3>
-          <p>
-            Plug your ESP32-S3 transmitter board into your PC or Android phone via USB OTG. Open the Companion App and press <strong>Install SourceTX</strong>.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <span style="font-size: 1.5rem; font-weight: 800; font-family: 'JetBrains Mono';">02</span>
-          </div>
-          <h3>Wire Wheel & Trigger</h3>
-          <p>
-            Connect your steering wheel pot, throttle trigger, and auxiliary shift switches to the ADC/GPIO pins, and hook up the single-wire CRSF line.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon-wrapper">
-            <span style="font-size: 1.5rem; font-weight: 800; font-family: 'JetBrains Mono';">03</span>
-          </div>
-          <h3>Bind & Drive!</h3>
-          <p>
-            Power on your RC car, crawler, or truck. SourceTX automatically establishes the ultra-low-latency CRSF link with full telemetry!
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
+    <footer class="site-footer">
+      <div class="container footer-grid">
         <div class="footer-brand">
-          <a href="#" class="brand-logo">
-            <div class="logo-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
-            </div>
-            <span>Source<span class="text-gradient">TX</span></span>
-          </a>
-          <p>
-            High-performance, open-source surface RC transmitter firmware for ESP32-S3 and ExpressLRS / CRSF.
-          </p>
+          <a class="brand" href="#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>surface control system</small></span></a>
+          <p>Source-available surface RC transmitter firmware and companion tools for builders who want the control path in view.</p>
         </div>
-
-        <div class="footer-column">
-          <h4>Repositories</h4>
-          <ul>
-            <li><a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">SourceTX Firmware</a></li>
-            <li><a href="https://github.com/DrMeowy/SourceTX-Companion" target="_blank" rel="noopener">Windows Companion</a></li>
-            <li><a href="https://github.com/DrMeowy/-SourceTX-Companion-Android" target="_blank" rel="noopener">Android Companion</a></li>
-            <li><a href="https://github.com/DrMeowy/SourceTX-Updates" target="_blank" rel="noopener">Updates Feed</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-column">
-          <h4>Downloads</h4>
-          <ul>
-            <li><a href="https://github.com/DrMeowy/SourceTX-Companion/releases/latest" target="_blank" rel="noopener">Windows .exe</a></li>
-            <li><a href="https://github.com/DrMeowy/-SourceTX-Companion-Android/releases/latest" target="_blank" rel="noopener">Android .apk</a></li>
-            <li><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Firmware Binaries</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-column">
-          <h4>Community & Support</h4>
-          <ul>
-            <li><a href="https://github.com/DrMeowy/SourceTX/issues" target="_blank" rel="noopener">Report a Bug</a></li>
-            <li><a href="https://github.com/DrMeowy/SourceTX/discussions" target="_blank" rel="noopener">Discussions</a></li>
-            <li><a href="#quickstart">Wiring Guide</a></li>
-          </ul>
-        </div>
+        <div class="footer-column"><h3>Build</h3><a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">Firmware repository</a><a href="#hardware">Reference hardware</a><a href="https://github.com/DrMeowy/SourceTX/blob/main/docs/INSTALLATION_AND_RECOVERY.md" target="_blank" rel="noopener">Installation & recovery</a></div>
+        <div class="footer-column"><h3>Run</h3><a href="#companions">Companion apps</a><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Firmware releases</a><a href="https://github.com/DrMeowy/SourceTX/security/advisories/new" target="_blank" rel="noopener">Security report</a></div>
+        <div class="footer-column"><h3>Connect</h3><a href="#partner">Partner enquiries</a><a href="https://github.com/DrMeowy/SourceTX/issues" target="_blank" rel="noopener">Issues & support</a><a href="https://www.buymeacoffee.com/DrMeowy" target="_blank" rel="noopener">Support development</a></div>
       </div>
+      <div class="container footer-bottom"><span>© <span id="current-year">2026</span> SourceTX Project</span><span>Firmware is not a finished or certified transmitter design.</span><a href="https://github.com/DrMeowy/SourceTX/blob/main/LICENSE" target="_blank" rel="noopener">License <span aria-hidden="true">↗</span></a></div>
+    </footer>
 
-      <div class="footer-bottom">
-        <div>© 2026 SourceTX Project. Released under Open Source License.</div>
-        <div style="display: flex; gap: 16px;">
-          <a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener" style="color: var(--text-muted); text-decoration: none;">GitHub</a>
-          <span>•</span>
-          <a href="https://github.com/DrMeowy/SourceTX/issues/new" target="_blank" rel="noopener" style="color: #fb7185; text-decoration: none; font-weight: 600;">Report Issue</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="js/particles.js"></script>
-  <script src="js/simulator.js"></script>
-  <script src="js/webserial.js"></script>
-  <script src="js/main.js"></script>
-</body>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="js/main.js" defer></script>
+  </body>
 </html>
