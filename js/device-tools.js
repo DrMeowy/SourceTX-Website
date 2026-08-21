@@ -120,9 +120,9 @@ function setBusy(busy) {
 
 function supportMessage() {
   if (!window.isSecureContext) return "Open SourceTX over HTTPS.";
-  if (!("serial" in navigator)) return "Use Chrome or Edge on a desktop for Web Serial.";
-  if (!window.crypto?.subtle) return "This browser cannot verify signed releases locally.";
-  return "Web Serial ready / signed releases verified locally";
+  if (!("serial" in navigator)) return "Use Chrome or Edge on a PC.";
+  if (!window.crypto?.subtle) return "This browser cannot safely verify the installation.";
+  return "Ready to connect.";
 }
 
 function renderSupport() {
@@ -461,7 +461,7 @@ async function runFlash() {
     if (!window.confirm("Install the complete SourceTX factory image? Keep the transmitter powered and do not disconnect USB during the write.")) {
       throw new Error("Factory installation cancelled.");
     }
-    setStatus("Checking the signed SourceTX release…", "busy");
+    setStatus("Checking the installation…", "busy");
     log("[INSTALL] USB port selected.");
     const packageInfo = await acquireFirmware();
     const tool = await getEspTool();
@@ -477,7 +477,7 @@ async function runFlash() {
         write: function () {},
       },
     });
-    setStatus("Checking the connected ESP32-S3…", "busy");
+    setStatus("Checking the transmitter…", "busy");
     const description = await loader.main();
     await verifyConnectedTarget(loader, description);
     const address = Number.parseInt(packageInfo.manifest.flash_offset, 16);
@@ -628,7 +628,7 @@ async function readHardwareConfig() {
     if (profile.SCHEMA !== 1) throw new Error("This transmitter uses an unsupported hardware-profile schema.");
     writeHardwareForm(profile);
     log("[SUCCESS] Loaded schema 1 hardware profile / CRSF GPIO " + profile.CRSF + ".");
-    setStatus("Hardware profile loaded. Review values before saving.", "good");
+    setStatus("Settings loaded. Review them before saving.", "good");
   } finally {
     await closeDevice();
   }

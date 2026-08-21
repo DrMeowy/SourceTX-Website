@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0b0d" />
-    <meta name="description" content="SourceTX browser alpha for firmware installation and transmitter configuration." />
-    <title>Browser Alpha — SourceTX</title>
+    <meta name="description" content="Install SourceTX or change transmitter settings from Chrome or Edge on a PC." />
+    <title>Use SourceTX from your browser — SourceTX</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -19,17 +19,16 @@
       <div class="container nav-wrap">
         <a class="brand" href="index.html#top" aria-label="SourceTX home">
           <span class="brand-mark" aria-hidden="true">TX</span>
-          <span class="brand-copy"><strong>SourceTX</strong><small>surface control system</small></span>
+          <span class="brand-copy"><strong>SourceTX</strong><small>RC transmitter system</small></span>
         </a>
         <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
         <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
-          <a href="index.html#dashboard">Dashboard</a>
+          <a href="index.html#dashboard">Home</a>
           <a class="is-current" href="index.html#install">Install</a>
           <a href="hardware.html">Hardware</a>
-          <a href="index.html#partner">Partner</a>
+          <a href="index.html#partner">Contact</a>
           <a href="donate.html">Donate</a>
           <a class="nav-discord" href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Discord <span aria-hidden="true">↗</span></a>
-          <a class="nav-github" href="https://github.com/DrMeowy/SourceTX-Updates" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
         </nav>
       </div>
     </header>
@@ -38,15 +37,15 @@
       <section class="subpage-hero" aria-labelledby="browser-tools-title">
         <div class="container">
           <a class="subpage-backlink" href="index.html#install">← Back to install options</a>
-          <p class="eyebrow"><span class="eyebrow-dot"></span> browser alpha</p>
-          <h1 id="browser-tools-title">Install and configure from the browser.</h1>
-          <p class="subpage-lede">Choose the job you want to do. The alpha talks directly to a USB-connected SourceTX transmitter from your browser; release manifests and firmware signatures are checked locally before any write.</p>
+          <p class="eyebrow"><span class="eyebrow-dot"></span> browser tools / alpha</p>
+          <h1 id="browser-tools-title">Use SourceTX from your browser.</h1>
+          <p class="subpage-lede">On a PC, Chrome or Edge can connect to your transmitter over USB to install firmware or change its settings.</p>
 
           <div class="requirement-grid" aria-label="Browser alpha requirements">
-            <article class="requirement-card"><span class="requirement-label">DEVICE</span><strong>SourceTX ESP32-S3 target</strong><p>Official 4 MB hardware profile.</p></article>
-            <article class="requirement-card"><span class="requirement-label">BROWSER</span><strong>Chrome or Edge on a PC</strong><p>Web Serial and secure context required.</p></article>
+            <article class="requirement-card"><span class="requirement-label">DEVICE</span><strong>SourceTX transmitter</strong><p>Use supported SourceTX hardware.</p></article>
+            <article class="requirement-card"><span class="requirement-label">BROWSER</span><strong>Chrome or Edge on a PC</strong><p>Required for the USB connection.</p></article>
             <article class="requirement-card"><span class="requirement-label">CONNECTION</span><strong>HTTPS + USB data cable</strong><p>Keep the transmitter powered during work.</p></article>
-            <article class="requirement-card requirement-card-warn"><span class="requirement-label">ANDROID</span><strong>Use Android Companion</strong><p>Android Chrome is not supported by this alpha yet.</p></article>
+            <article class="requirement-card requirement-card-warn"><span class="requirement-label">ANDROID</span><strong>Use Android Companion</strong><p>Browser tools currently work on PCs only.</p></article>
           </div>
         </div>
       </section>
@@ -54,26 +53,26 @@
       <section class="section subpage-section" aria-labelledby="browser-choice-title">
         <div class="container">
           <div class="section-heading section-heading-split">
-            <div><p class="eyebrow"><span class="eyebrow-dot"></span> choose a workflow</p><h2 id="browser-choice-title">What do you need to do?</h2></div>
-            <p>Firmware installation changes the flash. Configuration changes the hardware profile stored by the running transmitter. Pick the matching path so the safety notes stay close to the action.</p>
+              <div><p class="eyebrow"><span class="eyebrow-dot"></span> choose a task</p><h2 id="browser-choice-title">What do you want to do?</h2></div>
+              <p>Install firmware on a new or recovering transmitter, or change settings on one you already use.</p>
           </div>
 
           <div class="subpage-options">
             <article class="subpage-option-card">
-              <div class="install-choice-topline"><span class="card-status">01 / SIGNED USB FLASH</span><span class="install-choice-index">INSTALL</span></div>
+                <div class="install-choice-topline"><span class="card-status">01 / USB INSTALL</span><span class="install-choice-index">INSTALL</span></div>
               <h3>Firmware installation</h3>
-              <p>Install a signed factory image on a blank official 4 MB board or recover one over USB. Existing transmitters update from their built-in Firmware Update screen.</p>
+                <p>Install SourceTX on a new transmitter or recover one over USB. Existing transmitters can also update from their built-in update screen.</p>
               <a class="button button-primary" href="browser-install.html">Open firmware installation <span aria-hidden="true">→</span></a>
             </article>
             <article class="subpage-option-card subpage-option-card-green">
-              <div class="install-choice-topline"><span class="card-status">02 / HARDWARE PROFILE</span><span class="install-choice-index">CONFIGURE</span></div>
+                <div class="install-choice-topline"><span class="card-status">02 / SETTINGS</span><span class="install-choice-index">CONFIGURE</span></div>
               <h3>Configure transmitter</h3>
-              <p>Read or save the validated display, touch, control, CRSF, and feedback pin assignments used by the firmware.</p>
+                <p>Read or change the settings for your display, controls, touch panel, and radio connection.</p>
               <a class="button button-green" href="browser-config.html">Open transmitter configuration <span aria-hidden="true">→</span></a>
             </article>
           </div>
 
-          <div class="subpage-callout"><strong>Need model backup or restore?</strong><span>Use the Windows or Android companion apps. The browser alpha is focused on firmware and hardware-profile work.</span><a class="text-link" href="standalone-apps.html">View standalone apps ↗</a></div>
+          <div class="subpage-callout"><strong>Need model backup or restore?</strong><span>Use the Windows or Android companion apps for the complete guided workflow.</span><a class="text-link" href="standalone-apps.html">View companion apps ↗</a></div>
         </div>
       </section>
     </main>

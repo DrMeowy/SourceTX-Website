@@ -6,16 +6,16 @@
     <meta name="theme-color" content="#0a0b0d" />
     <meta
       name="description"
-      content="SourceTX is a safety-focused surface RC transmitter system for ESP32-S3: model-aware control, telemetry, signed updates, and companion tools."
+      content="SourceTX is a touchscreen RC transmitter for cars, crawlers, boats, and other surface vehicles."
     />
-    <meta property="og:title" content="SourceTX — surface control, documented" />
+    <meta property="og:title" content="SourceTX — a touchscreen RC transmitter" />
     <meta
       property="og:description"
-      content="A safety-focused surface RC transmitter system with firmware, companion apps, and a reproducible reference target."
+      content="Set up and drive surface vehicles with a clear touchscreen, live status, and companion tools."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sourcetx.org/" />
-    <title>SourceTX — surface control, documented</title>
+    <title>SourceTX — a touchscreen RC transmitter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -35,7 +35,7 @@
           <span class="brand-mark" aria-hidden="true">TX</span>
           <span class="brand-copy">
             <strong>SourceTX</strong>
-            <small>surface control system</small>
+            <small>RC transmitter system</small>
           </span>
         </a>
 
@@ -51,20 +51,12 @@
         </button>
 
         <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
-          <a href="#dashboard">Dashboard</a>
+          <a href="#dashboard">Home</a>
           <a href="#install">Install</a>
           <a href="hardware.html">Hardware</a>
-          <a href="#partner">Partner</a>
+          <a href="#partner">Contact</a>
           <a href="donate.html">Donate</a>
           <a class="nav-discord" href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Discord <span aria-hidden="true">↗</span></a>
-          <a
-            class="nav-github"
-            href="https://github.com/DrMeowy/SourceTX-Updates"
-            target="_blank"
-            rel="noopener"
-          >
-            GitHub <span aria-hidden="true">↗</span>
-          </a>
         </nav>
       </div>
     </header>
@@ -73,10 +65,10 @@
       <section class="hero" id="dashboard" aria-labelledby="hero-title">
         <div class="container hero-grid">
           <div class="hero-copy">
-            <h1 id="hero-title">A modern, touch-first transmitter OS.</h1>
+            <h1 id="hero-title">A touchscreen transmitter for RC vehicles.</h1>
             <p class="hero-lede">
-              SourceTX gives you a clear touchscreen for setting up and driving RC cars,
-              crawlers, boats, and more—with live battery and signal information always in view.
+              A clear touchscreen for setting up and driving RC cars, crawlers, boats,
+              and more—with battery, signal, timers, and channels easy to see.
             </p>
 
             <div class="hero-actions">
@@ -84,32 +76,13 @@
               <a class="button button-secondary" href="#install">Install SourceTX <span aria-hidden="true">↗</span></a>
             </div>
 
-            <div class="hero-stats" aria-label="SourceTX highlights">
-              <div class="hero-stat">
-                <strong>16</strong>
-                <span>CRSF output channels</span>
-              </div>
-              <div class="hero-stat">
-                <strong>250 Hz</strong>
-                <span>transmitter schedule</span>
-              </div>
-              <div class="hero-stat">
-                <strong>480×320</strong>
-                <span>touch interface</span>
-              </div>
-            </div>
-
-            <p class="hero-footnote">
-              Release target <span class="mono" id="firmware-version" data-fallback="v1.0.0">v1.0.0</span>
-              · source-available · built for surface vehicles
-            </p>
           </div>
 
-          <div class="hero-visual tx-hero-visual" aria-label="Interactive SourceTX 480 by 320 firmware dashboard preview">
+          <div class="hero-visual tx-hero-visual" aria-label="Interactive SourceTX transmitter dashboard preview">
             <div class="tx-preview-shell">
               <div class="tx-preview-meta">
-                <span><i class="tx-meta-dot"></i> FIRMWARE DASHBOARD / 480×320</span>
-                <span class="tx-meta-state">WEB PREVIEW / SIMULATED</span>
+                <span><i class="tx-meta-dot"></i> TRANSMITTER DASHBOARD</span>
+                <span class="tx-meta-state">INTERACTIVE PREVIEW</span>
               </div>
 
               <div class="tx-screen is-linked" id="tx-screen">
@@ -219,39 +192,29 @@
         </div>
       </section>
 
-      <section class="signal-rail" aria-label="SourceTX system facts">
-        <div class="container signal-rail-inner">
-          <span>DESIGNED AROUND</span>
-          <strong>ESP32-S3 / CRSF / TELEMETRY / SAFETY</strong>
-          <span class="signal-line" aria-hidden="true"></span>
-          <span>MAINTAINED THROUGH</span>
-          <strong>SIGNED OTA + USB RECOVERY</strong>
-        </div>
-      </section>
-
       <section class="section section-dark" id="install" aria-labelledby="install-title">
         <div class="container">
           <div class="section-heading section-heading-split">
             <div>
-              <p class="eyebrow"><span class="eyebrow-dot"></span> install / maintain</p>
-              <h2 id="install-title">Install SourceTX your way.</h2>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> install</p>
+              <h2 id="install-title">How do you want to install SourceTX?</h2>
             </div>
-            <p>Choose a standalone companion for guided maintenance, or try the browser alpha when you want a direct desktop USB workflow. Both paths use the same signed SourceTX release feed.</p>
+              <p>Choose a companion app or use the browser tools. Both give you a simple way to set up, update, and manage your transmitter.</p>
           </div>
 
           <div class="install-choice-grid">
             <article class="install-choice-card">
               <div class="install-choice-topline"><span class="card-status">STANDALONE APPS</span><span class="install-choice-index">01</span></div>
               <h3>Windows or Android.</h3>
-              <p>Use the supported desktop or phone companion for guided installation, signed updates, and model backup or restore.</p>
-              <a class="button button-primary" href="standalone-apps.html">View standalone apps <span aria-hidden="true">↗</span></a>
+              <p>Use the app on your computer or phone for guided setup, updates, recovery, and model backups.</p>
+              <a class="button button-primary" href="standalone-apps.html">View companion apps <span aria-hidden="true">↗</span></a>
             </article>
 
             <article class="install-choice-card install-choice-browser">
-              <div class="install-choice-topline"><span class="card-status">WEB BROWSER / ALPHA</span><span class="install-choice-index">02</span></div>
+              <div class="install-choice-topline"><span class="card-status">BROWSER TOOLS / ALPHA</span><span class="install-choice-index">02</span></div>
               <h3>Install and configure from your browser.</h3>
-              <p>Use Chrome or Edge over HTTPS to connect directly to the official USB target and verify release data locally.</p>
-              <a class="button button-green" href="browser-tools.html">Open browser alpha <span aria-hidden="true">↗</span></a>
+              <p>Use Chrome or Edge on a PC to install or configure your transmitter directly over USB.</p>
+              <a class="button button-green" href="browser-tools.html">Open browser tools <span aria-hidden="true">↗</span></a>
             </article>
           </div>
 
@@ -261,16 +224,15 @@
       <section class="section section-start" id="start" aria-labelledby="start-title">
         <div class="container start-grid">
           <div>
-            <p class="eyebrow"><span class="eyebrow-dot"></span> a safer first run</p>
-            <h2 id="start-title">Start with the vehicle restrained.</h2>
-            <p class="start-lede">The shortest path to a good first drive is a careful one. SourceTX gives you the checkpoints; the builder still owns the hardware and the load.</p>
+            <p class="eyebrow"><span class="eyebrow-dot"></span> before your first drive</p>
+            <h2 id="start-title">Set up safely, then enjoy the drive.</h2>
+            <p class="start-lede">Take a moment to check your controls and link before applying drive power. Always test with the vehicle restrained or its wheels off the ground.</p>
             <a class="button button-secondary" href="browser-tools.html">Open the installation guide <span aria-hidden="true">→</span></a>
           </div>
           <ol class="start-list">
-            <li><span>01</span><div><strong>Confirm the target.</strong><p>Match the ESP32-S3, flash, PSRAM, display, touch controller, pins, module, and antenna to the reference.</p></div></li>
-            <li><span>02</span><div><strong>Install through a companion.</strong><p>Use the signed factory flow for a blank board, or the signed OTA path for a compatible running unit.</p></div></li>
-            <li><span>03</span><div><strong>Calibrate with drive power off.</strong><p>Center controls, verify direction and endpoints, select the intended model, and configure receiver failsafe.</p></div></li>
-            <li><span>04</span><div><strong>Watch the return path.</strong><p>Keep throttle hold available and treat link loss, stale telemetry, or unexpected response as a stop condition.</p></div></li>
+            <li><span>01</span><div><strong>Connect your transmitter.</strong><p>Use the companion app or browser tools to install SourceTX and choose your model.</p></div></li>
+            <li><span>02</span><div><strong>Check your controls.</strong><p>Center the steering and throttle, confirm their direction, and check the receiver link.</p></div></li>
+            <li><span>03</span><div><strong>Test before driving.</strong><p>Keep the vehicle restrained, keep throttle ready to stop, and stop if the controls or link behave unexpectedly.</p></div></li>
           </ol>
         </div>
       </section>
@@ -279,23 +241,22 @@
         <div class="container">
           <div class="partner-panel">
             <div class="partner-copy">
-              <p class="eyebrow"><span class="eyebrow-dot eyebrow-dot-amber"></span> for builders, integrators, and firms</p>
-              <h2 id="partner-title">Bring SourceTX into the next surface platform.</h2>
+              <p class="eyebrow"><span class="eyebrow-dot eyebrow-dot-amber"></span> for teams and businesses</p>
+              <h2 id="partner-title">Interested in working with SourceTX?</h2>
               <p>
-                We welcome serious conversations around reference hardware, radio-module integration,
-                companion distribution, testing, and vehicle-specific control systems.
-                Start with a clear brief: target hardware, intended market, load, RF module, and support model.
+                We are open to conversations about hardware, distribution, testing, and RC vehicle projects.
+                Tell us what you are building and how SourceTX could help.
               </p>
               <div class="partner-points">
-                <span><i></i> Hardware integration</span>
-                <span><i></i> Companion / distribution</span>
-                <span><i></i> Vehicle-control partnerships</span>
+                <span><i></i> Hardware projects</span>
+                <span><i></i> App and distribution</span>
+                <span><i></i> Testing and integration</span>
               </div>
             </div>
             <div class="partner-actions">
-              <a class="button button-amber" href="https://github.com/DrMeowy" target="_blank" rel="noopener">Contact the maintainer <span aria-hidden="true">↗</span></a>
-              <a class="button button-ghost" href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Start a project discussion <span aria-hidden="true">↗</span></a>
-              <p>Commercial use remains subject to the SourceTX license. Partnership contact does not imply certification, warranty, exclusivity, or guaranteed support.</p>
+              <a class="button button-amber" href="https://github.com/DrMeowy" target="_blank" rel="noopener">Contact on GitHub <span aria-hidden="true">↗</span></a>
+              <a class="button button-ghost" href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Talk on Discord <span aria-hidden="true">↗</span></a>
+              <p>Licensing and support arrangements can be discussed for each project.</p>
             </div>
           </div>
         </div>
@@ -305,14 +266,14 @@
     <footer class="site-footer">
       <div class="container footer-grid">
         <div class="footer-brand">
-          <a class="brand" href="#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>surface control system</small></span></a>
-          <p>Signed surface RC transmitter firmware and public companion tools for builders who want the control path in view.</p>
+          <a class="brand" href="#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>RC transmitter system</small></span></a>
+          <p>An open project for building and using a touchscreen RC transmitter.</p>
         </div>
-        <div class="footer-column"><h3>Build</h3><a href="hardware.html">Reference hardware</a><a href="https://github.com/DrMeowy/SourceTX-Updates" target="_blank" rel="noopener">Signed firmware feed</a><a href="browser-tools.html">Installation & recovery</a></div>
-        <div class="footer-column"><h3>Run</h3><a href="#install">Install</a><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Firmware releases</a><a href="https://github.com/DrMeowy/SourceTX-Updates/security/advisories/new" target="_blank" rel="noopener">Security report</a></div>
-        <div class="footer-column"><h3>Connect</h3><a href="#partner">Partner enquiries</a><a href="donate.html">Donate</a><a href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Discord community ↗</a><a href="https://github.com/DrMeowy/SourceTX-Updates/issues" target="_blank" rel="noopener">Issues & support</a></div>
+        <div class="footer-column"><h3>Explore</h3><a href="hardware.html">Hardware</a><a href="#install">Install</a><a href="standalone-apps.html">Companion apps</a></div>
+        <div class="footer-column"><h3>Project</h3><a href="https://github.com/DrMeowy/SourceTX-Updates/releases" target="_blank" rel="noopener">Releases</a><a href="https://github.com/DrMeowy/SourceTX-Updates" target="_blank" rel="noopener">GitHub</a><a href="donate.html">Donate</a></div>
+        <div class="footer-column"><h3>Connect</h3><a href="#partner">Contact</a><a href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Discord community ↗</a></div>
       </div>
-      <div class="container footer-bottom"><span>© <span id="current-year">2026</span> SourceTX Project</span><span>Firmware is not a finished or certified transmitter design.</span><a href="https://github.com/DrMeowy/SourceTX-Updates/releases/latest" target="_blank" rel="noopener">Release license package <span aria-hidden="true">↗</span></a></div>
+      <div class="container footer-bottom"><span>© <span id="current-year">2026</span> SourceTX Project</span><span>SourceTX is a project, not a certified product.</span></div>
     </footer>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>

@@ -408,7 +408,7 @@
     {
       repo: "DrMeowy/SourceTX-Companion",
       badge: "#windows-version",
-      fallback: "Not published",
+      fallback: "Coming soon",
       download: "#windows-download",
       downloadLabel: "Download for Windows ↗",
       assetPattern: /\.exe$|\.zip$/i,
@@ -416,7 +416,7 @@
     {
       repo: "DrMeowy/-SourceTX-Companion-Android",
       badge: "#android-version",
-      fallback: "Not published",
+      fallback: "Coming soon",
       download: "#android-download",
       downloadLabel: "Get the Android app ↗",
       assetPattern: /\.apk$/i,
@@ -432,7 +432,7 @@
     const download = target.download ? $(target.download) : null;
     if (download) {
       download.href = repositoryUrl;
-      download.textContent = "Release pending — view repository ↗";
+      download.textContent = "View project ↗";
     }
   };
 

@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0b0d" />
-    <meta name="description" content="Install a verified SourceTX factory image from a desktop browser over USB." />
-    <title>Firmware Installation — SourceTX Browser Alpha</title>
+    <meta name="description" content="Install SourceTX on a new transmitter or recover one over USB from Chrome or Edge." />
+    <title>Install SourceTX — SourceTX</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -14,32 +14,32 @@
   <body>
     <div class="page-noise" aria-hidden="true"></div><div class="page-grid" aria-hidden="true"></div>
     <header class="site-header" id="top"><div class="container nav-wrap">
-      <a class="brand" href="index.html#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>surface control system</small></span></a>
+      <a class="brand" href="index.html#top" aria-label="SourceTX home"><span class="brand-mark" aria-hidden="true">TX</span><span class="brand-copy"><strong>SourceTX</strong><small>RC transmitter system</small></span></a>
       <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
-      <nav class="site-nav" id="site-nav" aria-label="Primary navigation"><a href="index.html#dashboard">Dashboard</a><a class="is-current" href="index.html#install">Install</a><a href="hardware.html">Hardware</a><a href="index.html#partner">Partner</a><a href="donate.html">Donate</a><a class="nav-discord" href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Discord <span aria-hidden="true">↗</span></a><a class="nav-github" href="https://github.com/DrMeowy/SourceTX-Updates" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></nav>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation"><a href="index.html#dashboard">Home</a><a class="is-current" href="index.html#install">Install</a><a href="hardware.html">Hardware</a><a href="index.html#partner">Contact</a><a href="donate.html">Donate</a><a class="nav-discord" href="https://discord.gg/6x9r8HEmBr" target="_blank" rel="noopener">Discord <span aria-hidden="true">↗</span></a></nav>
     </div></header>
 
     <main class="subpage-main">
       <section class="subpage-hero subpage-hero-compact" aria-labelledby="install-page-title"><div class="container">
         <a class="subpage-backlink" href="browser-tools.html">← Back to browser alpha</a>
-        <p class="eyebrow"><span class="eyebrow-dot"></span> browser alpha / firmware installation</p>
+        <p class="eyebrow"><span class="eyebrow-dot"></span> browser tools / installation</p>
         <h1 id="install-page-title">Install SourceTX over USB.</h1>
-        <p class="subpage-lede">The browser installer writes the complete signed factory package for the official 4 MB target. Existing transmitters update safely from the built-in transactional OTA screen.</p>
+        <p class="subpage-lede">Use this PC tool to install SourceTX on a new transmitter or recover one over USB. Existing transmitters can update from their built-in update screen.</p>
         <div class="detail-grid">
-          <article class="detail-card"><span class="requirement-label">REQUIRED</span><strong>PC with Chrome or Edge</strong><p>Open this page over HTTPS so Web Serial and local signature verification are available.</p></article>
-          <article class="detail-card"><span class="requirement-label">TARGET</span><strong>SourceTX ESP32-S3 / 4 MB</strong><p>The tool verifies the physical chip and flash capacity before it permits a write.</p></article>
-          <article class="detail-card"><span class="requirement-label">CABLE</span><strong>USB data cable</strong><p>Charge-only cables cannot expose the transmitter serial port.</p></article>
-          <article class="detail-card detail-card-warn"><span class="requirement-label">RECOVERY</span><strong>BOOT → RESET → release</strong><p>For a blank board, hold BOOT, tap RESET, then release BOOT before selecting the port.</p></article>
+          <article class="detail-card"><span class="requirement-label">REQUIRED</span><strong>PC with Chrome or Edge</strong><p>Open this page over HTTPS.</p></article>
+          <article class="detail-card"><span class="requirement-label">TARGET</span><strong>Supported SourceTX transmitter</strong><p>The tool checks the board before writing.</p></article>
+          <article class="detail-card"><span class="requirement-label">CABLE</span><strong>USB data cable</strong><p>Charge-only cables will not work.</p></article>
+          <article class="detail-card detail-card-warn"><span class="requirement-label">NEW BOARD</span><strong>BOOT → RESET → release</strong><p>For a blank board, hold BOOT, tap RESET, then release BOOT.</p></article>
         </div>
       </div></section>
 
       <section class="section subpage-section" aria-labelledby="flash-tool-title"><div class="container">
-        <div class="section-heading section-heading-split"><div><p class="eyebrow"><span class="eyebrow-dot"></span> signed local workflow</p><h2 id="flash-tool-title">Firmware installation</h2></div><p>Keep the transmitter connected and do not disconnect USB during the write or reboot. Android is not supported for this alpha; use Android Companion instead.</p></div>
+        <div class="section-heading section-heading-split"><div><p class="eyebrow"><span class="eyebrow-dot"></span> USB installer</p><h2 id="flash-tool-title">Install firmware</h2></div><p>Keep the transmitter connected during the write and reboot. Android users should use Android Companion.</p></div>
 
         <div class="device-tool-shell" id="device-tools" aria-labelledby="device-tools-title">
-          <div class="device-tool-heading"><div><p class="eyebrow"><span class="eyebrow-dot"></span> source tx / usb</p><h3 id="device-tools-title">Flash the verified release.</h3></div><span class="device-support-pill" id="device-support-pill">Checking browser support…</span></div>
-          <p class="device-tool-lede">The signed release contract, firmware digest and signature, ESP32-S3 identity, exact 4 MB flash capacity, and factory image layout are checked locally before any erase or write begins. The pinned browser flasher code is also verified before execution.</p>
-          <div class="device-tool-grid"><article class="device-tool-card device-tool-flash-card"><div class="device-tool-card-topline"><span class="card-status">FACTORY IMAGE</span><span class="device-tool-index">0x0000</span></div><h4>Install SourceTX</h4><p>Use this for a blank official 4 MB board or USB recovery. It installs the bootloader, partition table, OTA metadata, and application.</p><label class="device-check-row"><input type="checkbox" id="device-erase-flash" /> <span><strong>Erase all flash first</strong><small>Deletes models, calibration, settings, and update state.</small></span></label><div class="device-tool-actions"><button class="button button-primary" type="button" id="device-install-button">Install factory image</button></div></article><article class="device-tool-card"><div class="device-tool-card-topline"><span class="card-status">NORMAL UPDATE</span><span class="device-tool-index">SAFE OTA</span></div><h4>Update an existing transmitter</h4><p>On SourceTX, open <strong>Settings → System → Firmware Update</strong>. The transmitter writes the signed application to the inactive OTA slot and switches slots only after verification.</p><div class="device-tool-actions"><a class="button button-secondary" href="standalone-apps.html">Need USB recovery?</a></div></article></div>
+          <div class="device-tool-heading"><div><p class="eyebrow"><span class="eyebrow-dot"></span> SourceTX / USB</p><h3 id="device-tools-title">Connect your transmitter.</h3></div><span class="device-support-pill" id="device-support-pill">Checking browser support…</span></div>
+          <p class="device-tool-lede">The installer checks the connected board before it writes anything.</p>
+          <div class="device-tool-grid"><article class="device-tool-card device-tool-flash-card"><div class="device-tool-card-topline"><span class="card-status">NEW OR RECOVERING</span><span class="device-tool-index">INSTALL</span></div><h4>Install SourceTX</h4><p>Use this for a new transmitter or USB recovery.</p><label class="device-check-row"><input type="checkbox" id="device-erase-flash" /> <span><strong>Erase all flash first</strong><small>Deletes models, calibration, settings, and update state.</small></span></label><div class="device-tool-actions"><button class="button button-primary" type="button" id="device-install-button">Install SourceTX</button></div></article><article class="device-tool-card"><div class="device-tool-card-topline"><span class="card-status">ALREADY RUNNING</span><span class="device-tool-index">UPDATE</span></div><h4>Update an existing transmitter</h4><p>Open <strong>Settings → System → Firmware Update</strong> on the transmitter and follow its instructions.</p><div class="device-tool-actions"><a class="button button-secondary" href="standalone-apps.html">Use a companion app</a></div></article></div>
           <div class="device-tool-status" id="device-tool-status" role="status" aria-live="polite"><span class="device-status-led"></span><span id="device-tool-status-text">Ready. Use Chrome or Edge over HTTPS, then connect a USB data cable.</span></div>
           <pre class="device-tool-log" id="device-tool-log" aria-label="Browser tool activity log">[READY] Browser tool is idle.</pre>
         </div>
