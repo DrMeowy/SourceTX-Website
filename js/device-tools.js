@@ -1,6 +1,6 @@
 const FACTORY_MANIFEST_URL =
-  "https://github.com/DrMeowy/SourceTX-Updates/releases/latest/download/factory.json";
-const SOURCE_REPOSITORY = "DrMeowy/SourceTX-Updates";
+  "https://github.com/DrMeowy/SourceTX/releases/latest/download/factory.json";
+const SOURCE_REPOSITORY = "DrMeowy/SourceTX";
 const SOURCE_HARDWARE_ID = "sourcetx-s3-st7796-ft6x36";
 const ESPTOOL_MODULES = {
   main: {

@@ -135,6 +135,32 @@
   ];
 
   const dashboardScreen = $("#tx-screen");
+  const demoDialog = $("#dashboard-demo");
+  const demoOpen = $("#demo-open");
+  const demoClose = $("#demo-close");
+  const demoViewport = $("#demo-viewport");
+  const previewShell = $(".tx-preview-shell");
+  const previewHome = previewShell?.parentElement;
+  const previewControls = $(".tx-preview-controls");
+
+  if (demoDialog?.showModal && demoOpen && demoClose && demoViewport && previewShell && previewHome) {
+    demoOpen.hidden = false;
+    demoOpen.addEventListener("click", () => {
+      if (demoDialog.open) return;
+      closeMenu();
+      demoViewport.append(previewShell);
+      demoViewport.scrollLeft = 0;
+      demoDialog.showModal();
+      document.documentElement.classList.add("demo-is-open");
+    });
+    demoClose.addEventListener("click", () => demoDialog.close());
+    demoDialog.addEventListener("close", () => {
+      previewHome.insertBefore(previewShell, previewControls);
+      document.documentElement.classList.remove("demo-is-open");
+      demoOpen.focus({ preventScroll: true });
+    });
+  }
+
   const dashboardImage = $("#tx-model-image");
   const dashboardModelName = $("#tx-model-name");
   const dashboardHeaderModel = $("#tx-header-model");
@@ -191,6 +217,8 @@
     if (value) value.textContent = formatDashboardTimer(timer.seconds);
     if (state) state.textContent = timer.running ? "RUNNING" : "STOPPED";
     $(`.tx-timer-${timerNumber}`)?.classList.toggle("is-running", timer.running);
+    const control = $(`.tx-preview-actions [data-dashboard-action="timer${timerNumber}"]`);
+    if (control) control.textContent = `${timer.running ? "Stop" : "Start"} timer ${timerNumber}`;
   };
 
   const syncDashboardTimers = () => {
@@ -400,7 +428,7 @@
   // Release badges use GitHub as the live source, with documented local fallbacks.
   const releaseTargets = [
     {
-      repo: "DrMeowy/SourceTX-Updates",
+      repo: "DrMeowy/SourceTX",
       badge: "#firmware-version",
       fallback: "v1.0.0",
       releaseLink: "#firmware-release-link",
@@ -410,6 +438,7 @@
       badge: "#windows-version",
       fallback: "Coming soon",
       download: "#windows-download",
+      fallbackLabel: "View Windows releases ↗",
       downloadLabel: "Download for Windows ↗",
       assetPattern: /\.exe$|\.zip$/i,
     },
@@ -418,6 +447,7 @@
       badge: "#android-version",
       fallback: "Coming soon",
       download: "#android-download",
+      fallbackLabel: "View Android releases ↗",
       downloadLabel: "Get the Android app ↗",
       assetPattern: /\.apk$/i,
     },
@@ -428,11 +458,11 @@
     if (badge) badge.textContent = target.fallback;
     const repositoryUrl = `https://github.com/${target.repo}`;
     const releaseLink = target.releaseLink ? $(target.releaseLink) : null;
-    if (releaseLink) releaseLink.href = repositoryUrl;
+    if (releaseLink) releaseLink.href = `${repositoryUrl}/releases`;
     const download = target.download ? $(target.download) : null;
     if (download) {
-      download.href = repositoryUrl;
-      download.textContent = "View project ↗";
+      download.href = `${repositoryUrl}/releases`;
+      download.textContent = target.fallbackLabel;
     }
   };
 
@@ -464,7 +494,8 @@
     }
   };
 
-  releaseTargets.forEach((target) => hydrateRelease(target));
+  releaseTargets.filter((target) => $(target.badge) || $(target.download || target.releaseLink))
+    .forEach((target) => hydrateRelease(target));
 
   const currentYear = $("#current-year");
   if (currentYear) currentYear.textContent = String(new Date().getFullYear());

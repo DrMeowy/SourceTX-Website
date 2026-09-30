@@ -44,7 +44,7 @@
           <pre class="device-tool-log" id="device-tool-log" aria-label="Browser tool activity log">[READY] Browser tool is idle.</pre>
         </div>
 
-        <details class="cli-details"><summary>CLI equivalent / detailed recovery</summary><div class="cli-content"><p>The browser tool uses the same release contract as the companion apps. Download the signed factory artifact from <a href="https://github.com/DrMeowy/SourceTX-Updates" target="_blank" rel="noopener">SourceTX Updates</a>, verify its checksum and signature, and confirm the connected board is the official 4 MB ESP32-S3 target before writing it.</p><pre><code># Factory image — first installation or USB recovery
+        <details class="cli-details"><summary>CLI equivalent / detailed recovery</summary><div class="cli-content"><p>The browser tool uses the same release contract as the companion apps. Download the signed factory artifact from <a href="https://github.com/DrMeowy/SourceTX" target="_blank" rel="noopener">SourceTX Releases</a>, verify its checksum and signature, and confirm the connected board is the official 4 MB ESP32-S3 target before writing it.</p><pre><code># Factory image — first installation or USB recovery
 python -m esptool --chip esp32s3 --port PORT --baud 460800 write-flash --flash-mode dio --flash-freq 80m --flash-size 4MB 0x0000 SourceTX-vX.Y-factory.bin</code></pre><p class="cli-warning"><strong>Do not flash an application-only image at a fixed OTA offset.</strong> Normal updates belong in SourceTX’s built-in Firmware Update screen so it can select and verify the inactive slot transactionally.</p></div></details>
       </div></section>
     </main>
